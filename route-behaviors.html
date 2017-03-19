@@ -1,14 +1,14 @@
 <link rel='import' href='helper-functions.html'></script>
 <script>
 var routeBehaviours = function routeBehaviors(superClass) {
+  var _routeComponents = [];
+  
+  window.addEventListener('popstate',handleStateChange.bind(this,_routeComponents));
   return class extends superClass {
-
-    created() {
-      this._routeComponents.push(this);
-      //console.log(this._routeComponents);
-    }
-
+    
     ready() {
+      _routeComponents.push(this);
+      console.log(_routeComponents);
       if(!loadListenerAttached) {
           window.history.pushState({'_spa_PATH':'/'},'','/');
           dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
@@ -58,11 +58,6 @@ var routeBehaviours = function routeBehaviors(superClass) {
           console.log(err);
         })
     }
-
-    registered() {      
-        this._routeComponents = [];
-        window.addEventListener('popstate',handleStateChange.bind(this));
-    }
         
   // Will implement with data-binding functionality when needed
   // injectBoundHTML: function injectBoundHTML(html, element) {
@@ -81,13 +76,12 @@ var routeBehaviours = function routeBehaviors(superClass) {
   // },
   }
 }
-let loadListenerAttached = false; 
-var handleStateChange = function(event) {
+var loadListenerAttached = false; 
+var handleStateChange = function(event, routeComponents) {
       if( !event.state ) {
       } else if ( event.state._spa_PATH ) {
 
         let pathname = event.state._spa_PATH;
-        var routeComponents = this._routeComponents;
         for ( var i = 0; i < routeComponents.length; i++ ) {
 
           routeComponent = routeComponents[i];

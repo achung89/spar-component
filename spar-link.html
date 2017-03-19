@@ -1,0 +1,31 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="spa-link">
+  <template>
+    <slot></slot>
+  </template>
+
+  <script>
+    class SpaLink extends Polymer.Element {
+
+      static get is() { return 'spa-link' }
+
+      static get properties() {
+        return { path: String }
+      }
+      constructor() {
+        super();
+        this._navigateTo = this._navigateTo.bind(this)
+      }
+      //consider creating a remove listener when detached from DOM
+      ready () {
+        super.ready();
+        this.addEventListener('tap', this._navigateTo)
+      }
+      _navigateTo() {
+        window.history.pushState({'_spa_PATH':this.path},'',this.path);
+        dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':this.path}}));
+      }
+    }
+  </script>
+</dom-module>

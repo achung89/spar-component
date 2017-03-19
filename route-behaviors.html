@@ -1,0 +1,105 @@
+<link rel='import' href='helper-functions.html'></script>
+<script>
+var routeBehaviours = function routeBehaviors(superClass) {
+  return class extends superClass {
+
+    created() {
+      this._routeComponents.push(this);
+      //console.log(this._routeComponents);
+    }
+
+    ready() {
+      if(!loadListenerAttached) {
+          window.history.pushState({'_spa_PATH':'/'},'','/');
+          dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
+          loadListenerAttached = true;
+      }
+    }
+
+    render() {
+      //console.log(this.path);
+      var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
+      //check index component for children in light DOM 
+      if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
+        if ( !this.src ) {
+          this.shadowRoot.appendChild ( document.createElement('slot') );
+          return;
+        }
+      }
+      //check to see if src has been specified other-wise default to this.path+'.html'
+      if ( this.src ) {
+        var fileSrc = this.src;
+      } else {
+        var fileSrc =  this.path+'.html';
+        //console.log(fileSrc)
+      }
+
+      var context = this;
+      fetch(fileSrc)
+        .then(function(data) {
+          //console.log(data);
+          return data.text();
+        })
+        .then(function(data) {
+        //console.log("before invoking",context)
+        var parsedNodes = parseXML ( data );
+        //console.log(parsedNodes);
+        var nodes = Array.from ( parsedNodes );
+        //console.log(nodes);
+        context.shadowRoot.innerHTML = '';
+        nodes.forEach ( function ( node ) {
+          //console.log(node, context);
+        context.shadowRoot.appendChild ( node );
+        })
+        context.distributeContent(true); 
+        executeEmbeddedJavascript(getScriptsContentInDoc(context.shadowRoot.innerHTML));
+        })
+        .catch(function errored(err){
+          console.log(err);
+        })
+    }
+
+    registered() {      
+        this._routeComponents = [];
+        window.addEventListener('popstate',handleStateChange.bind(this));
+    }
+        
+  // Will implement with data-binding functionality when needed
+  // injectBoundHTML: function injectBoundHTML(html, element) {
+  //   var template = document.createElement('template', 'dom-bind');
+  //   var doc = template.content.ownerDocument;
+  //   var div = doc.createElement('div');
+  //   div.innerHTML = html;
+  //   template.content.appendChild(div);
+  //   while (element.firstChild) {
+  //       element.removeChild(element.firstChild);
+  //   }
+  //   element.appendChild(Polymer.Base.instanceTemplate(template));
+  // },
+  // isLoaded: function() {
+  //   return 
+  // },
+  }
+}
+let loadListenerAttached = false; 
+var handleStateChange = function(event) {
+      if( !event.state ) {
+      } else if ( event.state._spa_PATH ) {
+
+        let pathname = event.state._spa_PATH;
+        var routeComponents = this._routeComponents;
+        for ( var i = 0; i < routeComponents.length; i++ ) {
+
+          routeComponent = routeComponents[i];
+          if ( routeComponent.path === pathname ) {
+            routeComponent.render.call(routeComponent);
+          } else {
+            if ( routeComponent.innerHTML ) {
+              //implementation subject to change
+              routeComponent.innerHTML = '';
+            }
+          }
+        }
+      }
+    }
+</script>

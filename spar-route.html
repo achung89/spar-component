@@ -1,0 +1,56 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`spar-route`
+Route component
+
+@demo demo/index.html
+-->
+
+<link rel="import" href="route-behaviors.html"></link>
+<dom-module id="spar-route">
+
+  <template>
+  </template>
+
+  <script>
+    class SpaRoute extends routeBehaviours(Polymer.Element) {
+      static get is() { return 'spar-route'; }
+
+      static get properties() {
+        return { 
+            path: {
+              type: String,
+            },
+            src: {
+              type: String,
+            },
+        }
+      }
+      constructor () {
+        super();
+      }
+            
+      // Will implement with data-binding functionality when needed
+      // injectBoundHTML: function injectBoundHTML(html, element) {
+      //   var template = document.createElement('template', 'dom-bind');
+      //   var doc = template.content.ownerDocument;
+      //   var div = doc.createElement('div');
+      //   div.innerHTML = html;
+      //   template.content.appendChild(div);
+      //   while (element.firstChild) {
+      //       element.removeChild(element.firstChild);
+      //   }
+      //   element.appendChild(Polymer.Base.instanceTemplate(template));
+      // },
+      // isLoaded: function() {
+      //   return 
+      // },
+
+   
+    };
+  </script>
+  <script>
+
+  </script>
+</dom-module>

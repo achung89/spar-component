@@ -1,0 +1,13 @@
+FROM node:boron
+
+RUN npm install -g bower
+RUN npm install -g polymer-cli@next
+RUN mkdir -p /code
+WORKDIR /code
+COPY bower.json /code/
+ENV POLYMER_CLI_HOME /code
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+RUN bower install
+EXPOSE 8081
+EXPOSE 8080
+CMD bash

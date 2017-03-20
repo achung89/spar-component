@@ -1,12 +1,14 @@
 <link rel='import' href='helper-functions.html'></script>
 <script>
+
 var routeBehaviours = function routeBehaviors(superClass) {
   var _routeComponents = [];
-  
-  window.addEventListener('popstate',handleStateChange.bind(this,_routeComponents));
+  var handleBound = ()=>((state)=>handleStateChange.call(this,state,_routeComponents))
+  window.addEventListener('popstate',handleBound());
   return class extends superClass {
     
     ready() {
+      super.ready();
       _routeComponents.push(this);
       console.log(_routeComponents);
       if(!loadListenerAttached) {
@@ -16,7 +18,7 @@ var routeBehaviours = function routeBehaviors(superClass) {
       }
     }
 
-    render() {
+    __render() {
       //console.log(this.path);
       var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
       //check index component for children in light DOM 
@@ -44,6 +46,7 @@ var routeBehaviours = function routeBehaviors(superClass) {
         //console.log("before invoking",context)
         var parsedNodes = parseXML ( data );
         //console.log(parsedNodes);
+        console.log('hihi',Polymer.dom)
         var nodes = Array.from ( parsedNodes );
         //console.log(nodes);
         context.shadowRoot.innerHTML = '';
@@ -51,7 +54,7 @@ var routeBehaviours = function routeBehaviors(superClass) {
           //console.log(node, context);
         context.shadowRoot.appendChild ( node );
         })
-        context.distributeContent(true); 
+        // context.distributeContent(true); 
         executeEmbeddedJavascript(getScriptsContentInDoc(context.shadowRoot.innerHTML));
         })
         .catch(function errored(err){
@@ -78,6 +81,7 @@ var routeBehaviours = function routeBehaviors(superClass) {
 }
 var loadListenerAttached = false; 
 var handleStateChange = function(event, routeComponents) {
+      console.log('HandleStateChange function invoked', event)
       if( !event.state ) {
       } else if ( event.state._spa_PATH ) {
 
@@ -86,7 +90,7 @@ var handleStateChange = function(event, routeComponents) {
 
           routeComponent = routeComponents[i];
           if ( routeComponent.path === pathname ) {
-            routeComponent.render.call(routeComponent);
+            routeComponent.__render.call(routeComponent);
           } else {
             if ( routeComponent.innerHTML ) {
               //implementation subject to change

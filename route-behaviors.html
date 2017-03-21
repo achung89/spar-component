@@ -5,20 +5,16 @@ var routeBehaviours = function routeBehaviors(superClass) {
   var _routeComponents = [];
   var handleBound = ()=>((state)=>handleStateChange.call(this,state,_routeComponents))
   window.addEventListener('popstate',handleBound());
+  window.addEventListener('DOMConentLoaded',initializeRoutes())
   return class extends superClass {
     
     ready() {
       super.ready();
       _routeComponents.push(this);
-      console.log(_routeComponents);
-      if(!loadListenerAttached) {
-          window.history.pushState({'_spa_PATH':'/'},'','/');
-          dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
-          loadListenerAttached = true;
-      }
+      // console.log(_routeComponents);
     }
 
-    __render() {
+    render() {
       //console.log(this.path);
       var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
       //check index component for children in light DOM 
@@ -43,18 +39,21 @@ var routeBehaviours = function routeBehaviors(superClass) {
           return data.text();
         })
         .then(function(data) {
-        //console.log("before invoking",context)
+        // below commented since innerHTML seems updated all nodes accordingly
+        console.log("before invoking",context)
         var parsedNodes = parseXML ( data );
-        //console.log(parsedNodes);
-        console.log('hihi',Polymer.dom)
-        var nodes = Array.from ( parsedNodes );
+        console.dir(parsedNodes);
+        // var nodes = Array.from ( parsedNodes );
         //console.log(nodes);
+        console.dir(context);
         context.shadowRoot.innerHTML = '';
-        nodes.forEach ( function ( node ) {
-          //console.log(node, context);
-        context.shadowRoot.appendChild ( node );
-        })
-        // context.distributeContent(true); 
+        // nodes.forEach ( function ( node ) {
+        //   //console.log(node, context);
+        // context.shadowRoot.appendChild ( node );
+        // })
+        context.root.appendChild(parsedNodes);
+        // context.distributeSlot(true); 
+        // context.innerHTML=data;
         executeEmbeddedJavascript(getScriptsContentInDoc(context.shadowRoot.innerHTML));
         })
         .catch(function errored(err){
@@ -90,11 +89,11 @@ var handleStateChange = function(event, routeComponents) {
 
           routeComponent = routeComponents[i];
           if ( routeComponent.path === pathname ) {
-            routeComponent.__render.call(routeComponent);
+            routeComponent.render.call(routeComponent);
           } else {
             if ( routeComponent.innerHTML ) {
               //implementation subject to change
-              routeComponent.innerHTML = '';
+              routeComponent.shadowRoot.innerHTML = '';
             }
           }
         }

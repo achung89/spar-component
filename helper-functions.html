@@ -4,10 +4,15 @@ function parseXML(xmlString) {
   var wrapper= document.createElement('div');
   wrapper.innerHTML= xmlString;
   var div= wrapper.firstChild;
-  
-  return wrapper.childNodes;
-}
+  var fragment = document.createDocumentFragment();
+  Array.from(wrapper.childNodes).forEach((node)=>{
+    console.log(node);
+    fragment.appendChild(node);
+  })
 
+  return fragment;
+}
+// function distributeSlots()
 function executeEmbeddedJavascript(scripts) {
   scripts.forEach( function(scriptText){
     var head = document.getElementsByTagName("head")[0] ||
@@ -25,7 +30,10 @@ function executeEmbeddedJavascript(scripts) {
     head.removeChild(script);
   });
 }
-
+function initializeRoutes(){
+  window.history.pushState({'_spa_PATH':'/'},'','/');
+  dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
+}
 function getScriptsContentInDoc(innerHTML){
   var scriptContentRE = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
 

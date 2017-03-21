@@ -1,5 +1,6 @@
+
 <div>
-    <content></content>
+    <slot></slot>
     <div>   
         Text node
           
@@ -7,11 +8,11 @@
     <script type='text/javascript'> console.log('nestedScriptTag');</script>
 </div>
 Text Node
+<slot></slot>
 <div></div>
 <a></a>
 <script type='text/javascript'> console.log('hihi');</script>
 
 <audio src="hahaha"></audio>
-<div><span><script type='text/javascript'> console.log('nestedScriptTag2');</script></span><script type='text/javascript'> console.log('nestedScriptTag3');var a = 1;console.log(a); function alpha(hallo){
-                                                                                                                                                                                        console.log('whoo')
-                                                                                                                                                                                        return 1;}</script></div>
+<div><span><script type='text/javascript'> console.log('nestedScriptTag2');</script></span><script type='text/javascript'> console.log('nestedScriptTag3');var a = 1;console.log(a);</script></div>
+                            

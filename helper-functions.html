@@ -44,4 +44,38 @@ function getScriptsContentInDoc(innerHTML){
   }
   return scripts;
 }
+function handlePopChange (event, routeComponents) {
+      // console.log('HandleStateChange function invoked', event)
+      console.trace();
+      console.log(event,routeComponents)
+      if( !event.state ) {
+      } else if ( event.state._spa_PATH ) {
+
+        let pathname = event.state._spa_PATH;
+        for ( var i = 0; i < routeComponents.length; i++ ) {
+
+          routeComponent = routeComponents[i];
+          if ( routeComponent.path === pathname ) {
+            routeComponent.render.call(routeComponent);
+          } else {
+            if ( routeComponent.innerHTML ) {
+              //implementation subject to change
+              routeComponent.shadowRoot.innerHTML = '';
+            }
+          }
+        }
+      }
+    }
+function handleListenerBound ( handleChangeListener, ...args ) {
+  return ( ...eventArgs ) => {
+    // console.trace();
+    console.log ( eventArgs, args );
+    handleChangeListener(...eventArgs, ...args );
+  }
+}
+
+// function preCacheRoutes () {
+
+// }
+
 </script>

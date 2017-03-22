@@ -1,17 +1,19 @@
 <link rel='import' href='helper-functions.html'></script>
 <script>
 
+window.addEventListener('DOMConentLoaded',initializeRoutes);
+// window.addEventListener('load', preCacheRoutes);
 var routeBehaviours = function routeBehaviors(superClass) {
   var _routeComponents = [];
-  var handleBound = ()=>((state)=>handleStateChange.call(this,state,_routeComponents))
-  window.addEventListener('popstate',handleBound());
-  window.addEventListener('DOMConentLoaded',initializeRoutes())
+  window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
+  console.log(_routeComponents.map(elem=>elem.path));
+
   return class extends superClass {
     
     ready() {
       super.ready();
       _routeComponents.push(this);
-      // console.log(_routeComponents);
+
     }
 
     render() {
@@ -40,21 +42,24 @@ var routeBehaviours = function routeBehaviors(superClass) {
         })
         .then(function(data) {
         // below commented since innerHTML seems updated all nodes accordingly
-        console.log("before invoking",context)
-        var parsedNodes = parseXML ( data );
-        console.dir(parsedNodes);
-        // var nodes = Array.from ( parsedNodes );
-        //console.log(nodes);
-        console.dir(context);
+        // console.log("before invoking",context)
+        // var parsedNodes = parseXML ( data );
+        // console.dir(parsedNodes);
+        // // var nodes = Array.from ( parsedNodes );
+        // //console.log(nodes);
+        // console.dir(context);
         context.shadowRoot.innerHTML = '';
         // nodes.forEach ( function ( node ) {
         //   //console.log(node, context);
         // context.shadowRoot.appendChild ( node );
         // })
-        context.root.appendChild(parsedNodes);
+        // context.root.appendChild(parsedNodes);
         // context.distributeSlot(true); 
-        // context.innerHTML=data;
+ 
+        context.shadowRoot.innerHTML=data;
+
         executeEmbeddedJavascript(getScriptsContentInDoc(context.shadowRoot.innerHTML));
+        //console.trace();
         })
         .catch(function errored(err){
           console.log(err);
@@ -78,25 +83,6 @@ var routeBehaviours = function routeBehaviors(superClass) {
   // },
   }
 }
-var loadListenerAttached = false; 
-var handleStateChange = function(event, routeComponents) {
-      console.log('HandleStateChange function invoked', event)
-      if( !event.state ) {
-      } else if ( event.state._spa_PATH ) {
 
-        let pathname = event.state._spa_PATH;
-        for ( var i = 0; i < routeComponents.length; i++ ) {
 
-          routeComponent = routeComponents[i];
-          if ( routeComponent.path === pathname ) {
-            routeComponent.render.call(routeComponent);
-          } else {
-            if ( routeComponent.innerHTML ) {
-              //implementation subject to change
-              routeComponent.shadowRoot.innerHTML = '';
-            }
-          }
-        }
-      }
-    }
 </script>

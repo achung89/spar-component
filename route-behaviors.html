@@ -3,61 +3,28 @@
 let _routeComponents = [];
 window.addEventListener('load',initializeRoutes);
 window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
-window.addEventListener('load', handleListenerBound(preCacheRoutes, _routeComponents));
 
 var routeBehaviours = function routeBehaviors(superClass) {
-
-
-
   return class extends superClass {
     
     connectedCallback() {
-      console.log('hihi');
-      //assume that each component is instantiated in order of DOM
+      preCacheRoute(this);
+      //assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
-      console.log(_routeComponents.map(elem=>elem.path));
-    }
-    /****/
-    //check to see if src has been specified other-wise default to this.path+'.html'
-    getFileSrc () {
-      if ( this.src ) {
-        var fileSrc = this.src;
-      } else {
-        var fileSrc =  this.path+'.html';
-        //console.log(fileSrc)
-      }
-      return fileSrc;
     }
     render() {
-      console.log('hhihih',this.path);
-
-      let fileSrc = this.getFileSrc();
       var context = this;
-      fetch(fileSrc)
+      fetch(context.src)
         .then(function(data) {
           //console.log(data);
           return data.text();
         })
         .then(function(data) {
-        // below commented since innerHTML seems to parse shadow dom fine
-        // console.log("before invoking",context)
-        // var parsedNodes = parseXML ( data );
-        // console.dir(parsedNodes);
-        // // var nodes = Array.from ( parsedNodes );
-        // //console.log(nodes);
-        // console.dir(context);
+        clearShadowDOM(context);
+        fillShadowDOM(context,data);
 
-        context.shadowRoot.innerHTML = '';
-        // nodes.forEach ( function ( node ) {
-        //   //console.log(node, context);
-        // context.shadowRoot.appendChild ( node );
-        // })
-        // context.root.appendChild(parsedNodes);
-        // context.distributeSlot(true); 
+        executeScriptTags(getScriptsContentInDoc ( data )); 
  
-        context.shadowRoot.innerHTML=data;
-
-        executeScriptTags(getScriptsContentInDoc ( context.shadowRoot.innerHTML ) );
         //console.trace();
         })
         .catch(function errored(err){

@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+
 
 <!--
 `spar-route`
@@ -14,24 +14,26 @@ Route component
   </template>
 
   <script>
-    class SparRoute extends routeBehaviours(HTMLElement) {
+    class SparRoute extends routeBehaviours ( HTMLElement ) {
       static get is() { return 'spar-route'; }
-
-      static get properties() {
-        return { 
-            path: {
-              type: String,
-            },
-            src: {
-              type: String,
-            },
-        }
-      }
       constructor () {
         super();
         this.attachShadow({mode:'open'});
         // console.log('hihi',this);
       }
+      get path() {
+        return this.getAttribute('path');
+      }
+      get src() {
+        if ( this.getAttribute('src') ) {
+          var fileSrc = this.getAttribute('src');
+        } else {
+          var fileSrc =  this.path+'.html';
+        }
+        // console.dir(fileSrc)
+        return fileSrc;
+      }
+
             
       // Will implement when implementing data-binding
       // injectBoundHTML: function injectBoundHTML(html, element) {

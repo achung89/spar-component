@@ -1,4 +1,3 @@
-<link rel="import" href="../polymer/polymer.html">
 
 <dom-module id="spar-link">
   <template>
@@ -6,22 +5,19 @@
   </template>
 
   <script>
-    class SparLink extends Polymer.Element {
+    class SparLink extends HTMLElement {
 
       static get is() { return 'spar-link' }
 
-      static get properties() {
-        return { path: String }
+      get path() {
+        return this.getAttribute('path');
       }
       constructor() {
         super();
         this._navigateTo = this._navigateTo.bind(this);
-        
       }
       //consider creating a remove listener when detached from DOM
-      ready () {
-        
-        super.ready();
+      connectedCallback () {
         // 'tap' event does not trigger, will submit issue
         this.addEventListener('click', this._navigateTo)
         // console.dir(this);

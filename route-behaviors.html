@@ -1,21 +1,24 @@
 <link rel='import' href='helper-functions.html'></script>
 <script>
 let _routeComponents = [];
-document.addEventListener('DOMConentLoaded',initializeRoutes);
+window.addEventListener('load',initializeRoutes);
 window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
 window.addEventListener('load', handleListenerBound(preCacheRoutes, _routeComponents));
+
 var routeBehaviours = function routeBehaviors(superClass) {
 
 
-  console.log(_routeComponents.map(elem=>elem.path));
 
   return class extends superClass {
     
     ready() {
       super.ready();
-      //assume that each component is instantiated in order
+      //assume that each component is instantiated in order of DOM
       _routeComponents.push(this);
+      console.log(_routeComponents.map(elem=>elem.path));
     }
+    /****/
+    //check to see if src has been specified other-wise default to this.path+'.html'
     getFileSrc () {
       if ( this.src ) {
         var fileSrc = this.src;
@@ -26,18 +29,8 @@ var routeBehaviours = function routeBehaviors(superClass) {
       return fileSrc;
     }
     render() {
-      //console.log(this.path);
-      var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
-      //check index component for children in light DOM 
-      /**needs edit to exclude pathnames that end in '/'**/
-      if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
-        if ( !this.src ) {
-          this.shadowRoot.appendChild ( document.createElement('slot') );
-          return;
-        }
-      }
-      /****/
-      //check to see if src has been specified other-wise default to this.path+'.html'
+      console.log('hhihih',this.path);
+
       let fileSrc = this.getFileSrc();
       var context = this;
       fetch(fileSrc)
@@ -46,13 +39,14 @@ var routeBehaviours = function routeBehaviors(superClass) {
           return data.text();
         })
         .then(function(data) {
-        // below commented since innerHTML seems updated all nodes accordingly
+        // below commented since innerHTML seems to parse shadow dom fine
         // console.log("before invoking",context)
         // var parsedNodes = parseXML ( data );
         // console.dir(parsedNodes);
         // // var nodes = Array.from ( parsedNodes );
         // //console.log(nodes);
         // console.dir(context);
+
         context.shadowRoot.innerHTML = '';
         // nodes.forEach ( function ( node ) {
         //   //console.log(node, context);
@@ -63,7 +57,7 @@ var routeBehaviours = function routeBehaviors(superClass) {
  
         context.shadowRoot.innerHTML=data;
 
-        executeEmbeddedJavascript(getScriptsContentInDoc(context.shadowRoot.innerHTML));
+        executeScriptTags(getScriptsContentInDoc ( context.shadowRoot.innerHTML ) );
         //console.trace();
         })
         .catch(function errored(err){

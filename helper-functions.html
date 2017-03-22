@@ -1,19 +1,18 @@
 <script type='text/javascript'>
-function parseXML(xmlString) {
-  //just one approach, time will tell if another one will be implemented
-  var wrapper= document.createElement('div');
-  wrapper.innerHTML= xmlString;
-  var div= wrapper.firstChild;
-  var fragment = document.createDocumentFragment();
-  Array.from(wrapper.childNodes).forEach((node)=>{
-    console.log(node);
-    fragment.appendChild(node);
-  })
+// function parseXML(xmlString) {
+//   //just one approach, time will tell if another one will be implemented
+//   var wrapper= document.createElement('div');
+//   wrapper.innerHTML= xmlString;
+//   var div= wrapper.firstChild;
+//   var fragment = document.createDocumentFragment();
+//   Array.from(wrapper.childNodes).forEach((node)=>{
+//     console.log(node);
+//     fragment.appendChild(node);
+//   })
 
-  return fragment;
-}
-// function distributeSlots()
-function executeEmbeddedJavascript(scripts) {
+//   return fragment;
+// }
+function executeScriptTags(scripts) {
   scripts.forEach( function(scriptText){
     var head = document.getElementsByTagName("head")[0] ||
               document.documentElement,
@@ -29,10 +28,13 @@ function executeEmbeddedJavascript(scripts) {
     head.removeChild(script);
   });
 }
+
 function initializeRoutes(){
+  console.log('DomContentLoaded');
   window.history.pushState({'_spa_PATH':'/'},'','/');
   dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
 }
+
 function getScriptsContentInDoc(innerHTML){
   var scriptContentRE = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
 
@@ -43,28 +45,30 @@ function getScriptsContentInDoc(innerHTML){
   }
   return scripts;
 }
+
 function handlePopChange (event, routeComponents) {
       // console.log('HandleStateChange function invoked', event)
-      console.trace();
-      console.log(event,routeComponents)
+  console.trace();
+  console.log(event,routeComponents)
 
-      if ( event.state && event.state._spa_PATH ) {
+  if ( event.state && event.state._spa_PATH ) {
 
-        let pathname = event.state._spa_PATH;
-        for ( var i = 0; i < routeComponents.length; i++ ) {
+    let pathname = event.state._spa_PATH;
+    for ( var i = 0; i < routeComponents.length; i++ ) {
 
-          routeComponent = routeComponents[i];
-          if ( routeComponent.path === pathname ) {
-            routeComponent.render.call(routeComponent);
-          } else {
-            if ( routeComponent.innerHTML ) {
-              //implementation subject to change
-              routeComponent.shadowRoot.innerHTML = '';
-            }
-          }
+      routeComponent = routeComponents[i];
+      if ( routeComponent.path === pathname ) {
+        routeComponent.render.call(routeComponent);
+      } else {
+        if ( routeComponent.innerHTML ) {
+          //implementation subject to change
+          routeComponent.shadowRoot.innerHTML = '';
         }
       }
     }
+  }
+}
+
 function handleListenerBound ( handleChangeListener, ...args ) {
   return ( ...eventArgs ) => {
     // console.trace();
@@ -76,7 +80,7 @@ function handleListenerBound ( handleChangeListener, ...args ) {
 function preCacheRoutes (e, preCachedComponents) {
   (preCachedComponents.reduce( ( chain, elem )=>{
     return chain.then((data) => {
-      console.log(data);
+      // console.log(data);
       return fetch(elem.getFileSrc())
     })
   }, Promise.resolve())).catch(err=>console.log(err));

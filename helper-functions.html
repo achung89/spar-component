@@ -25,7 +25,6 @@ function executeEmbeddedJavascript(scripts) {
     } catch(e) {
       script.text = scriptText;
     }
-
     head.insertBefore(script, head.firstChild);
     head.removeChild(script);
   });
@@ -48,8 +47,8 @@ function handlePopChange (event, routeComponents) {
       // console.log('HandleStateChange function invoked', event)
       console.trace();
       console.log(event,routeComponents)
-      if( !event.state ) {
-      } else if ( event.state._spa_PATH ) {
+
+      if ( event.state && event.state._spa_PATH ) {
 
         let pathname = event.state._spa_PATH;
         for ( var i = 0; i < routeComponents.length; i++ ) {
@@ -70,12 +69,17 @@ function handleListenerBound ( handleChangeListener, ...args ) {
   return ( ...eventArgs ) => {
     // console.trace();
     console.log ( eventArgs, args );
-    handleChangeListener(...eventArgs, ...args );
+    handleChangeListener.call(this, ...eventArgs, ...args );
   }
 }
 
-// function preCacheRoutes () {
-
-// }
+function preCacheRoutes (e, preCachedComponents) {
+  (preCachedComponents.reduce( ( chain, elem )=>{
+    return chain.then((data) => {
+      console.log(data);
+      return fetch(elem.getFileSrc())
+    })
+  }, Promise.resolve())).catch(err=>console.log(err));
+}
 
 </script>

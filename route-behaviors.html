@@ -1,39 +1,44 @@
 <link rel='import' href='helper-functions.html'></script>
 <script>
-
-window.addEventListener('DOMConentLoaded',initializeRoutes);
-// window.addEventListener('load', preCacheRoutes);
+let _routeComponents = [];
+document.addEventListener('DOMConentLoaded',initializeRoutes);
+window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
+window.addEventListener('load', handleListenerBound(preCacheRoutes, _routeComponents));
 var routeBehaviours = function routeBehaviors(superClass) {
-  var _routeComponents = [];
-  window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
+
+
   console.log(_routeComponents.map(elem=>elem.path));
 
   return class extends superClass {
     
     ready() {
       super.ready();
+      //assume that each component is instantiated in order
       _routeComponents.push(this);
-
     }
-
-    render() {
-      //console.log(this.path);
-      var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
-      //check index component for children in light DOM 
-      if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
-        if ( !this.src ) {
-          this.shadowRoot.appendChild ( document.createElement('slot') );
-          return;
-        }
-      }
-      //check to see if src has been specified other-wise default to this.path+'.html'
+    getFileSrc () {
       if ( this.src ) {
         var fileSrc = this.src;
       } else {
         var fileSrc =  this.path+'.html';
         //console.log(fileSrc)
       }
-
+      return fileSrc;
+    }
+    render() {
+      //console.log(this.path);
+      var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
+      //check index component for children in light DOM 
+      /**needs edit to exclude pathnames that end in '/'**/
+      if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
+        if ( !this.src ) {
+          this.shadowRoot.appendChild ( document.createElement('slot') );
+          return;
+        }
+      }
+      /****/
+      //check to see if src has been specified other-wise default to this.path+'.html'
+      let fileSrc = this.getFileSrc();
       var context = this;
       fetch(fileSrc)
         .then(function(data) {

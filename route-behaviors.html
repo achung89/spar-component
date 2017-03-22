@@ -11,8 +11,8 @@ var routeBehaviours = function routeBehaviors(superClass) {
 
   return class extends superClass {
     
-    ready() {
-      super.ready();
+    connectedCallback() {
+      console.log('hihi');
       //assume that each component is instantiated in order of DOM
       _routeComponents.push(this);
       console.log(_routeComponents.map(elem=>elem.path));

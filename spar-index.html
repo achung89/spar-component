@@ -12,14 +12,15 @@ route for index path '/'
   </template>
 
   <script>
-    class SparIndex extends routeBehaviours(Polymer.Element) {
+    class SparIndex extends routeBehaviours(HTMLElement) {
 
       static get is() { return 'spar-index' }
 
       constructor() {
         super();
+        this.attachShadow({mode:'open'});
       }
-      
+
       static get properties() {
         return {
           path: {
@@ -32,6 +33,7 @@ route for index path '/'
       }
       connectedCallback() {
         super.connectedCallback();
+        console.log('hihihihihhi');
         var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
         //console.log(this.textContent.trim(), this.children.length, this.src)
         if(!this.textContent.trim() && this.children.length===0 && !this.src) {

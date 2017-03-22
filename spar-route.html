@@ -14,7 +14,7 @@ Route component
   </template>
 
   <script>
-    class SparRoute extends routeBehaviours(Polymer.Element) {
+    class SparRoute extends routeBehaviours(HTMLElement) {
       static get is() { return 'spar-route'; }
 
       static get properties() {
@@ -29,6 +29,7 @@ Route component
       }
       constructor () {
         super();
+        this.attachShadow({mode:'open'});
         // console.log('hihi',this);
       }
             

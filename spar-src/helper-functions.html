@@ -1,29 +1,26 @@
 <script type='text/javascript'>
 function parseXML(xmlString) {
-  //just one approach, time will tell if another one will be implemented
-  var wrapper= document.createElement('div');
-  wrapper.innerHTML= xmlString;
-  var div= wrapper.firstChild;
-  var fragment = document.createDocumentFragment();
-  Array.from(wrapper.childNodes).forEach((node)=>{
-    console.log(node);
-    fragment.appendChild(node);
-  })
+  // console.log(xmlString);
+  // var domParser = new DOMParser();
+  // var nodes = domParser.parseFromString(xmlString,'text/xml');
+  // var fragment = document.createDocumentFragment();
 
-  return fragment;
+  // fragment.appendChild(nodes);
+
+  // console.dir(fragment);
+  // return fragment;
+
+  //creates document fragment from string
+  return document.createRange().createContextualFragment(xmlString);
 }
 function executeScriptTags(scripts) {
-  scripts.forEach( function appendScriptTag(scriptText){
-    var head = document.getElementsByTagName("head")[0] ||
-              document.documentElement,
-    script = document.createElement("script");
-
-    script.type = "text/javascript";
-    try {
-      script.appendChild(document.createTextNode(scriptText));      
-    } catch(e) {
-      script.text = scriptText;
-    }
+  console.log(scripts);
+  var head = document.getElementsByTagName("head")[0] ||
+             document.documentElement;
+  scripts.forEach ( function appendScriptTag(scriptText) {
+    var script = parseXML(scriptText);
+    // console.dir(script.childNodes[0]);
+    var script = script.childNodes[0];
     head.insertBefore(script, head.firstChild);
     head.removeChild(script);
   });
@@ -35,14 +32,10 @@ function initializeRoutes(){
   dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
 }
 
-function getScriptsContentInDoc(innerHTML){
-  var scriptContentRE = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
-
-  var match;
-  var scripts = [];
-  while (match = scriptContentRE.exec(innerHTML)) {
-    scripts.push(match[1]);
-  }
+function getScriptTags( document ){
+  var scriptContentRE = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
+  var scripts = document.match(scriptContentRE)
+  // console.log('scripts', document,scripts);
   return scripts;
 }
 

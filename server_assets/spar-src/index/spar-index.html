@@ -1,0 +1,44 @@
+
+
+<!--
+`spar-index`
+route for index path '/'
+
+@demo demo/index.html 
+-->
+<link rel="import" href="../behaviors/route-behaviors.html"></link>
+  <script>
+    class SparIndex extends routeBehaviours ( HTMLElement ) {
+
+      static get is() { return 'spar-index' }
+
+      constructor() {
+        super();
+        this.attachShadow({mode:'open'});
+      }
+      get path() {
+        return '/';
+      }
+      get src(){
+        return this.getAttribute('src');
+      }
+      connectedCallback() {
+        super.connectedCallback();
+        var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
+        //console.log(this.textContent.trim(), this.children.length, this.src)
+        if(!this.textContent.trim() && this.children.length===0 && !this.src) {
+          console.warn('Default content exception: Index routes should contain child nodes or have a "src" attribute with a file path');
+        } else {
+          //check index component for children in light DOM 
+          /**needs edit to exclude pathnames that end in '/'**/
+          if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
+            if ( !this.src ) {
+              this.shadowRoot.appendChild ( document.createElement('slot') );
+            } 
+          }
+        }
+      }
+    };
+
+    customElements.define(SparIndex.is, SparIndex);
+  </script>

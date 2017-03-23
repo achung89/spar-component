@@ -1,0 +1,7 @@
+<script>
+  globalFnDeclaration('This string passed to a remote script tag and was appended to a third route');
+  var string = globalFnExpression('This string was passed to and returned from a remote script tag and was appended to a third route<br></br>');
+  var div = document.createElement('div');
+  div.innerHTML = string + globalStr;
+  document.querySelector('#aboutus-path1').shadowRoot.querySelector('#testDiv').appendChild(div);
+</script>

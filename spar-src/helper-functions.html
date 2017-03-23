@@ -53,22 +53,22 @@ function handlePopChange (event, routeComponents) {
     let pathname = event.state._spa_PATH;
     //console.time('forloop')
     for ( let i = 0; i < routeComponents.length; i++ ) {
-        routeComponent = routeComponents[i];
-        if ( routeComponent.path === pathname ) {
-          
-          routeComponent.render.call(routeComponent);
-        } else {
-          if ( routeComponent.shadowRoot.innerHTML ) {
-            //implementation subject to change
+      routeComponent = routeComponents[i];
+      if ( routeComponent.path === pathname ) {
+        
+        routeComponent.render.call(routeComponent);
+      } else {
+        if ( routeComponent.shadowRoot.innerHTML ) {
+          //implementation subject to change
 
-            routeComponent.shadowRoot.innerHTML = '';
+          routeComponent.shadowRoot.innerHTML = '';
 
-          }
         }
       }
     }
-    //console.timeEnd('forloop');
   }
+    //console.timeEnd('forloop');
+}
 
 
 function handleListenerBound ( handleChangeListener, ...args ) {
@@ -83,15 +83,14 @@ function clearShadowDOM(component){
   component.shadowRoot.innerHTML = '';
 }
 function fillShadowDOM(component, content) {
-        // below commented since innerHTML seems to parse shadow dom fine
-        // console.log("before invoking",context)
-        var parsedNodes = parseXML ( content );
-        parsedNodes.querySelectorAll('script').forEach(function(script) {
-          script.src = `${window.location.origin}/${script.src}`;
-        })
-        component.shadowRoot.appendChild(parsedNodes);
-        //console.trace();
-
+  // below commented since innerHTML seems to parse shadow dom fine
+  // console.log("before invoking",context)
+  var parsedNodes = parseXML ( content );
+  parsedNodes.querySelectorAll('script').forEach(function(script) {
+    script.src = `${window.location.origin}/${script.src}`;
+  })
+  component.shadowRoot.appendChild(parsedNodes);
+  //console.trace();
 }
 function preCacheRoute(elementToCache) {
   //consider using link preload for precaching

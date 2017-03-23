@@ -1,13 +1,14 @@
 version: '3'
+
 services:
   web:
     build:
-      context: .
       dockerfile: DockerFileDev
+      context: .
+    volumes:
+      - .:/code
+      - /code/node_modules
+      - /code/bower_components
+      - /code/server_assets/bower_components
     ports:
       - "8080:8080"
-      - "8081:8081"
-    command: polymer serve -H 0.0.0.0
-    volumes: 
-      - .:/code
-      - /code/bower_components

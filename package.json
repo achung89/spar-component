@@ -1,0 +1,23 @@
+{
+  "name": "single-page-application-router",
+  "version": "1.0.0",
+  "description": "Route component",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.15.2",
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achung89/spar-component.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/achung89/spar-component/issues"
+  },
+  "homepage": "https://github.com/achung89/spar-component#readme"
+}

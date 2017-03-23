@@ -18,7 +18,11 @@ app.use(router1);
 app.use('/two', router2)
 app.use('/three', express.static(path.join(__dirname, '../server_assets')));
 
-app.listen(8080);
+app.listen(8080, function(err){
+  if(err) {
+    throw err;
+  }
+});
 /**the following routes test the service from a build folder */
 // appStatAssets.use(express.static(path.join(__dirname, 'server_assets')));
 

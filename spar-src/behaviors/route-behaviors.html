@@ -26,10 +26,10 @@ var routeBehaviours = function routeBehaviors(superClass) {
         .then(function(data) {
         clearShadowDOM(context);
         fillShadowDOM(context,data);
-        var scriptTags = getScriptTags( data );
-        if(scriptTags){
-          executeScriptTags(scriptTags); 
-        }
+        // var scriptTags = getScriptTags( data );
+        // if(scriptTags){
+        //   executeScriptTags(scriptTags); 
+        // }
         //console.trace();
         })
         .catch(function errored(err){

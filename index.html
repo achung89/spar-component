@@ -18,12 +18,20 @@
   This is the test page for spar component.  Routes are rendered below.
   <br></br>
   <br></br>
-  <spar-index id='default-content-index'> hello there </spar-index>
+  <spar-index id='index-default-content'> hello there </spar-index>
+  <spar-route id='class-div-1' path='home' src="src/home/normalShadowDom.htm"></spar-route>
   <spar-link path='about us'>click here to navigate to about us page</spar-link>
-  <spar-index src='src/index.html' id='file-index'> </spar-index>
+
+  <spar-index src='src/index.html' id='index-file'> </spar-index>
   <spar-route id='aboutus-path1' path='about us' src='src/about us/page1.html'> </spar-route>
+  <spar-route id='class-div-2' path='home' src="src/home/fellowShadowDOM.html"></spar-route>
   <spar-route id='aboutus-src-js' path='about us' src='src/about us/source of javascript.html'> </spar-route>
+  <spar-route id='script-src' path='home' src="src/home/Srctag.html"></spar-route>
   <spar-route id='aboutus-invoked-js' path='about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
+  <spar-route id='aboutus-slot' path='about us' src="src/about us/ne$t@d S!ots.html"><div>this div element was in the spar-route tag</div></spar-route>
+  <spar-link path='home'>click here to navigate to home page</spar-link>
   
+
+
 </body>
 </html>

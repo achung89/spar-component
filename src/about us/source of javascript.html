@@ -1,0 +1,12 @@
+<script>
+  function globalFnDeclaration(arg) {
+    var div = document.createElement('div');
+    div.id = 'attachedDiv';
+    div.innerHTML = arg;
+    document.querySelector('#divTag').appendChild(div);
+  }
+  var globalFnExpression = function(arg) {
+    return arg;
+  }
+  var globalStr = "This global variable was passed and appended across routes";
+</script>

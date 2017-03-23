@@ -1,19 +1,19 @@
 <script type='text/javascript'>
-// function parseXML(xmlString) {
-//   //just one approach, time will tell if another one will be implemented
-//   var wrapper= document.createElement('div');
-//   wrapper.innerHTML= xmlString;
-//   var div= wrapper.firstChild;
-//   var fragment = document.createDocumentFragment();
-//   Array.from(wrapper.childNodes).forEach((node)=>{
-//     console.log(node);
-//     fragment.appendChild(node);
-//   })
+function parseXML(xmlString) {
+  //just one approach, time will tell if another one will be implemented
+  var wrapper= document.createElement('div');
+  wrapper.innerHTML= xmlString;
+  var div= wrapper.firstChild;
+  var fragment = document.createDocumentFragment();
+  Array.from(wrapper.childNodes).forEach((node)=>{
+    console.log(node);
+    fragment.appendChild(node);
+  })
 
-//   return fragment;
-// }
+  return fragment;
+}
 function executeScriptTags(scripts) {
-  scripts.forEach( function(scriptText){
+  scripts.forEach( function appendScriptTag(scriptText){
     var head = document.getElementsByTagName("head")[0] ||
               document.documentElement,
     script = document.createElement("script");
@@ -30,6 +30,7 @@ function executeScriptTags(scripts) {
 }
 
 function initializeRoutes(){
+  console.log('Routes Initializing');
   window.history.pushState({'_spa_PATH':'/'},'','/');
   dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
 }
@@ -46,15 +47,14 @@ function getScriptsContentInDoc(innerHTML){
 }
 
 function handlePopChange (event, routeComponents) {
+  console.trace();
       // console.log('HandleStateChange function invoked', event)
-  // console.log(event,routeComponents)
-
+  console.log(event,routeComponents.map(elem=>elem.src))
   if ( event.state && event.state._spa_PATH ) {
 
     let pathname = event.state._spa_PATH;
     //console.time('forloop')
     for ( let i = 0; i < routeComponents.length; i++ ) {
-      setTimeout(()=>{
         routeComponent = routeComponents[i];
         if ( routeComponent.path === pathname ) {
           
@@ -67,14 +67,15 @@ function handlePopChange (event, routeComponents) {
 
           }
         }
-      },0)
+      }
     }
     //console.timeEnd('forloop');
   }
-}
+
 
 function handleListenerBound ( handleChangeListener, ...args ) {
   return ( ...eventArgs ) => {
+
     // console.trace();
     // console.log ( eventArgs, args );
     handleChangeListener.call(this, ...eventArgs, ...args );
@@ -84,27 +85,18 @@ function clearShadowDOM(component){
   component.shadowRoot.innerHTML = '';
 }
 function fillShadowDOM(component, content) {
-          // below commented since innerHTML seems to parse shadow dom fine
+        // below commented since innerHTML seems to parse shadow dom fine
         // console.log("before invoking",context)
-        // var parsedNodes = parseXML ( data );
-        // console.dir(parsedNodes);
-        // // var nodes = Array.from ( parsedNodes );
-        // //console.log(nodes);
-        // console.dir(context);
-
-        // nodes.forEach ( function ( node ) {
-        //   //console.log(node, context);
-        // context.shadowRoot.appendChild ( node );
-        // })
-        // context.root.appendChild(parsedNodes);
-        component.shadowRoot.innerHTML=content;
+        var parsedNodes = parseXML ( content );
+        component.shadowRoot.appendChild(parsedNodes);
         //console.trace();
 
 }
 function preCacheRoute(elementToCache) {
-
+  //consider using link preload for precaching
   //console.trace();
   //console.log('element precached',elementToCache)
+  console.log(elementToCache);
   return fetch(elementToCache.src);
   // (elementsToCache.reduce( ( chain, elem )=>{
  

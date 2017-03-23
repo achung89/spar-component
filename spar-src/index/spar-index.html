@@ -1,4 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
+
 
 <!--
 `spar-index`
@@ -6,11 +6,7 @@ route for index path '/'
 
 @demo demo/index.html 
 -->
-<link rel="import" href="route-behaviors.html"></link>
-<dom-module id="spar-index">
-  <template>
-  </template>
-
+<link rel="import" href="../behaviors/route-behaviors.html"></link>
   <script>
     class SparIndex extends routeBehaviours ( HTMLElement ) {
 
@@ -27,25 +23,22 @@ route for index path '/'
         return this.getAttribute('src');
       }
       connectedCallback() {
-        setTimeout(()=>{
-          super.connectedCallback();
-          var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
-          //console.log(this.textContent.trim(), this.children.length, this.src)
-          if(!this.textContent.trim() && this.children.length===0 && !this.src) {
-            console.warn('Default content exception: Index routes should contain child nodes or have a "src" attribute with a file path');
-          } else {
-            //check index component for children in light DOM 
-            /**needs edit to exclude pathnames that end in '/'**/
-            if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
-              if ( !this.src ) {
-                this.shadowRoot.appendChild ( document.createElement('slot') );
-              } 
-            }
+        super.connectedCallback();
+        var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
+        //console.log(this.textContent.trim(), this.children.length, this.src)
+        if(!this.textContent.trim() && this.children.length===0 && !this.src) {
+          console.warn('Default content exception: Index routes should contain child nodes or have a "src" attribute with a file path');
+        } else {
+          //check index component for children in light DOM 
+          /**needs edit to exclude pathnames that end in '/'**/
+          if( (relativePathname ==='/' || relativePathname ==='/index.html') && this.path === '/') {
+            if ( !this.src ) {
+              this.shadowRoot.appendChild ( document.createElement('slot') );
+            } 
           }
-        },0);
+        }
       }
-
     };
+
     customElements.define(SparIndex.is, SparIndex);
   </script>
-</dom-module>

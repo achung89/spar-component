@@ -5,10 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>spar component test page</title>
+  <script src='/spar-src/polyfill.js'></script>
+  <!--<link rel='import' href='spar-src/helper-functions.html'>
+  <link rel='import' href='spar-src/behaviors/route-behaviors.html'>-->
+
+  <link rel='import' href='spar-src/spar-route.html'>
+  <link rel='import' href='spar-src/index/spar-index.html'>
+
+  <link rel='import' href='spar-src/spar-link.html'>
 </head>
 <body>
   This is the test page for spar component.  Routes are rendered below.
   <br></br>
   <br></br>
+  <spar-index id='default-content-index'> hello there </spar-index>
+  <spar-link path='about us'>click here to navigate to about us page</spar-link>
+  <spar-index src='src/index.html' id='file-index'> </spar-index>
+  <spar-route id='aboutus-path1' path='about us' src='src/about us/page1.html'> </spar-route>
+  <spar-route id='aboutus-src-js' path='about us' src='src/about us/source of javascript.html'> </spar-route>
+  <spar-route id='aboutus-invoked-js' path='about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
+  
 </body>
 </html>

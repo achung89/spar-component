@@ -7,11 +7,7 @@ Route component
 @demo demo/index.html
 -->
 
-<link rel="import" href="route-behaviors.html"></link>
-<dom-module id="spar-route">
-
-  <template>
-  </template>
+<link rel="import" href="behaviors/route-behaviors.html"></link>
 
   <script>
     class SparRoute extends routeBehaviours ( HTMLElement ) {
@@ -35,7 +31,7 @@ Route component
       }
 
             
-      // Will implement when implementing data-binding
+      // Will add when implementing shadoDOM data-binding
       // injectBoundHTML: function injectBoundHTML(html, element) {
       //   var template = document.createElement('template', 'dom-bind');
       //   var doc = template.content.ownerDocument;
@@ -53,4 +49,3 @@ Route component
     };
     customElements.define(SparRoute.is, SparRoute);
   </script>
-</dom-module>

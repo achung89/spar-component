@@ -5,7 +5,7 @@ var app = express();
 var appStatAssets = express();
 var path = require('path');
 
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '../')));
 
 router1.get('/', function ( req, res ) {
   res.sendFile(path.join(__dirname, '../index.html'));
@@ -16,7 +16,7 @@ router2.get('/', function ( req,res ) {
 
 app.use(router1);
 app.use('/two', router2)
-app.use('/three', express.static(path.join(__dirname, 'server_assets')));
+app.use('/three', express.static(path.join(__dirname, '../server_assets')));
 
 app.listen(8080);
 /**the following routes test the service from a build folder */

@@ -1,66 +1,51 @@
 <link rel='import' href='../helper-functions.html'>
 <script>
 
-window.addEventListener('load',initializeRoutes);
 
 
 var routeBehaviours = function(superClass) {
   var _routeComponents = [];
   window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
+  window.addEventListener('load',handleListenerBound(initializeRoutes, _routeComponents));
   return class extends superClass {
     
     connectedCallback() {
-
       preCacheRoute(this);
-      //assume that each component is instantiated in order of DOM tree
+      // assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
-      //console.log(_routeComponents);
+      // console.log(_routeComponents);
+    }
+    get src() {
+      return this.getAttribute('src');
     }
     get pathParsed() {
-      var anchor = document.createElement('a');
-      anchor.href = this.path;
+        var stripSlash = this.path.replace(/^\//g,'');
+        var anchor = document.createElement('a');
+        anchor.href = window.location.origin+'/'+stripSlash;
+
       return anchor.pathname;
     }
     render() {
       var context = this;
+
+      if ( !this.src ) {
+        this.shadowRoot.appendChild(document.createElement('slot'));
+        return;
+      }
+
       //console.log('fetching',context.src);
       //need to fix so as to not need window.location
-
-      fetch(`${window.location.origin}/${context.src}`)
-        .then(function(res) {
+      fetch(`${window.location.origin}/${context.src}`).then(function getText(res) {
           // console.log(res);
           return res.text();
-        })
-        .then(function(data) {
+        }).then(function populateDOM(data) {
           clearShadowDOM(context);
           fillShadowDOM(context,data);
-        // var scriptTags = getScriptTags( data );
-        // if(scriptTags){
-        //   executeScriptTags(scriptTags); 
-        // }
-        //console.trace();
-        })
-        .catch(function error(err){
+        }).catch(function error(err){
           console.log(err);
         })
         //console.trace()
     }
-        
-  // Will implement with data-binding functionality when needed
-  // injectBoundHTML: function injectBoundHTML(html, element) {
-  //   var template = document.createElement('template', 'dom-bind');
-  //   var doc = template.content.ownerDocument;
-  //   var div = doc.createElement('div');
-  //   div.innerHTML = html;
-  //   template.content.appendChild(div);
-  //   while (element.firstChild) {
-  //       element.removeChild(element.firstChild);
-  //   }
-  //   element.appendChild(Polymer.Base.instanceTemplate(template));
-  // },
-  // isLoaded: function() {
-  //   return 
-  // },
   }
 }
 var RouteBehaviours = routeBehaviours(HTMLElement);

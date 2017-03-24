@@ -49,16 +49,16 @@
   <spar-link path='about us/dup'>Link: click here to navigate to nested about us page</spar-link>
 
   <spar-index src='src/about us/duplicate pages/index.html' class='index file'> </spar-index>
-  <spar-route class='aboutus-dup path1' path='about us/dup' src='src/about us/duplicate pages/about us/page1.html'> </spar-route>
+  <spar-route class='aboutus-dup path1' path='/about us/dup' src='src/about us/duplicate pages/about us/page1.html'> </spar-route>
   <spar-route class='home-dup class-div-2' path='home/dup' src="src/about us/duplicate pages/home/fellowShadowDOM.html"></spar-route>
   <spar-route class='aboutus-dup src-js' path='about us/dup' src='src/about us/duplicate pages/about us/source of javascript.html'> </spar-route>
-  <spar-route class='home-dup script-src' path='home/dup' src="src/about us/duplicate pages/home/Srctag.html"></spar-route>
+  <spar-route class='home-dup script-src' path='/home/dup' src="src/about us/duplicate pages/home/Srctag.html"></spar-route>
   <spar-route class='aboutus-dup invoked-js' path='about us/dup' src="src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spar-route>
-  <spar-route class='aboutus-dup slot' path='about us/dup' src="src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  <spar-route class='aboutus-dup slot' path='/about us/dup' src="src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
   <spar-link path='home/dup'>Link: click here to navigate to nested home page</spar-link>
   <spar-route path='home/dup' class="home-dup default-route-value">The below spar-route is a slot content default</spar-route>
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
-  <spar-route path='home/dup' class="home-dup default-route-value">The below route is the slot content overwritten</div>
+  <spar-route path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</div>
   <!--Slot not working for some reason-->
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
   <script>

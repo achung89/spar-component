@@ -1,66 +1,34 @@
 <script type='text/javascript'>
 function parseXML(xmlString) {
   // console.log(xmlString);
-
-  // DOMParser algorithm
-  // var domParser = new DOMParser();
-  // var nodes = domParser.parseFromString(xmlString,'text/xml');
-  // var fragment = document.createDocumentFragment();
-  // fragment.appendChild(nodes);
-  // console.dir(fragment);
-  // return fragment;
-
-  // template algorithm
-  // var temp = document.createElement('template');
-  // temp.innerHTML = '<div>x</div><span>y</span>';
-  // var frag = temp.content;
-
   //creates document fragment from string
   return document.createRange().createContextualFragment(xmlString);
 }
-// function executeScriptTags(scripts) {
-//   console.log(scripts);
-//   var head = document.getElementsByTagName("head")[0] ||
-//              document.documentElement;
-//   scripts.forEach ( function appendScriptTag(scriptText) {
-//     var script = parseXML(scriptText);
-//     // console.dir(script.childNodes[0]);
-//     var script = script.childNodes[0];
-//     head.insertBefore(script, head.firstChild);
-//     head.removeChild(script);
-//   });
-// }
 
-function initializeRoutes(){
-  console.log('Routes Initializing');
+function initializeRoutes(e, routeComponents){
+  console.log('Routes Initializing',e,routeComponents);
   window.history.pushState({'_spa_PATH':'/'},'','/');
-  dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':'/'}}));
+  renderDiff('/',routeComponents);
 }
 
-// function getScriptTags( document ){
-//   var scriptContentRE = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
-//   var scripts = document.match(scriptContentRE)
-//   // console.log('scripts', document,scripts);
-//   return scripts;
-// }
-
 function handlePopChange (event, routeComponents) {
-  console.trace();
-      // console.log('HandleStateChange function invoked', event)
-  //console.log(event,routeComponents.map(elem=>elem.src))
+  // console.trace();
+  // console.log('HandleStateChange function invoked', event)
+  // console.log(event,routeComponents.map(elem=>elem.src))
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
-    //console.time('forloop')
+    //console.time('render')
     renderDiff(pathname, routeComponents)
+    //console.timeEnd('render');
   }
-    //console.timeEnd('forloop');
+
 }
 
 function renderDiff ( urlPathname, routeComponents ) {
   for ( let i = 0; i < routeComponents.length; i++ ) {
       routeComponent = routeComponents[i];
-      console.log(routeComponent.path,urlPathname)
-      if ( routeComponent.path === urlPathname ) {
+      console.log(routeComponent.pathParsed,urlPathname)
+      if ( routeComponent.pathParsed === urlPathname ) {
         
         routeComponent.render.call(routeComponent);
       } else {
@@ -93,27 +61,17 @@ function fillShadowDOM(component, content) {
     script.src = `${window.location.origin}/${script.src}`;
   })
   var subRoutes = parsedNodes.querySelectorAll('spar-route');
-  console.dir(parsedNodes);
-  console.log(parsedNodes.innerHTML,subRoutes);
   renderDiff(window.location.pathname,subRoutes);
   component.shadowRoot.appendChild(parsedNodes);
 
   //console.trace();
 }
 function preCacheRoute(elementToCache) {
-  //consider using link preload for precaching
-  //console.trace();
-  //console.log('element precached',elementToCache)
-  //console.log(elementToCache);
-  return fetch(elementToCache.src);
-  // (elementsToCache.reduce( ( chain, elem )=>{
- 
-  //   // console.log('element to cache', elem)
-  //   return chain.then((data) => {
-  //     // console.log(data);
-  //     return fetch(elem.getFileSrc())
-  //   })
-  // }, Promise.resolve())).catch(err=>console.log(err));
+  // consider link preload for precaching
+  // algorithm may need change for onload implementation
+  if(elementToCache.src) {
+    fetch(elementToCache.src);
+  }
 }
 
 </script>

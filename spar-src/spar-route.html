@@ -20,15 +20,6 @@ Route component
       get path() {
         return this.getAttribute('path');
       }
-      get src() {
-        if ( this.getAttribute('src') ) {
-          var fileSrc = this.getAttribute('src');
-        } else {
-          var fileSrc =  this.path+'.html';
-        }
-        // console.dir(fileSrc)
-        return fileSrc;
-      }
 
             
       // Will add when implementing shadoDOM data-binding

@@ -1,5 +1,5 @@
   <script>
-    class SparLink extends HTMLElement {
+    class SparLink extends RouteBehaviours {
 
       static get is() { return 'spar-link' }
 
@@ -21,9 +21,8 @@
       }
       _navigateTo() {
         if(window.location.pathname !== this.pathParsed) {
-          window.history.pushState({'_spa_PATH':this.path},'',this.path);
-        
-          dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':this.path}}));
+          window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
+          dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':this.pathParsed}}));
         }
       }
     }

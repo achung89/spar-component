@@ -47,14 +47,20 @@ function initializeRoutes(){
 function handlePopChange (event, routeComponents) {
   console.trace();
       // console.log('HandleStateChange function invoked', event)
-  console.log(event,routeComponents.map(elem=>elem.src))
+  //console.log(event,routeComponents.map(elem=>elem.src))
   if ( event.state && event.state._spa_PATH ) {
-
     let pathname = event.state._spa_PATH;
     //console.time('forloop')
-    for ( let i = 0; i < routeComponents.length; i++ ) {
+    renderDiff(pathname, routeComponents)
+  }
+    //console.timeEnd('forloop');
+}
+
+function renderDiff ( urlPathname, routeComponents ) {
+  for ( let i = 0; i < routeComponents.length; i++ ) {
       routeComponent = routeComponents[i];
-      if ( routeComponent.path === pathname ) {
+      console.log(routeComponent.path,urlPathname)
+      if ( routeComponent.path === urlPathname ) {
         
         routeComponent.render.call(routeComponent);
       } else {
@@ -66,11 +72,7 @@ function handlePopChange (event, routeComponents) {
         }
       }
     }
-  }
-    //console.timeEnd('forloop');
 }
-
-
 function handleListenerBound ( handleChangeListener, ...args ) {
   return ( ...eventArgs ) => {
 
@@ -87,16 +89,22 @@ function fillShadowDOM(component, content) {
   // console.log("before invoking",context)
   var parsedNodes = parseXML ( content );
   parsedNodes.querySelectorAll('script').forEach(function(script) {
+    //doesn't work
     script.src = `${window.location.origin}/${script.src}`;
   })
+  var subRoutes = parsedNodes.querySelectorAll('spar-route');
+  console.dir(parsedNodes);
+  console.log(parsedNodes.innerHTML,subRoutes);
+  renderDiff(window.location.pathname,subRoutes);
   component.shadowRoot.appendChild(parsedNodes);
+
   //console.trace();
 }
 function preCacheRoute(elementToCache) {
   //consider using link preload for precaching
   //console.trace();
   //console.log('element precached',elementToCache)
-  console.log(elementToCache);
+  //console.log(elementToCache);
   return fetch(elementToCache.src);
   // (elementsToCache.reduce( ( chain, elem )=>{
  

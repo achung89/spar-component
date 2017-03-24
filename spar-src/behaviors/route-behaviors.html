@@ -1,11 +1,12 @@
 <link rel='import' href='../helper-functions.html'>
 <script>
-let _routeComponents = [];
-console.log(document.readyState === "complete");
-window.addEventListener('load',initializeRoutes);
-window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
 
-var routeBehaviours = function routeBehaviors(superClass) {
+window.addEventListener('load',initializeRoutes);
+
+
+var routeBehaviours = function(superClass) {
+  var _routeComponents = [];
+  window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
   return class extends superClass {
     
     connectedCallback() {
@@ -13,29 +14,36 @@ var routeBehaviours = function routeBehaviors(superClass) {
       preCacheRoute(this);
       //assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
-      console.log(_routeComponents[0]);
+      //console.log(_routeComponents);
+    }
+    get pathParsed() {
+      var anchor = document.createElement('a');
+      anchor.href = this.path;
+      return anchor.pathname;
     }
     render() {
       var context = this;
-      console.log('fetching',context.src);
+      //console.log('fetching',context.src);
       //need to fix so as to not need window.location
+
       fetch(`${window.location.origin}/${context.src}`)
-        .then(function(data) {
-          //console.log(data);
-          return data.text();
+        .then(function(res) {
+          // console.log(res);
+          return res.text();
         })
         .then(function(data) {
-        clearShadowDOM(context);
-        fillShadowDOM(context,data);
+          clearShadowDOM(context);
+          fillShadowDOM(context,data);
         // var scriptTags = getScriptTags( data );
         // if(scriptTags){
         //   executeScriptTags(scriptTags); 
         // }
         //console.trace();
         })
-        .catch(function errored(err){
+        .catch(function error(err){
           console.log(err);
         })
+        //console.trace()
     }
         
   // Will implement with data-binding functionality when needed
@@ -55,6 +63,6 @@ var routeBehaviours = function routeBehaviors(superClass) {
   // },
   }
 }
-
+var RouteBehaviours = routeBehaviours(HTMLElement);
 
 </script>

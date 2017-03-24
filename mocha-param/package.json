@@ -1,0 +1,93 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "mocha-param",
+        "scope": null,
+        "escapedName": "mocha-param",
+        "name": "mocha-param",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Workdir\\Javascript\\Project\\spar-polymerV2"
+    ]
+  ],
+  "_from": "mocha-param@latest",
+  "_id": "mocha-param@1.0.2",
+  "_inCache": true,
+  "_location": "/mocha-param",
+  "_nodeVersion": "6.9.4",
+  "_npmOperationalInternal": {
+    "host": "packages-18-east.internal.npmjs.com",
+    "tmp": "tmp/mocha-param-1.0.2.tgz_1489941464085_0.7798669240437448"
+  },
+  "_npmUser": {
+    "name": "mikejsdev",
+    "email": "mikejsdev@gmail.com"
+  },
+  "_npmVersion": "3.10.10",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "mocha-param",
+    "scope": null,
+    "escapedName": "mocha-param",
+    "name": "mocha-param",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/mocha-param/-/mocha-param-1.0.2.tgz",
+  "_shasum": "1292164d637808eeb2a51a5eff87a5624b4c551b",
+  "_shrinkwrap": null,
+  "_spec": "mocha-param",
+  "_where": "C:\\Workdir\\Javascript\\Project\\spar-polymerV2",
+  "author": {
+    "name": "mikejsdev"
+  },
+  "bugs": {
+    "url": "https://github.com/mikejsdev/mocha-param/issues"
+  },
+  "dependencies": {},
+  "description": "Parameterized tests for Mocha",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "1292164d637808eeb2a51a5eff87a5624b4c551b",
+    "tarball": "https://registry.npmjs.org/mocha-param/-/mocha-param-1.0.2.tgz"
+  },
+  "gitHead": "e8b2a3344cf2bdeee9e79182546e31d7f1c819d8",
+  "homepage": "https://github.com/mikejsdev/mocha-param#readme",
+  "keywords": [
+    "parameterized",
+    "test",
+    "mocha",
+    "tests"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "maintainers": [
+    {
+      "name": "mikejsdev",
+      "email": "mikejsdev@gmail.com"
+    }
+  ],
+  "name": "mocha-param",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mikejsdev/mocha-param.git"
+  },
+  "scripts": {
+    "test": "mocha ./test/*.js"
+  },
+  "version": "1.0.2"
+}

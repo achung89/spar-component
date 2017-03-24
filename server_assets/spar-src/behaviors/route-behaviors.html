@@ -1,7 +1,7 @@
 <link rel='import' href='../helper-functions.html'>
 <script>
 let _routeComponents = [];
-console.log(document.readyState === "complete");
+//console.log(document.readyState === "complete");
 window.addEventListener('load',initializeRoutes);
 window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
 
@@ -13,11 +13,11 @@ var routeBehaviours = function routeBehaviors(superClass) {
       preCacheRoute(this);
       //assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
-      console.log(_routeComponents[0]);
+      //console.log(_routeComponents[0]);
     }
     render() {
       var context = this;
-      console.log('fetching',context.src);
+      //console.log('fetching',context.src);
       //need to fix so as to not need window.location
       fetch(`${window.location.origin}/${context.src}`)
         .then(function(data) {

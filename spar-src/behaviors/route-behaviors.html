@@ -31,7 +31,7 @@ var SPARouter = (function(superClass) {
       }
       //console.log('fetching',context.src);
       //note: fix so as to not need window.location
-      return fetch(`${window.location.origin}/${context.src}`).then(function getText(res) {
+      return fetch(`${window.location.origin}/${this.src}`).then(function getText(res) {
         // console.log(res);
         return res.text();
       })

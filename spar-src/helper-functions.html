@@ -9,32 +9,37 @@ function parseXML(xmlString) {
 function initializeRoutes(e, routeComponents){
   console.log('Routes Initializing',e,routeComponents);
   window.history.pushState({'_spa_PATH':'/'},'','/');
-  renderDiff('/',routeComponents);
+  initializeDiff('/', routeComponents);
 }
 
 function handlePopChange (event, routeComponents) {
   // console.trace();
   // console.log('HandleStateChange function invoked', event)
   // console.log(event,routeComponents.map(elem=>elem.src))
+  // check to that the popstate was triggered by spar-link
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
     //console.time('render')
-
+    //console.timeEnd('render');
+    // console.count();
+    initializeDiff(pathname, routeComponents);
+  }
+}
+function initializeDiff ( urlPathname, routeComponents )  {
+    var routes = [];
     var nonRoutes = [];
-    routeComponents.forEach(function(comp) {
+    routeComponents.forEach( function ( comp ) {
       if ( comp.pathParsed === urlPathname ) {
+        //console.log(comp.pathParsed, urlPathname)
         routes.push(comp);
       } else {
+        //console.log(comp.pathParsed, urlPathname)
         nonRoutes.push(comp);
       }
     })
-    setTimeout(()=>{clearShadowDOM( nonRoutes );},0);
-    renderDiff( pathname, routeComponents );
-    //console.timeEnd('render');
-    // console.count();
-  }
+    setTimeout(()=>{nonRoutes.forEach((route)=>clearShadowDOM( route ));},0);
+    renderDiff( urlPathname, routes );
 }
-
 function renderDiff ( urlPathname, routeComponents, invokeLater) {
   let  renderSyncFn = renderSyncThunk ( routeComponents.length, invokeLater );
 
@@ -45,7 +50,10 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
   routeComponents.forEach((routeComponent, thkOrderTracker)=>{
 
     routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
-
+      // may need to consider edge case for 'undefined' xml
+      if(typeof xml === 'undefined'){
+        return;
+      }
       xml = parseShadowDOM( routeComponent, xml );
       var subRoutes = xml.querySelectorAll('spar-route');
       if ( subRoutes.length === 0) {
@@ -54,14 +62,12 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
 
         renderDiff ( window.location.pathname, subRoutes, invocLaterThunk (renderSyncFn, thkOrderTracker, routeComponent, xml) );
       }
-
-      console.log(thkOrderTracker);
     });
   });
 }
 function invocLaterThunk(cb, ...arg) {
   return function () {
-    cb(...args);
+    cb(...arg);
   }
 }
 function renderSyncThunk(length, laterCb) {
@@ -73,7 +79,7 @@ function renderSyncThunk(length, laterCb) {
     contents[index] = content;
     if ( index === counter ) {
       while(components[counter]) {
-        console.log(counter);
+        console.log(components[counter], counter);
         clearShadowDOM(components[counter]); 
         components[counter].shadowRoot.appendChild(contents[counter]);
         counter++;
@@ -85,7 +91,7 @@ function renderSyncThunk(length, laterCb) {
   }
 }
 
-function parseShadowDOM(component, content) {
+function parseShadowDOM ( component, content ) {
   // below commented since innerHTML seems to parse shadow dom fine
   // console.log("before invoking",context);
   var parsedNodes = parseXML ( content );
@@ -102,10 +108,12 @@ function handleListenerBound ( handleChangeListener, ...args ) {
   }
 }
 function clearShadowDOM(component) {
-  if ( routeComponent.shadowRoot.innerHTML ) {
-    console.log('Cleared:',component.path);
+  typeof component.shadowRoot === 'undefined' && console.log('undefined shadowroot',component);
+  if ( component.shadowRoot.innerHTML ) {
+    // console.trace();
+    console.log('Cleared:',component,component.path);
     while(component.shadowRoot.firstChild) {
-      component.shadowRoot.removeChild(div.firstChild);
+      component.shadowRoot.removeChild(component.shadowRoot.firstChild);
     }
   }
 }

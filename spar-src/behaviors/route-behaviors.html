@@ -25,28 +25,25 @@ var SPARouter = (function(superClass) {
 
       return anchor.pathname;
     }
-    render() {
-      var context = this;
-
+    fetchOrRender() {
       if ( !this.src ) {
-        this.shadowRoot.appendChild(document.createElement('slot'));
-        return;
+        return Promise.resolve();
       }
-
       //console.log('fetching',context.src);
       //note: fix so as to not need window.location
-      fetch(`${window.location.origin}/${context.src}`).then(function getText(res) {
-          // console.log(res);
-          return res.text();
-        }).then(function populateDOM(data) {
-          clearShadowDOM(context);
-          // console.trace();
-          // console.log(context);
-          fillShadowDOM(context,data);
-        }).catch(function error(err){
-          console.log(err);
-        })
-        //console.trace()
+      return fetch(`${window.location.origin}/${context.src}`).then(function getText(res) {
+        // console.log(res);
+        return res.text();
+      })
+      // .then(function populateDOM(data) {
+      //   clearShadowDOM(context);
+      //   // console.trace();
+      //   // console.log(context);
+      //   fillShadowDOM(context,data);
+      // }).catch(function error(err){
+      //   console.log(err);
+      // })
+      //console.trace()
     }
   }
 })(HTMLElement)

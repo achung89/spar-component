@@ -1,4 +1,5 @@
 <script type='text/javascript'>
+//place all in object
 function parseXML(xmlString) {
   // console.log(xmlString);
   //creates document fragment from string
@@ -18,29 +19,79 @@ function handlePopChange (event, routeComponents) {
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
     //console.time('render')
-    renderDiff(pathname, routeComponents)
-    //console.timeEnd('render');
-    console.count();
-  }
 
+    var nonRoutes = [];
+    routeComponents.forEach(function(comp) {
+      if ( comp.pathParsed === urlPathname ) {
+        routes.push(comp);
+      } else {
+        nonRoutes.push(comp);
+      }
+    })
+    setTimeout(()=>{clearShadowDOM( nonRoutes );},0);
+    renderDiff( pathname, routeComponents );
+    //console.timeEnd('render');
+    // console.count();
+  }
 }
 
-function renderDiff ( urlPathname, routeComponents ) {
-  for ( let i = 0; i < routeComponents.length; i++ ) {
-      routeComponent = routeComponents[i];
-      // console.log(routeComponent.pathParsed,urlPathname)
-      if ( routeComponent.pathParsed === urlPathname ) {
-        
-        routeComponent.render.call(routeComponent);
+function renderDiff ( urlPathname, routeComponents, invokeLater) {
+  let  renderSyncFn = renderSyncThunk ( routeComponents.length, invokeLater );
+
+  //turn into for each
+  if ( routeComponents.length === 0 ) {
+    return; 
+  }
+  routeComponents.forEach((routeComponent, thkOrderTracker)=>{
+
+    routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
+
+      xml = parseShadowDOM( routeComponent, xml );
+      var subRoutes = xml.querySelectorAll('spar-route');
+      if ( subRoutes.length === 0) {
+        renderSyncFn ( thkOrderTracker, routeComponent, xml );
       } else {
-        if ( routeComponent.shadowRoot.innerHTML ) {
-          //implementation subject to change
 
-          routeComponent.shadowRoot.innerHTML = '';
+        renderDiff ( window.location.pathname, subRoutes, invocLaterThunk (renderSyncFn, thkOrderTracker, routeComponent, xml) );
+      }
 
-        }
+      console.log(thkOrderTracker);
+    });
+  });
+}
+function invocLaterThunk(cb, ...arg) {
+  return function () {
+    cb(...args);
+  }
+}
+function renderSyncThunk(length, laterCb) {
+  var components = [];
+  var contents = [];
+  var counter = 0;
+  return function renderSync ( index, component, content ) {
+    components[index] = component;
+    contents[index] = content;
+    if ( index === counter ) {
+      while(components[counter]) {
+        console.log(counter);
+        clearShadowDOM(components[counter]); 
+        components[counter].shadowRoot.appendChild(contents[counter]);
+        counter++;
       }
     }
+    if ( length === counter && laterCb ) {
+      laterCb();
+    }
+  }
+}
+
+function parseShadowDOM(component, content) {
+  // below commented since innerHTML seems to parse shadow dom fine
+  // console.log("before invoking",context);
+  var parsedNodes = parseXML ( content );
+
+  return parsedNodes;
+  //console.trace();
 }
 function handleListenerBound ( handleChangeListener, ...args ) {
   return ( ...eventArgs ) => {
@@ -50,24 +101,16 @@ function handleListenerBound ( handleChangeListener, ...args ) {
     handleChangeListener.call(this, ...eventArgs, ...args );
   }
 }
-function clearShadowDOM(component){
-  component.shadowRoot.innerHTML = '';
+function clearShadowDOM(component) {
+  if ( routeComponent.shadowRoot.innerHTML ) {
+    console.log('Cleared:',component.path);
+    while(component.shadowRoot.firstChild) {
+      component.shadowRoot.removeChild(div.firstChild);
+    }
+  }
 }
-function fillShadowDOM(component, content) {
-  // below commented since innerHTML seems to parse shadow dom fine
-  // console.log("before invoking",context)
-  var parsedNodes = parseXML ( content );
-  // parsedNodes.querySelectorAll('script').forEach(function(script) {
-  //   //doesn't work
-  //   console.log(`${script.src}`);
-  //   script.src = `${script.src}`;
-  // })
-  var subRoutes = parsedNodes.querySelectorAll('spar-route');
-  renderDiff(window.location.pathname,subRoutes);
-  component.shadowRoot.appendChild(parsedNodes);
 
-  //console.trace();
-}
+
 function preCacheRoute(elementToCache) {
   // consider link preload for precaching
   // algorithm may need change for onload implementation
@@ -75,5 +118,6 @@ function preCacheRoute(elementToCache) {
     fetch(elementToCache.src);
   }
 }
+
 
 </script>

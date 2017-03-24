@@ -2,8 +2,8 @@
 <script>
 
 
-
-var routeBehaviours = function(superClass) {
+// to-do make SPARouter propeties not configurable
+var SPARouter = (function(superClass) {
   var _routeComponents = [];
   window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
   window.addEventListener('load',handleListenerBound(initializeRoutes, _routeComponents));
@@ -34,12 +34,14 @@ var routeBehaviours = function(superClass) {
       }
 
       //console.log('fetching',context.src);
-      //need to fix so as to not need window.location
+      //note: fix so as to not need window.location
       fetch(`${window.location.origin}/${context.src}`).then(function getText(res) {
           // console.log(res);
           return res.text();
         }).then(function populateDOM(data) {
           clearShadowDOM(context);
+          // console.trace();
+          // console.log(context);
           fillShadowDOM(context,data);
         }).catch(function error(err){
           console.log(err);
@@ -47,7 +49,6 @@ var routeBehaviours = function(superClass) {
         //console.trace()
     }
   }
-}
-var RouteBehaviours = routeBehaviours(HTMLElement);
+})(HTMLElement)
 
 </script>

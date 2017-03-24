@@ -20,6 +20,7 @@ function handlePopChange (event, routeComponents) {
     //console.time('render')
     renderDiff(pathname, routeComponents)
     //console.timeEnd('render');
+    console.count();
   }
 
 }
@@ -27,7 +28,7 @@ function handlePopChange (event, routeComponents) {
 function renderDiff ( urlPathname, routeComponents ) {
   for ( let i = 0; i < routeComponents.length; i++ ) {
       routeComponent = routeComponents[i];
-      console.log(routeComponent.pathParsed,urlPathname)
+      // console.log(routeComponent.pathParsed,urlPathname)
       if ( routeComponent.pathParsed === urlPathname ) {
         
         routeComponent.render.call(routeComponent);
@@ -56,10 +57,11 @@ function fillShadowDOM(component, content) {
   // below commented since innerHTML seems to parse shadow dom fine
   // console.log("before invoking",context)
   var parsedNodes = parseXML ( content );
-  parsedNodes.querySelectorAll('script').forEach(function(script) {
-    //doesn't work
-    script.src = `${window.location.origin}/${script.src}`;
-  })
+  // parsedNodes.querySelectorAll('script').forEach(function(script) {
+  //   //doesn't work
+  //   console.log(`${script.src}`);
+  //   script.src = `${script.src}`;
+  // })
   var subRoutes = parsedNodes.querySelectorAll('spar-route');
   renderDiff(window.location.pathname,subRoutes);
   component.shadowRoot.appendChild(parsedNodes);

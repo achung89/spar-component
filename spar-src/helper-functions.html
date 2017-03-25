@@ -61,10 +61,10 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
         var subRoutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"]`);
 
         if ( subRoutes.length === 0) {
-          console.log('invoking renderySyncFn', routeComponent)
+          //console.log('invoking renderySyncFn', routeComponent)
           renderSyncFn ( indexTrackerfrThk, routeComponent, xml );
         } else {
-          console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
+          //console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
           renderDiff ( window.location.pathname, subRoutes, invocLaterThunk ( renderSyncFn, indexTrackerfrThk, routeComponent, xml ) );
         }
       });
@@ -86,14 +86,14 @@ function renderSyncThunk(length, laterCb) {
     contents[index] = content;
     if ( index === counter ) {
       while(components[counter]) {
-        console.log(components[counter], counter, length-1);
+        //console.log(components[counter], counter, length-1);
         clearShadowDOM(components[counter]); 
         components[counter].shadowRoot.appendChild(contents[counter]);
         counter++;
       }
     }
     if ( length === counter && laterCb ) {
-      console.log('invocLater was invoked');
+      //console.log('invocLater was invoked');
       laterCb();
     }
   }

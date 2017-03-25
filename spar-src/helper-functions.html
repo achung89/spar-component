@@ -59,10 +59,12 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
         console.log(xml)
         xml = parseShadowDOM( routeComponent, xml );
         //test this express
-        console.log(routeComponent.path);
-        var regex = new RegExp(`^${routeComponent.path}$|^\/${routeComponent.path}$`);
-        var subRoutes = xml.querySelectorAll(`spar-route[path="${regex}"]`);
-        console.dir(xml.children.length);
+        if(routeComponent.path === '/') {
+          var subRoutes = xml.querySelectorAll(`spar-index`);
+        } else {
+          var subRoutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"],spar-route[path="/${routeComponent.path}"]`);
+        }
+        // console.dir(xml.children.length);
         console.log(subRoutes);
         if ( subRoutes.length === 0) {
           //console.log('invoking renderySyncFn', routeComponent)

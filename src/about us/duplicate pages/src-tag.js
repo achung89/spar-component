@@ -6,4 +6,6 @@ if (eles) {
     console.log('The specs have changed, update application')
   })
 }
-document.querySelector('.home.class-div-2').shadowRoot.querySelector('.test-class-2').innerHTML='class selected';
+console.log('src tag in duplicate')
+console.trace();
+document.querySelector('.home-dup.class-div-2').shadowRoot.querySelector('.test-class-2').innerHTML='class selected';

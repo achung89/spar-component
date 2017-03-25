@@ -114,6 +114,7 @@ describe('SPAR-componets', function() {
   <div>path1.html has rendered</div>
 <div id="attachedDiv">This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv</div><div>This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>This global variable was accessed by another script tag in invokeglobal.html and  was appended to the #testDiv in path1.html</div>`
       expect(path1.shadowRoot.children.length).to.equal(4);
+      
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
            expect(testDiv[0].innerHTML).to.equal(testDivChildren);
@@ -130,9 +131,10 @@ describe('SPAR-componets', function() {
     index.html file in src rendered
   </div>
 </div>`;
+
       var spar = path1.shadowRoot.querySelectorAll('spar-route');
-      expect(!!spar[0].shadowRoot.innerHTML).to.be.ok;
-      expect(!!spar[1].shadowRoot.innerHTML).to.be.ok;
+      expect(spar[0].shadowRoot.innerHTML).to.be.ok;
+      expect(spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.be.ok;

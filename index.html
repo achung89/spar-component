@@ -8,8 +8,6 @@
   <script src='/spar-src/polyfill.js'></script>
  
   <script src="bower_components/web-component-tester/browser.js"></script>
-  <!--<link rel='import' href='spar-src/helper-functions.html'>
-  <link rel='import' href='spar-src/behaviors/route-behaviors.html'>-->
   <script src="mocha-param/lib/index.js"></script>
   <link rel='import' href='spar-src/spar-route.html'>
   <link rel='import' href='spar-src/index/spar-index.html'>
@@ -61,11 +59,11 @@
   <spar-route path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</spar-route>
   <!--Slot not working for some reason-->
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
-  <script>
-    // WCT.loadSuites([
-    //   'test/index.test.js',
-    //   'test/test.js'
-    // ]);
+  <!--<script>
+    WCT.loadSuites([
+      'test/index.test.js',
+      'test/test.js'
+    ]);-->
   </script>
 </body>
 </html>

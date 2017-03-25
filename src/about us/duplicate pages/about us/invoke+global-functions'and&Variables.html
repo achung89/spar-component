@@ -1,8 +1,6 @@
 <script>
-  
-console.log('this file is in the duplicate page')
-  globalFnDeclaration('This string passed to a remote script tag and was appended to a third route');
-  var string = globalFnExpression('This string was passed to and returned from a remote script tag and was appended to a third route<br></br>');
+  globalFnDeclaration("This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv");
+  var string = globalFnExpression('This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>');
   var div = document.createElement('div');
   div.innerHTML = string + globalStr;
   document.querySelector('.aboutus-dup.path1').shadowRoot.querySelector('#testDiv').appendChild(div);

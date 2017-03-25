@@ -18,7 +18,8 @@ Route component
         // console.log('hihi',this);
       }
       get path() {
-        return this.getAttribute('path');
+        var stripSlash = this.getAttribute('path').replace(/^\//g,'');
+        return stripSlash;
       }
 
             

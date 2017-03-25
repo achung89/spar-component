@@ -10,7 +10,7 @@ var SPARouter = (function(superClass) {
   return class extends superClass {
     
     connectedCallback() {
-      preCacheRoute(this);
+      // preCacheRoute(this);
       // assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
       // console.log(_routeComponents);

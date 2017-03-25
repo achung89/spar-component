@@ -54,17 +54,21 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
     if ( !routeComponent.src ) {
       renderSyncFn(indexTrackerfrThk, routeComponent, document.createElement('slot') )
     } else {
+      // console.log(routeComponent);
       routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
-        // console.log(xml)
+        console.log(xml)
         xml = parseShadowDOM( routeComponent, xml );
         //test this express
-        var subRoutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"]`);
-
+        console.log(routeComponent.path);
+        var regex = new RegExp(`^${routeComponent.path}$|^\/${routeComponent.path}$`);
+        var subRoutes = xml.querySelectorAll(`spar-route[path="${regex}"]`);
+        console.dir(xml.children.length);
+        console.log(subRoutes);
         if ( subRoutes.length === 0) {
           //console.log('invoking renderySyncFn', routeComponent)
           renderSyncFn ( indexTrackerfrThk, routeComponent, xml );
         } else {
-          //console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
+          console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
           renderDiff ( window.location.pathname, subRoutes, invocLaterThunk ( renderSyncFn, indexTrackerfrThk, routeComponent, xml ) );
         }
       });
@@ -86,14 +90,14 @@ function renderSyncThunk(length, laterCb) {
     contents[index] = content;
     if ( index === counter ) {
       while(components[counter]) {
-        //console.log(components[counter], counter, length-1);
+        console.log(components[counter], counter, length-1);
         clearShadowDOM(components[counter]); 
         components[counter].shadowRoot.appendChild(contents[counter]);
         counter++;
       }
     }
     if ( length === counter && laterCb ) {
-      //console.log('invocLater was invoked');
+      console.log('invocLater was invoked');
       laterCb();
     }
   }

@@ -66,9 +66,9 @@ describe('SPAR-componets', function() {
       expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
       console.log(54);
     });
-    // itParam('should display default content', Array.from(indexConteteRoutes), function(node) {
-    //   expect()
-    // });
+    itParam('should display default content', Array.from(indexContentRoutes), function(node) {
+      expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
+    });
 
   });
 
@@ -131,8 +131,8 @@ describe('SPAR-componets', function() {
   </div>
 </div>`;
       var spar = path1.shadowRoot.querySelectorAll('spar-route');
-      expect(spar[0].shadowRoot.innerHTML).to.be.ok;
-      expect(spar[1].shadowRoot.innerHTML).to.be.ok;
+      expect(!!spar[0].shadowRoot.innerHTML).to.be.ok;
+      expect(!!spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.be.ok;
@@ -144,6 +144,27 @@ describe('SPAR-componets', function() {
       expect(slotRoute.firstChild).to.be.instanceOf(HTMLDivElement);
       expect(slotRoute.firstChild.assignedSlot).to.be.instanceOf(HTMLSlotElement);
     });
-    
+
+  });
+  
+  describe('Home page', function () {
+    before(function (done) {
+      var homeLink = document.querySelector("spar-link[path='home']");
+      click(homeLink);
+      setTimeout(function(){
+        done();
+      },500);
+    });
+    it('should be able to select class in shadowDOM', function () {
+      var fellowShadowDom = document.querySelector('.home.class-div-2');
+      expect(fellowShadowDom.shadowRoot.querySelector('.test-class-2')).to.be.ok;
+      expect(fellowShadowDom.shadowRoot.querySelector('.test-class-2').innerHTML.includes('class selected')).to.equal(true);
+    });
+    it('should display default content and slot content', function() {
+      var defaultRoute = document.querySelector('.home.default-route-value');
+      expect(defaultRoute.innerHTML).to.equal('The below spar-route is a slot content default');
+      var defaultSlot = document.querySelector('.home.slot div[slot="slot-name"]');
+      expect(defaultSlot.assignedSlot).to.be.instanceOf(HTMLSlotElement);
+    });
   });
 });

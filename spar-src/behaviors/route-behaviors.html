@@ -26,11 +26,11 @@ var SPARouter = (function(superClass) {
       return anchor.pathname;
     }
     fetchOrRender() {
-      if ( !this.src ) {
-        return Promise.resolve();
-      }
+      // if ( !this.src ) {
+      //   return Promise.resolve();
+      // }
       //console.log('fetching',context.src);
-      //note: fix so as to not need window.location
+      //look into ways to not need window.location for relative pathing
       return fetch(`${window.location.origin}/${this.src}`).then(function getText(res) {
         // console.log(res);
         return res.text();

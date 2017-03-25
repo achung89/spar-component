@@ -26,8 +26,8 @@ route for index path '/'
         super.connectedCallback();
         var relativePathname = window.location.pathname.substr(window.location.pathname.lastIndexOf('/'));
         //console.log(this.textContent.trim(), this.children.length, this.src)
-        if(!this.textContent.trim() && this.children.length===0 && !this.src) {
-          console.warn('Default content exception: Index routes should contain child nodes or have a "src" attribute with a file path');
+        if(!this.textContent.trim() && this.children.length === 0 && !this.src) {
+          console.warn('Default content warning: Index routes should either contain child nodes or have a "src" attribute with a file path');
         } else {
           //check index component for children in light DOM 
           /**needs edit to exclude pathnames that end in '/'**/

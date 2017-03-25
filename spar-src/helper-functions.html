@@ -9,7 +9,7 @@ function parseXML(xmlString) {
 function initializeRoutes(e, routeComponents){
   console.log('Routes Initializing',e,routeComponents);
   window.history.pushState({'_spa_PATH':'/'},'','/');
-  initializeDiff('/', routeComponents);
+  initializeDiff( '/', routeComponents );
 }
 
 function handlePopChange (event, routeComponents) {
@@ -27,16 +27,18 @@ function handlePopChange (event, routeComponents) {
 }
 function initializeDiff ( urlPathname, routeComponents )  {
     var routes = [];
+    var routesWithChildNodes = [];
     var nonRoutes = [];
     routeComponents.forEach( function ( comp ) {
       if ( comp.pathParsed === urlPathname ) {
         //console.log(comp.pathParsed, urlPathname)
-        routes.push(comp);
+          routes.push(comp);
       } else {
         //console.log(comp.pathParsed, urlPathname)
         nonRoutes.push(comp);
       }
     })
+    // callback so that ShadowDom clears only after fetch requests are sent
     setTimeout(()=>{nonRoutes.forEach((route)=>clearShadowDOM( route ));},0);
     renderDiff( urlPathname, routes );
 }
@@ -47,45 +49,51 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
   if ( routeComponents.length === 0 ) {
     return; 
   }
-  routeComponents.forEach((routeComponent, thkOrderTracker)=>{
+  routeComponents.forEach((routeComponent, indexTrackerfrThk)=>{
+    // may not need 'call', check when tests are setup
+    if ( !routeComponent.src ) {
+      renderSyncFn(indexTrackerfrThk, routeComponent, document.createElement('slot') )
+    } else {
+      routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
+        // console.log(xml)
+        xml = parseShadowDOM( routeComponent, xml );
+        //test this express
+        var subRoutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"]`);
 
-    routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
-      // may need to consider edge case for 'undefined' xml
-      if(typeof xml === 'undefined'){
-        return;
-      }
-      xml = parseShadowDOM( routeComponent, xml );
-      var subRoutes = xml.querySelectorAll('spar-route');
-      if ( subRoutes.length === 0) {
-        renderSyncFn ( thkOrderTracker, routeComponent, xml );
-      } else {
-
-        renderDiff ( window.location.pathname, subRoutes, invocLaterThunk (renderSyncFn, thkOrderTracker, routeComponent, xml) );
-      }
-    });
+        if ( subRoutes.length === 0) {
+          console.log('invoking renderySyncFn', routeComponent)
+          renderSyncFn ( indexTrackerfrThk, routeComponent, xml );
+        } else {
+          console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
+          renderDiff ( window.location.pathname, subRoutes, invocLaterThunk ( renderSyncFn, indexTrackerfrThk, routeComponent, xml ) );
+        }
+      });
+    }
   });
 }
 function invocLaterThunk(cb, ...arg) {
   return function () {
-    cb(...arg);
+    cb ( ...arg );
   }
 }
 function renderSyncThunk(length, laterCb) {
-  var components = [];
-  var contents = [];
-  var counter = 0;
+  let components = [];
+  let contents = [];
+  let counter = 0;
   return function renderSync ( index, component, content ) {
+
     components[index] = component;
     contents[index] = content;
     if ( index === counter ) {
       while(components[counter]) {
-        console.log(components[counter], counter);
+        console.log(components[counter], counter, length-1);
         clearShadowDOM(components[counter]); 
         components[counter].shadowRoot.appendChild(contents[counter]);
         counter++;
       }
     }
     if ( length === counter && laterCb ) {
+      console.log('invocLater was invoked');
       laterCb();
     }
   }
@@ -111,7 +119,7 @@ function clearShadowDOM(component) {
   typeof component.shadowRoot === 'undefined' && console.log('undefined shadowroot',component);
   if ( component.shadowRoot.innerHTML ) {
     // console.trace();
-    console.log('Cleared:',component,component.path);
+    // console.log('Cleared:',component,component.path);
     while(component.shadowRoot.firstChild) {
       component.shadowRoot.removeChild(component.shadowRoot.firstChild);
     }
@@ -126,6 +134,5 @@ function preCacheRoute(elementToCache) {
     fetch(elementToCache.src);
   }
 }
-
 
 </script>

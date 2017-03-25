@@ -43,7 +43,7 @@ function initializeDiff ( urlPathname, routeComponents )  {
     renderDiff( urlPathname, routes );
 }
 function renderDiff ( urlPathname, routeComponents, invokeLater) {
-  var segmentFile = {};
+  var frameFile = {};
   if ( routeComponents.length === 0 ) {
     return; 
   }
@@ -51,42 +51,52 @@ function renderDiff ( urlPathname, routeComponents, invokeLater) {
   routeComponents.forEach((routeComponent, thkIndex) => {
     // may not need 'call', check when tests are setup
     var fetch = true;
-    if (routeComponent.segmentId) {
-      if(segmentFile[routeComponent.src]) {
-        fetch = false;
-        segmentFile[routeComponent.src].push(routeComponent);
-      } else {      
-        segmentFile[routeComponent.src]=[routeComponent];
-      }
+    if ( routeComponent.frameId ) {
+      fetch = shouldFetch( frameFile, routeComponent, thkIndex )
     }
 
     if ( !routeComponent.src ) {
       renderSyncFn(thkIndex, routeComponent, document.createElement('slot') )
-    } else if( fetch ) {
+    } else if ( fetch ) {
       // console.log(routeComponent);
       routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xmlText ) {
-        console.log(xmlText)
+        console.log ( xmlText );
         xml = parseShadowDOM( routeComponent, xmlText );
-        if ( segmentFile[routeComponent.src] ) {
-          segmentFile[routeComponent.src].forEach ( function ( comp ){
-            var segmentXml = xml.querySelectorAll(`#${comp.segmentId}`);
-            if(segmentXml.length>1) {
-              console.error('Can not have multiple segment Ids per document');
+        if ( frameFile[routeComponent.src] ) {
+          frameFile[routeComponent.src].forEach ( function ([ comp, indexThk ]) {
+            var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
+            if ( frameXml.length > 1 ) {
+              throw 'Can not have multiple tags with same frame id per document';
+            } else if ( frameXml.length === 0 ) {
+              throw 'Can not find spar-frame id="'+'"';
             } else {
-              let subroutes = subroutesCheck(comp,segmentXml);
-                let params = [renderSyncFn, thkIndex, routeComponent, parseXML(segmentXml.innerHTML)];
-                recurseOrRender ( subroutes, params );
+              //console.log( frameXml )
+              let subroutes = subroutesCheck(comp,frameXml[0]);
+
+              let parsed = parseXML(frameXml[0].innerHTML);
+              console.log(parsed, frameXml[0].innerHTML);
+              let params = [renderSyncFn, indexThk, comp, parsed];
+              recurseOrRender ( subroutes, ...params );
             }
           })
         } else {
         //test this express
           let subroutes = subroutesCheck(routeComponent,xml);
           let params = [renderSyncFn, thkIndex, routeComponent, xml];
-          recurseOrRender ( subroutes, params );
+          recurseOrRender ( subroutes, ...params );
         }
       });
     }
   });
+}
+function shouldFetch ( frameFile, routeComponent, thkIndex ) {
+    if ( frameFile[routeComponent.src] ) {
+      frameFile[routeComponent.src].push([routeComponent,thkIndex]);
+      return false;
+    } else {      
+      frameFile[routeComponent.src]=[[routeComponent,thkIndex]];
+      return true;
+    }
 }
 function recurseOrRender (subroutes, ...args) {
     if ( subroutes ) {
@@ -94,7 +104,8 @@ function recurseOrRender (subroutes, ...args) {
       //window.location.pathname may not be right metric for comparison
       renderDiff ( window.location.pathname, subroutes, callLater ( ...args ) );
     } else {
-      renderSyncFn ( args[1], args[2], args[3] );
+      //console.log(args[0]);
+      args[0] ( args[1], args[2], args[3] );
     }
 }
 function subroutesCheck (routeComponent, xml) {

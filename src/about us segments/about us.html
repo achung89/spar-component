@@ -1,0 +1,48 @@
+<spar-segment id="one">
+<div id="testDiv">
+  <div>path1.html has rendered</div>
+</div>
+<spar-route path="about us" src="../../nested components/aboutus.html"></spar-route>
+
+<div>we are still in page1.html the content below is the result of a double nesting</div>
+<spar-route path="about us" src="../../nested components/aboutus-double-nested.html"></spar-route>
+</spar-segment>
+
+<spar-segment id="two">
+  <script type='text/javascript'>
+  function globalFnDeclaration(arg) {
+    var div = document.createElement('div');
+    div.id = 'attachedDiv';
+    div.innerHTML = arg;
+    document.querySelector('.aboutus.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
+  }
+  var globalFnExpression = function globalFnExpression(arg) {
+    return arg;
+  }
+  var globalStr = "This global variable was accessed by another script tag in invokeglobal.html and  was appended to the #testDiv in path1.html";
+</script>
+</spar-segment>
+<spar-segment id="1">
+</spar-segment>
+<spar-segment id="3">
+<script>
+  globalFnDeclaration("This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv");
+  var string = globalFnExpression('This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>');
+  var div = document.createElement('div');
+  div.innerHTML = string + globalStr;
+  document.querySelector('.aboutus.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
+</script>
+</spar-segment>
+
+<spar-segment id="four">
+<div>
+  Below is a slot tag.  Whatever is placed in the spar-route tag will be rendered below.
+  <slot></slot>
+</div>
+The slot below will not render because of a bug in slot distribution rendering
+<slot><slot>
+</spar-segment>
+
+<spar-segment id="5">
+
+</spar-segment>

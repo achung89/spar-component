@@ -25,7 +25,7 @@
   </style>
   <spar-index class='index default-content'> hello there </spar-index>
   <spar-route class='home class-div-1' path='home' src="src/home/normalShadowDom.htm"></spar-route>
-  <spar-link path='about us'>Link: click here to navigate to about us page</spar-link>
+  <spar-link path='about us'> click here to navigate to about us page</spar-link>
 
   <spar-index src='src/index.html' class='index file'> </spar-index>
   <spar-route class='aboutus path1' path='about us' src='src/about us/page1.html'> </spar-route>
@@ -34,7 +34,7 @@
   <spar-route class='home script-src' path='home' src="src/home/Srctag.html"></spar-route>
   <spar-route class='aboutus invoked-js' path='/about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
   <spar-route class='aboutus slot' path='about us' src="src/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
-  <spar-link path='home'>Link: click here to navigate to home page</spar-link>
+  <spar-link path='home'> click here to navigate to home page</spar-link>
   <spar-route path='home' class="home default-route-value">The below spar-route is a slot content default</spar-route>
   <spar-route path='/home' src="src/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
   <spar-route path='home' class="home default-route-value">The below route is the slot content overwritten</spar-route>
@@ -44,7 +44,7 @@
 
   <spar-index class='index default-content'> These routes will test the component's ability to handle more complex routes</spar-index>
   <spar-route class='home-dup class-div-1' path='home/dup' src="src/about us/duplicate pages/home/normalShadowDom.htm"></spar-route>
-  <spar-link path='about us/dup'>Link: click here to navigate to nested about us page</spar-link>
+  <spar-link path='about us/dup'> click here to navigate to nested about us page</spar-link>
 
   <spar-index src='src/about us/duplicate pages/index.html' class='index file'> </spar-index>
   <spar-route class='aboutus-dup path1' path='/about us/dup' src='src/about us/duplicate pages/about us/page1.html'> </spar-route>
@@ -53,17 +53,23 @@
   <spar-route class='home-dup script-src' path='/home/dup' src="src/about us/duplicate pages/home/Srctag.html"></spar-route>
   <spar-route class='aboutus-dup invoked-js' path='about us/dup' src="src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spar-route>
   <spar-route class='aboutus-dup slot' path='/about us/dup' src="src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
-  <spar-link path='home/dup'>Link: click here to navigate to nested home page</spar-link>
+  <spar-link path='home/dup'> click here to navigate to nested home page</spar-link>
   <spar-route path='home/dup' class="home-dup default-route-value">The below spar-route is a slot content default</spar-route>
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
   <spar-route path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</spar-route>
   <!--Slot not working for some reason-->
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
-  <!--<script>
+  
+  <spar-route path="about us/sections" src="src/about us segments/about us.html" segment-id="one"></spar-route>
+  <spar-route path="about us/sections" src="src/about us segments/about us.html" segment-id="two"></spar-route>
+  <spar-route path="about us/sections" src="src/about us segments/about us.html" segment-id="3"></spar-route>
+  <spar-route path="about us/sections" src="src/about us segments/about us.html" segment-id="four"></spar-route>
+  <spar-link path="about us/sections"> click here to display segmented components</spar-link>
+  <script>
     WCT.loadSuites([
       'test/index.test.js',
       'test/test.js'
-    ]);-->
+    ]);
   </script>
 </body>
 </html>

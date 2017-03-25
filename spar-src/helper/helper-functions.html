@@ -43,41 +43,76 @@ function initializeDiff ( urlPathname, routeComponents )  {
     renderDiff( urlPathname, routes );
 }
 function renderDiff ( urlPathname, routeComponents, invokeLater) {
-  let  renderSyncFn = renderSyncThunk ( routeComponents.length, invokeLater );
-
-  //turn into for each
+  var segmentFile = {};
   if ( routeComponents.length === 0 ) {
     return; 
   }
-  routeComponents.forEach((routeComponent, indexTrackerfrThk)=>{
+  let  renderSyncFn = renderSyncThunk ( routeComponents.length, invokeLater );
+  routeComponents.forEach((routeComponent, thkIndex) => {
     // may not need 'call', check when tests are setup
+    var fetch = true;
+    if (routeComponent.segmentId) {
+      if(segmentFile[routeComponent.src]) {
+        fetch = false;
+        segmentFile[routeComponent.src].push(routeComponent);
+      } else {      
+        segmentFile[routeComponent.src]=[routeComponent];
+      }
+    }
+
     if ( !routeComponent.src ) {
-      renderSyncFn(indexTrackerfrThk, routeComponent, document.createElement('slot') )
-    } else {
+      renderSyncFn(thkIndex, routeComponent, document.createElement('slot') )
+    } else if( fetch ) {
       // console.log(routeComponent);
-      routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xml ) {
-        console.log(xml)
-        xml = parseShadowDOM( routeComponent, xml );
+      routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xmlText ) {
+        console.log(xmlText)
+        xml = parseShadowDOM( routeComponent, xmlText );
+        if ( segmentFile[routeComponent.src] ) {
+          segmentFile[routeComponent.src].forEach ( function ( comp ){
+            var segmentXml = xml.querySelectorAll(`#${comp.segmentId}`);
+            if(segmentXml.length>1) {
+              console.error('Can not have multiple segment Ids per document');
+            } else {
+              let subroutes = subroutesCheck(comp,segmentXml);
+                let params = [renderSyncFn, thkIndex, routeComponent, parseXML(segmentXml.innerHTML)];
+                recurseOrRender ( subroutes, params );
+            }
+          })
+        } else {
         //test this express
-        if(routeComponent.path === '/') {
-          var subRoutes = xml.querySelectorAll(`spar-index`);
-        } else {
-          var subRoutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"],spar-route[path="/${routeComponent.path}"]`);
-        }
-        // console.dir(xml.children.length);
-        console.log(subRoutes);
-        if ( subRoutes.length === 0) {
-          //console.log('invoking renderySyncFn', routeComponent)
-          renderSyncFn ( indexTrackerfrThk, routeComponent, xml );
-        } else {
-          console.log('invoking recursive renderDiff',subRoutes, window.location.pathname)
-          renderDiff ( window.location.pathname, subRoutes, invocLaterThunk ( renderSyncFn, indexTrackerfrThk, routeComponent, xml ) );
+          let subroutes = subroutesCheck(routeComponent,xml);
+          let params = [renderSyncFn, thkIndex, routeComponent, xml];
+          recurseOrRender ( subroutes, params );
         }
       });
     }
   });
 }
-function invocLaterThunk(cb, ...arg) {
+function recurseOrRender (subroutes, ...args) {
+    if ( subroutes ) {
+      console.log('invoking recursive renderDiff',subroutes, window.location.pathname)
+      //window.location.pathname may not be right metric for comparison
+      renderDiff ( window.location.pathname, subroutes, callLater ( ...args ) );
+    } else {
+      renderSyncFn ( args[1], args[2], args[3] );
+    }
+}
+function subroutesCheck (routeComponent, xml) {
+  if ( routeComponent.path === '/' ) {
+    var subroutes = xml.querySelectorAll(`spar-index`);
+  } else {
+    var subroutes = xml.querySelectorAll(`spar-route[path="${routeComponent.path}"],spar-route[path="/${routeComponent.path}"]`);
+  }
+  // console.dir(xml.children.length);
+  console.log(subroutes);
+  if ( subroutes.length === 0) {
+    //console.log('invoking renderySyncFn', routeComponent)
+    return false;
+  } else {
+    return subroutes;
+  }
+}
+function callLater(cb, ...arg) {
   return function () {
     cb ( ...arg );
   }
@@ -122,7 +157,7 @@ function handleListenerBound ( handleChangeListener, ...args ) {
   }
 }
 function clearShadowDOM(component) {
-  typeof component.shadowRoot === 'undefined' && console.log('undefined shadowroot',component);
+  typeof component.shadowRoot !== 'object' && console.log('undefined shadowroot', component);
   if ( component.shadowRoot.innerHTML ) {
     // console.trace();
     // console.log('Cleared:',component,component.path);

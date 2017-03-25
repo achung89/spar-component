@@ -18,6 +18,9 @@ var SPARouter = (function(superClass) {
     get src() {
       return this.getAttribute('src');
     }
+    get segmentId() {
+      return this.getAttribute('segment-id');
+    }
     get pathParsed() {
         var stripSlash = this.path.replace(/^\//g,'');
         var anchor = document.createElement('a');
@@ -34,7 +37,7 @@ var SPARouter = (function(superClass) {
       return fetch(`${window.location.origin}/${this.src}`).then(function getText(res) {
         // console.log(res);
         return res.text();
-      })
+      });
       // .then(function populateDOM(data) {
       //   clearShadowDOM(context);
       //   // console.trace();

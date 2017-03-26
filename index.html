@@ -57,10 +57,20 @@
   <spar-route path='home/dup' class="home-dup default-route-value">The below spar-route is a slot content default</spar-route>
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
   <spar-route path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</spar-route>
+  
   <!--Slot not working for some reason-->
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
   <spar-index>The routes below will test the ability to fetch framed routes</spar-index>
   <spar-route class='aboutus-section default' path="about us/sections">The routes below are segmented frames from a single file</spar-route>
+  <spar-route class='aboutus-section path1' path="about us/sections" src="src/about us segments/about us.html" frame-id="one"></spar-route>
+  <spar-route class='aboutus-section js-src' path="about us/sections" src="src/about us segments/about us.html" frame-id="two"></spar-route>
+  <spar-route class='aboutus-section invoke-js' path="about us/sections" src="src/about us segments/about us.html" frame-id="3"></spar-route>
+  <spar-route class='aboutus-section slot'path="about us/sections" src="src/about us segments/about us.html" frame-id="four"></spar-route>
+  <spar-link path="about us/sections"> click here to display segmented components</spar-link>
+  <spar-link path="about us/sections"> click here to display framed components from two files mixed with regular route components</spar-link>
+  <spar-index>The routes below will test the ability to fetch framed routes</spar-index>
+  <spar-route class='aboutus-section default' path="about us/sections">The routes below are segmented frames from a single file</spar-route>
+  <spar-route class='aboutus-section '
   <spar-route class='aboutus-section path1' path="about us/sections" src="src/about us segments/about us.html" frame-id="one"></spar-route>
   <spar-route class='aboutus-section js-src' path="about us/sections" src="src/about us segments/about us.html" frame-id="two"></spar-route>
   <spar-route class='aboutus-section invoke-js' path="about us/sections" src="src/about us segments/about us.html" frame-id="3"></spar-route>

@@ -3,10 +3,10 @@
 
 
 // to-do make SPARouter propeties not configurable
-var SPARouter = (function(superClass) {
+var SPARouter = ( function ( superClass ) {
   var _routeComponents = [];
-  window.addEventListener('popstate', handleListenerBound(handlePopChange, _routeComponents));
-  window.addEventListener('load',handleListenerBound(initializeRoutes, _routeComponents));
+  window.addEventListener('popstate', handleListenerBound(initializeLoading, _routeComponents));
+  window.addEventListener('load',handleListenerBound(loadIndexRoutes, _routeComponents));
   return class extends superClass {
     
     connectedCallback() {

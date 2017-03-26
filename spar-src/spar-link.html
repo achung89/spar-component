@@ -9,11 +9,9 @@
       var shadowRoot = this.attachShadow({mode:'open'});
       shadowRoot.appendChild(document.createElement('slot'));
     }
-
     get path() {
       return this.getAttribute('path');
     }
-
     connectedCallback () {
       this.addEventListener('click', this._navigateTo)
     }

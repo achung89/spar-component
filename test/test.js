@@ -13,20 +13,17 @@ function click(el){
 describe('SPAR-componets', function() {
   describe('Component functionality', function() {
     var sparRoute;
-    var sparIndex;
     var sparLink;
     let setTimeout$Andrew = window.setTimeout; 
     before(function(){
       console.log(8);
       sparRoute = new SparRoute();
-      sparIndex = new SparIndex();
       sparLink = new SparLink();
     })
-    it('should have class of spar-route, spar-index, spar-link', function() {
+    it('should have class of spar-route, spar-link', function() {
       console.log(9);
       expect(sparRoute).to.be.an.instanceOf(SparRoute);
       expect(sparLink).to.be.an.instanceOf(SparLink);
-      expect(sparIndex).to.be.an.instanceOf(SparIndex);
     });
     // it('should be able to get and set properties', function() {
 

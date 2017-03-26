@@ -39,7 +39,6 @@ function precheckFetch ( event, routeElements ) {
  * @param {array} routeElements - array of route elements
  */
 function initializeFetching ( urlPathname, routeElements )  {
-    console.log(routeElements.size)
     var matchingRoutes = [];
 
     routeElements.forEach( function ( comp ) {
@@ -193,14 +192,11 @@ function appendSyncThunk(length, deferredCb) {
     contents[index] = content;
     if ( index === counter ) {
       while ( components[counter] ) {
-        console.log(contents[counter], components[counter], counter, length-1);
         components[counter].shadowRoot.appendChild(contents[counter]);
-        console.log(components[counter].shadowRoot.innerHTML);
         counter++;
       }
     }
     if ( length === counter && deferredCb) {
-      console.log('invocLater was invoked');
       deferredCb();
     }
   }
@@ -236,11 +232,14 @@ function clearShadowDOM ( element ) {
  * Pre-caches route files
  *  @param {element} element - route element
  */
-function preCacheRoute ( element ) {
+function preCacheRoute ( event, elements ) {
   // algorithm may need change for onload implementation
-  if ( element.src ) {
-    fetch(element.src);
-  }
+  
+  elements.forEach ( function ( element ) {
+    if ( element.src && element.pathParsed !== '/' ) {
+      fetch(element.src);
+    }
+  });
 }
 </script>
 

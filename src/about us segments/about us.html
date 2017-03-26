@@ -2,10 +2,10 @@
 <div id="testDiv">
   <div>path1.html has rendered</div>
 </div>
-<spar-route path="about us" src="../../nested components/aboutus.html"></spar-route>
+<spar path="about us" src="../../nested components/aboutus.html"></spar>
 
 <div>we are still in page1.html the content below is the result of a double nesting</div>
-<spar-route path="about us" src="../../nested components/aboutus-double-nested.html"></spar-route>
+<spar path="about us" src="../../nested components/aboutus-double-nested.html"></spar>
 </spar-frame>
 
 <spar-frame id="two">
@@ -36,7 +36,7 @@
 
 <spar-frame id="four">
 <div>
-  Below is a slot tag.  Whatever is placed in the spar-route tag will be rendered below.
+  Below is a slot tag.  Whatever is placed in the spar tag will be rendered below.
   <slot></slot>
 </div>
 The slot below will not render because of a bug in slot distribution rendering

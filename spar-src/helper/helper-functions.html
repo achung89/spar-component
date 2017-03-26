@@ -133,7 +133,7 @@ function subroutesCheck (routeElement, xml) {
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
-    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
+    var subroutes = xml.querySelectorAll(`spar[path="${routeElement.path}"],spar[path="/${routeElement.path}"]`);
   }
   if ( subroutes.length === 0) {
     return false;

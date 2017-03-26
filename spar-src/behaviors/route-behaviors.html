@@ -4,16 +4,15 @@
 
 // to-do make SPARouter propeties not configurable
 var SPARouter = ( function ( superClass ) {
+  // an array of all our commponents
   var _routeComponents = [];
+  
   window.addEventListener('popstate', handleListenerBound(initializeLoading, _routeComponents));
   window.addEventListener('load',handleListenerBound(loadIndexRoutes, _routeComponents));
   return class extends superClass {
     
     connectedCallback() {
-      // preCacheRoute(this);
-      // assume that each component is instantiated in order of DOM tree
       _routeComponents.push(this);
-      // console.log(_routeComponents);
     }
     get src() {
       return this.getAttribute('src');
@@ -22,31 +21,20 @@ var SPARouter = ( function ( superClass ) {
       return this.getAttribute('frame-id');
     }
     get pathParsed() {
+        // strips leading forward slashes
         var stripSlash = this.path.replace(/^\//g,'');
+
+        // anchor tag will apply url parsing algorithm to the path
         var anchor = document.createElement('a');
         anchor.href = window.location.origin+'/'+stripSlash;
-
       return anchor.pathname;
     }
     fetchOrRender() {
-      // if ( !this.src ) {
-      //   return Promise.resolve();
-      // }
-      console.log('fetching',this.src);
-      //look into alternatives to window.location for relative pathing
+
+      // look into alternatives forms of getting rid of relative pathing 
       return fetch(`${window.location.origin}/${this.src}`).then(function getText(res) {
-        // console.log(res);
         return res.text();
       });
-      // .then(function populateDOM(data) {
-      //   clearShadowDOM(context);
-      //   // console.trace();
-      //   // console.log(context);
-      //   fillShadowDOM(context,data);
-      // }).catch(function error(err){
-      //   console.log(err);
-      // })
-      //console.trace()
     }
   }
 })(HTMLElement)

@@ -1,22 +1,19 @@
 <script type='text/javascript'>
-//place all in object
+
 function parseXML(xmlString) {
-  // console.log(xmlString);
+
   //creates document fragment from string
   return document.createRange().createContextualFragment(xmlString);
 }
 
 function loadIndexRoutes(e, routeComponents){
-  console.log('Routes Initializing',e,routeComponents);
   window.history.pushState({'_spa_PATH':'/'},'','/');
   initializeFetching( '/', routeComponents );
 }
 
 function initializeLoading ( event, routeComponents ) {
-  // console.log('HandleStateChange function invoked', event)
-  // console.log(event,routeComponents.map(elem=>elem.src))
 
-  // only starts the fetch if popstate was not triggered by third party
+  // fetch only if popstate was not triggered by a third party
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
     initializeFetching(pathname, routeComponents);
@@ -27,10 +24,8 @@ function initializeFetching ( urlPathname, routeComponents )  {
     var nonmatchingRoutes = [];
     routeComponents.forEach( function ( comp ) {
       if ( comp.pathParsed === urlPathname ) {
-        //console.log(comp.pathParsed, urlPathname)
           matchingRoutes.push(comp);
       } else {
-        //console.log(comp.pathParsed, urlPathname)
         nonmatchingRoutes.push(comp);
       }
     })
@@ -40,6 +35,8 @@ function initializeFetching ( urlPathname, routeComponents )  {
     renderDiff( urlPathname, matchingRoutes );
 }
 function renderDiff ( urlPathname, routeComponents, invokeLater ) {
+
+  // frameFile will hold a list of routes with a frame id
   var frameFile = {};
   if ( routeComponents.length === 0 ) {
     return;
@@ -55,33 +52,27 @@ function renderDiff ( urlPathname, routeComponents, invokeLater ) {
     if ( !routeComponent.src ) {
       renderSyncFn(thkIndex, routeComponent, document.createElement('slot') )
     } else if ( fetch ) {
-      // console.log(routeComponent);
       routeComponent.fetchOrRender.call(routeComponent).then ( function postFetch ( xmlText ) {
-        console.log ( xmlText );
-        xml = parseShadowDOM( routeComponent, xmlText );
+        var xml = parseShadowDOM( routeComponent, xmlText );
+
         if ( frameFile[routeComponent.src] ) {
           frameFile[routeComponent.src].forEach ( function ([ comp, indexThk ]) {
-            console.log(comp, indexThk);
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
               throw 'Can not find spar-frame id="'+'"';
             } else {
-              //console.log( frameXml )
-              let subroutes = subroutesCheck(comp,frameXml[0]);
-
-              let parsed = parseXML(frameXml[0].innerHTML);
-              console.log(parsed, frameXml[0].innerHTML);
-              let params = [renderSyncFn, indexThk, comp, parsed];
-              recurseOrRender ( subroutes, .params );
+              var subroutes = subroutesCheck(comp,frameXml[0]);
+              var parsed = parseXML(frameXml[0].innerHTML);
+              var params = [renderSyncFn, indexThk, comp, parsed];
+              recurseOrRender ( subroutes, ...params );
             }
           })
         } else {
-        //test this express
-          let subroutes = subroutesCheck(routeComponent,xml);
-          let params = [renderSyncFn, thkIndex, routeComponent, xml];
-          recurseOrRender ( subroutes, .params );
+          var subroutes = subroutesCheck(routeComponent,xml);
+          var params = [renderSyncFn, thkIndex, routeComponent, xml];
+          recurseOrRender ( subroutes, ...params );
         }
       });
     }
@@ -97,11 +88,11 @@ function pushAndReturnFetchVal( frameFile, routeComponent, thkIndex ) {
       return true;
     }
 }
-function recurseOrRender (subroutes, .args) {
+function recurseOrRender (subroutes, ...args) {
     if ( subroutes ) {
       console.log('invoking recursive renderDiff',subroutes, window.location.pathname)
       //window.location.pathname may not be right metric for comparison
-      renderDiff ( window.location.pathname, subroutes, callLater ( .args ) );
+      renderDiff ( window.location.pathname, subroutes, callLater ( ...args ) );
     } else {
       //console.log(args[0]);
       args[0] ( args[1], args[2], args[3] );
@@ -122,9 +113,9 @@ function subroutesCheck (routeComponent, xml) {
     return subroutes;
   }
 }
-function callLater(cb, .arg) {
+function callLater(cb, ...arg) {
   return function () {
-    cb ( .arg );
+    cb ( ...arg );
   }
 }
 function renderSyncThunk(length, laterCb) {
@@ -156,12 +147,12 @@ function parseShadowDOM ( component, content ) {
   return parsedNodes;
   //console.trace();
 }
-function handleListenerBound ( handleChangeListener, .args ) {
-  return ( .eventArgs ) => {
+function handleListenerBound ( handleChangeListener, ...args ) {
+  return ( ...eventArgs ) => {
 
     // console.trace();
     // console.log ( eventArgs, args );
-    handleChangeListener.call(this, .eventArgs, .args );
+    handleChangeListener.call(this, ...eventArgs, ...args );
   }
 }
 function clearShadowDOM(component) {

@@ -3,8 +3,6 @@
 <!--
 `spar-route`
 Route component
-
-@demo demo/index.html
 -->
 
 <link rel="import" href="behaviors/route-behaviors.html"></link>
@@ -15,29 +13,11 @@ Route component
       constructor () {
         super();
         this.attachShadow({mode:'open'});
-        // console.log('hihi',this);
       }
       get path() {
         var stripSlash = this.getAttribute('path').replace(/^\//g,'');
         return stripSlash;
       }
-
-            
-      // Will add when implementing shadoDOM data-binding
-      // injectBoundHTML: function injectBoundHTML(html, element) {
-      //   var template = document.createElement('template', 'dom-bind');
-      //   var doc = template.content.ownerDocument;
-      //   var div = doc.createElement('div');
-      //   div.innerHTML = html;
-      //   template.content.appendChild(div);
-      //   while (element.firstChild) {
-      //       element.removeChild(element.firstChild);
-      //   }
-      //   element.appendChild(Polymer.Base.instanceTemplate(template));
-      // },
-      // isLoaded: function() {
-      //   return 
-      // },
     };
     customElements.define(SparRoute.is, SparRoute);
   </script>

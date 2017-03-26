@@ -1,12 +1,7 @@
 <link rel="import" href="behaviors/route-behaviors.html"></link>
 <script>
   class SparLink extends SPARouter {
-
     static get is() { return 'spar-link' }
-
-    get path() {
-      return this.getAttribute('path');
-    }
 
     constructor() {
       super();
@@ -14,12 +9,15 @@
       var shadowRoot = this.attachShadow({mode:'open'});
       shadowRoot.appendChild(document.createElement('slot'));
     }
-    //consider creating a remove listener when detached from DOM
-    connectedCallback () {
-      // 'tap' event does not trigger, will submit issue
-      this.addEventListener('click', this._navigateTo)
-      // console.dir(this);
+
+    get path() {
+      return this.getAttribute('path');
     }
+
+    connectedCallback () {
+      this.addEventListener('click', this._navigateTo)
+    }
+    
     _navigateTo() {
       if(window.location.pathname !== this.pathParsed) {
         window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);

@@ -74,14 +74,14 @@ function renderDiff ( urlPathname, routeComponents, invokeLater ) {
               let parsed = parseXML(frameXml[0].innerHTML);
               console.log(parsed, frameXml[0].innerHTML);
               let params = [renderSyncFn, indexThk, comp, parsed];
-              recurseOrRender ( subroutes, ...params );
+              recurseOrRender ( subroutes, .params );
             }
           })
         } else {
         //test this express
           let subroutes = subroutesCheck(routeComponent,xml);
           let params = [renderSyncFn, thkIndex, routeComponent, xml];
-          recurseOrRender ( subroutes, ...params );
+          recurseOrRender ( subroutes, .params );
         }
       });
     }
@@ -97,11 +97,11 @@ function pushAndReturnFetchVal( frameFile, routeComponent, thkIndex ) {
       return true;
     }
 }
-function recurseOrRender (subroutes, ...args) {
+function recurseOrRender (subroutes, .args) {
     if ( subroutes ) {
       console.log('invoking recursive renderDiff',subroutes, window.location.pathname)
       //window.location.pathname may not be right metric for comparison
-      renderDiff ( window.location.pathname, subroutes, callLater ( ...args ) );
+      renderDiff ( window.location.pathname, subroutes, callLater ( .args ) );
     } else {
       //console.log(args[0]);
       args[0] ( args[1], args[2], args[3] );
@@ -122,9 +122,9 @@ function subroutesCheck (routeComponent, xml) {
     return subroutes;
   }
 }
-function callLater(cb, ...arg) {
+function callLater(cb, .arg) {
   return function () {
-    cb ( ...arg );
+    cb ( .arg );
   }
 }
 function renderSyncThunk(length, laterCb) {
@@ -156,12 +156,12 @@ function parseShadowDOM ( component, content ) {
   return parsedNodes;
   //console.trace();
 }
-function handleListenerBound ( handleChangeListener, ...args ) {
-  return ( ...eventArgs ) => {
+function handleListenerBound ( handleChangeListener, .args ) {
+  return ( .eventArgs ) => {
 
     // console.trace();
     // console.log ( eventArgs, args );
-    handleChangeListener.call(this, ...eventArgs, ...args );
+    handleChangeListener.call(this, .eventArgs, .args );
   }
 }
 function clearShadowDOM(component) {
@@ -184,4 +184,51 @@ function preCacheRoute(elementToCache) {
   }
 }
 
+</script>
+
+
+
+<script>
+(()=>{
+  var supportsCustomElementsV1 = supportsCustomElementsV1 || null;
+  var supportsShadowDOMV1 = supportsShadowDOMV1 || null;
+  function loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+  //polyfill 
+  // Lazy load the polyfill if necessary.
+  if (!supportsCustomElementsV1) {
+    loadScript('/bower_components/custom-elements/custom-elements.min.js').then(e => {
+      console.log('CustomElements polyfill loaded');
+    }).catch(e=>{
+      supportsCustomElementsV1 = null;
+    })
+  }
+  //fix this polyfill script
+  function loadScriptShadow(src) {
+    return new Promise(function(resolve, reject) {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  // Lazy load the polyfill if necessary.
+  if (!supportsShadowDOMV1) {
+    loadScriptShadow('/bower_components/shadydom/shadydom.min.js').then(e => {
+      return loadScriptShadow('/bower_components/shadycss/scoping-shim.min.js')}).then(e => {
+      return loadScriptShadow('/bower_components/shadycss/apply-shim.min.js')}).then(e => {
+      return loadScriptShadow('/bower_components/shadycss/custom-style-interface.min.js')}).then(e => {
+          console.log('ShadowDOM polyfill loaded');
+    });
+  }
+})();
 </script>

@@ -24,8 +24,8 @@ function loadIndexRoutes ( event, routeElements ) {
  * @param {event} event - event object from 'pop' listener
  * @param {array} routeElements - array of route elements
  */
-function initializeLoading ( event, routeElements ) {
-  console.log(routeElements);
+function precheckFetch ( event, routeElements ) {
+
   // fetch only if popstate was triggered by navigation button
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
@@ -39,9 +39,11 @@ function initializeLoading ( event, routeElements ) {
  * @param {array} routeElements - array of route elements
  */
 function initializeFetching ( urlPathname, routeElements )  {
+    console.log(routeElements.size)
     var matchingRoutes = [];
 
     routeElements.forEach( function ( comp ) {
+      // console.log(comp);
       if ( comp.pathParsed === urlPathname ) {
         matchingRoutes.push(comp);
       } 
@@ -59,13 +61,12 @@ function initializeFetching ( urlPathname, routeElements )  {
  * @callback deferredFn - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
 function fetchRoutes ( urlPathname, routeElements, deferredCb ) {
-
   // frameFile stores information regarding framed routes
   var frameFile = {};
-  if ( routeElements.length === 0 ) {
+  if ( ( routeElements.size || routeElements.length ) === 0 ) {
     return;
   }
-  let  appendSyncFn = appendSyncThunk ( routeElements.length, deferredCb );
+  let  appendSyncFn = appendSyncThunk ( routeElements.size || routeElements.length, deferredCb );
   routeElements.forEach( ( routeElement, orderOnDomTree ) => {
     // may not need 'call', check when tests are setup
     var shouldFetch = true;

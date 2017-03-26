@@ -5,17 +5,17 @@
 // to-do make SPARouter propeties not configurable
 var SPARouter = ( function ( superClass ) {
   // an array of all our commponents
-  var _routeComponents = new Set();
+  var _routeElements = new Set();
 
-  window.addEventListener('popstate', handleListenerBound(precheckFetch, _routeComponents));
-  window.addEventListener('load',handleListenerBound(loadIndexRoutes, _routeComponents));
+  window.addEventListener('popstate', handleListenerBound(precheckFetch, _routeElements));
+  window.addEventListener('load',handleListenerBound(loadIndexRoutes, _routeElements));
   return class extends superClass {
     
     connectedCallback() {
-      _routeComponents.add(this);
+      _routeElements.add(this);
     }
     disconnectedCallback() {
-      _routeComponents.delete(this);
+      _routeElements.delete(this);
     }
     get src() {
       return this.getAttribute('src');
@@ -36,7 +36,7 @@ var SPARouter = ( function ( superClass ) {
     navigateTo() {
       if(window.location.pathname !== this.pathParsed) {
         window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
-        initializeFetching ( this.pathParsed, _routeComponents);
+        initializeFetching ( this.pathParsed, _routeElements);
       }
     }
   }

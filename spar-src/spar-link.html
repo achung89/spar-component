@@ -5,7 +5,7 @@
 
     constructor() {
       super();
-      this._navigateTo = this._navigateTo.bind(this);
+      this.navigateTo = this.navigateTo.bind(this);
       var shadowRoot = this.attachShadow({mode:'open'});
       shadowRoot.appendChild(document.createElement('slot'));
     }
@@ -13,14 +13,7 @@
       return this.getAttribute('path');
     }
     connectedCallback () {
-      this.addEventListener('click', this._navigateTo)
-    }
-    
-    _navigateTo() {
-      if(window.location.pathname !== this.pathParsed) {
-        window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
-        dispatchEvent(new PopStateEvent('popstate',{state:{'_spa_PATH':this.pathParsed}}));
-      }
+      this.addEventListener('click', this.navigateTo)
     }
   }
   customElements.define(SparLink.is, SparLink);

@@ -1,30 +1,32 @@
 <script>
 
-/** takes and outputs a parsed XML
- * @param {string} xmlString string to be parsed
+/** 
+ * Takes a string and outputs a parsed XML
+ * @param {string} xmlString - string to be parsed
+ * @return {documentFragment} - parsed xml
  */
-function parseXML(xmlString) {
+function parseXML ( xmlString ) {
   return document.createRange().createContextualFragment(xmlString);
 }
 
 /**
- * called on 'load': pushstate the index path and starts the fetch-async/append-sync algorithm for routes
- * @param {event} e event from 'load' listener 
- * @param {array} routeElements array of route elements
+ * Called on 'load': pushstate the index path and starts the fetch-async/append-sync algorithm for routes
+ * @param {event} event - event object from 'load' listener 
+ * @param {array} routeElements - array of route elements
  */
-function loadIndexRoutes(e, routeElements){
+function loadIndexRoutes ( event, routeElements ) {
   window.history.pushState({'_spa_PATH':'/'},'','/');
   initializeFetching( '/', routeElements );
 }
 
 /**
- * called on 'popstate': starts fetch-asyng/append-sync algorithm
- * @param {event} event event from 'pop' listener
- * @param {array} routeElements 
+ * Called on 'popstate'. Starts fetch-async/append-sync algorithm
+ * @param {event} event - event object from 'pop' listener
+ * @param {array} routeElements - array of route elements
  */
 function initializeLoading ( event, routeElements ) {
-
-  // fetch only if popstate was not triggered by a third party
+  console.log(routeElements);
+  // fetch only if popstate was triggered by navigation button
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
     initializeFetching(pathname, routeElements);
@@ -32,55 +34,55 @@ function initializeLoading ( event, routeElements ) {
 }
 
 /**
- * 
- * @param {string} urlPathname 
- * @param {array} routeElements array of route elements
+ * Clears all shadowDOMs and fetches files
+ * @param {string} urlPathname - url string to compare routes to
+ * @param {array} routeElements - array of route elements
  */
 function initializeFetching ( urlPathname, routeElements )  {
     var matchingRoutes = [];
-    var nonmatchingRoutes = [];
+
     routeElements.forEach( function ( comp ) {
       if ( comp.pathParsed === urlPathname ) {
-          matchingRoutes.push(comp);
-      } else {
-        nonmatchingRoutes.push(comp);
-      }
-    })
+        matchingRoutes.push(comp);
+      } 
+    });
 
-    // clearing set to callback so that it doesn't block fetching
-    setTimeout(()=>{nonmatchingRoutes.forEach((route)=>clearShadowDOM( route ));},0);
-    renderDiff( urlPathname, matchingRoutes );
+    // clearing deferred so as to not block fetching
+    setTimeout(()=>{routeElements.forEach((route)=>clearShadowDOM( route ));},0);
+    fetchRoutes( urlPathname, matchingRoutes );
 }
 
 /**
- * Recursive tree algorithm to fetch files asynchronously and appends them synchronously
- * @param {string} urlPathname pushstate path
- * @param {array} routeElements array of elements to be fetched and later rendered
- * @param {function) invokeLater a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
+ * Recursive tree function to fetch files async and call appendSync.
+ * @param {string} urlPathname - pushstate path
+ * @param {array} routeElements array - of elements to be fetched and later rendered
+ * @callback deferredFn - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
-function renderDiff ( urlPathname, routeElements, invokeLater ) {
+function fetchRoutes ( urlPathname, routeElements, deferredCb ) {
 
-  // frameFile will hold a list of routes with a frame id
+  // frameFile stores information regarding framed routes
   var frameFile = {};
   if ( routeElements.length === 0 ) {
     return;
   }
-  let  renderSyncFn = renderSyncThunk ( routeElements.length, invokeLater );
-  routeElements.forEach( ( routeElement, orderOnPage ) => {
+  let  appendSyncFn = appendSyncThunk ( routeElements.length, deferredCb );
+  routeElements.forEach( ( routeElement, orderOnDomTree ) => {
     // may not need 'call', check when tests are setup
-    var fetch = true;
+    var shouldFetch = true;
     if ( routeElement.frameId ) {
-      fetch = pushAndReturnFetchVal( frameFile, routeElement, orderOnPage )
+      shouldFetch = pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree )
     }
 
     if ( !routeElement.src ) {
-      renderSyncFn(orderOnPage, routeElement, document.createElement('slot') )
-    } else if ( fetch ) {
-      routeElement.fetchOrRender.call(routeElement).then ( function postFetch ( xmlText ) {
-        var xml = parseXML( xmlText );
+      appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
+    } else if ( shouldFetch ) {
 
+      fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
+        return res.text();
+      }).then ( function postFetch ( xmlText ) {
+        var xml = parseXML( xmlText );
         if ( frameFile[routeElement.src] ) {
-          frameFile[routeElement.src].forEach ( function ([ comp, pageOrder ]) {
+          frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
@@ -89,14 +91,14 @@ function renderDiff ( urlPathname, routeElements, invokeLater ) {
             } else {
               var subroutes = subroutesCheck(comp,frameXml[0]);
               var parsed = parseXML(frameXml[0].innerHTML);
-              var params = [pageOrder, comp, parsed];
-              fetchSubroutesOrRender ( subroutes, renderSyncFn, ...params );
+              var params = [OODT, comp, parsed];
+              fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
             }
           })
         } else {
           var subroutes = subroutesCheck(routeElement,xml);
-          var params = [orderOnPage, routeElement, xml];
-          fetchSubroutesOrRender ( subroutes, renderSyncFn, ...params );
+          var params = [orderOnDomTree, routeElement, xml];
+          fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
         }
       });
     }
@@ -104,26 +106,27 @@ function renderDiff ( urlPathname, routeElements, invokeLater ) {
 }
 
 /**
- * Stores element if it is fetching a frame. Returns false if the file has already been fetched
- * @param {object} frameFile holds information regarding element
+ * Stores element if it is fetching a framed route. Returns false if the file has already been fetched
+ * @param {object} frameFile - holds information regarding element
  * @param {spar element} routeElement  
- * @param {number} orderOnPage order of element to be rendered in 'render-sync' 
+ * @param {number} orderOnDomTree - order of element to be appended in appendSync
+ * @return {boolean}
  */
-function pushAndReturnFetchVal( frameFile, routeElement, orderOnPage ) {
-    console.log("pushed frame component",routeElement,orderOnPage)
+function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
     if ( frameFile[routeElement.src] ) {
-      frameFile[routeElement.src].push([routeElement,orderOnPage]);
+      frameFile[routeElement.src].push([routeElement,orderOnDomTree]);
       return false;
     } else {      
-      frameFile[routeElement.src]=[[routeElement,orderOnPage]];
+      frameFile[routeElement.src]=[[routeElement,orderOnDomTree]];
       return true;
     }
 }
 
 /**
- * checks if fetched children of spar route contains any spar elements
- * @param {element} routeElement parent element
- * @param {nodes} xml fetched children
+ * Checks if fetched file contains any spar element children
+ * @param {element} routeElement - parent
+ * @param {nodes} xml - fetched children
+ * @return if spar element children exists, return children. If not, return false.
  */
 function subroutesCheck (routeElement, xml) {
   if ( routeElement.path === '/' ) {
@@ -131,10 +134,7 @@ function subroutesCheck (routeElement, xml) {
   } else {
     var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
   }
-  // console.dir(xml.children.length);
-  console.log(subroutes);
   if ( subroutes.length === 0) {
-    //console.log('invoking renderySyncFn', routeElement)
     return false;
   } else {
     return subroutes;
@@ -142,89 +142,106 @@ function subroutesCheck (routeElement, xml) {
 }
 
 /**
- * If subroutes exist, recursively call fetch on children. If not, 
- * @param {array} subroutes nested spar components 
- * @param args 
+ * If subroutes exist, recursively call fetch on children. If not, call appendSync function on element
+ * @param {array} subroutes - nested spar components 
+ * @callback appendSyncFn - appendSync function
+ * @param {array} args - parameters of appendSyncFn 
  */
-function fetchSubroutesOrRender (subroutes, renderSyncFn, ...args) {
+function fetchSubroutesOrAppend (subroutes, appendSyncFn, ...args) {
     if ( subroutes ) {
-      console.log('invoking recursive renderDiff',subroutes, window.location.pathname)
-      //window.location.pathname may not be right metric for comparison
-      renderDiff ( window.location.pathname, subroutes, callLater ( renderSyncFn, ...args ) );
+      // look into other metrics other than window.location.pathname
+      fetchRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
     } else {
-      renderSyncFn ( args[0], args[1], args[2] );
+      appendSyncFn ( args[0], args[1], args[2] );
     }
 }
 
 /**
- * Thunk stores callback invocation and its parameters
- * @param {function} cb renderSyncFn
- * @param {array} arg parameters
+ * Thunk storing callback invocation and its parameters
+ * @callback appendSyncFn
+ * @param {array} arg - parameters for callback
  */
-function callLater(cb, ...arg) {
+function deferCall(cb, ...arg) {
   return function () {
     cb ( ...arg );
   }
 }
 
 /**
- * This thunk contains the async-fetch/sync-append algorithm. When components are fetched, this function is called and
- * stores the component and its contents into a closure. Only if the element is next in line will it's children be appended.
- * After all elements children are appended, the renderSync function will be called on its parent if the parent exists.
- * @param {number} length length of array of components, when counter equals length, syncRender is called on its parent spar element
- * @param {function} laterCb result of 'callLater' which, on invocation, calls syncRender on parent spar element
+ * Thunk returning the append-sync algorithm function
+ * @param {number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
+ * @callback deferredCb - result of 'deferCall' which, on invocation, calls syncRender on parent spar element
+ * @return appendSync function
  */
-function renderSyncThunk(length, laterCb) {
+function appendSyncThunk(length, deferredCb) {
   let components = [];
   let contents = [];
   let counter = 0;
-  return function renderSync ( index, component, content ) {
+
+  /**
+   * When html files are fetched, this function is called and stores the spar element and its contents into a closure. 
+   * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
+   * the appendSync function will be called on the parent spar-element if one exists
+   * @param {number} index - order of element in the dom tree
+   * @param {element} component - element who's content has been fetched
+   * @param {documentFragment} content - fetched content 
+   */
+  return function appendSync ( index, component, content ) {
 
     components[index] = component;
     contents[index] = content;
     if ( index === counter ) {
-      while(components[counter]) {
-        console.log(components, components[counter], counter, length-1);
-        clearShadowDOM(components[counter]); 
+      while ( components[counter] ) {
+        console.log(contents[counter], components[counter], counter, length-1);
         components[counter].shadowRoot.appendChild(contents[counter]);
+        console.log(components[counter].shadowRoot.innerHTML);
         counter++;
       }
     }
-    if ( length === counter && laterCb ) {
+    if ( length === counter && deferredCb) {
       console.log('invocLater was invoked');
-      laterCb();
+      deferredCb();
     }
   }
 }
+
+/**
+ * Passes event object and any parameters into event listener
+ * @param {fn} handleChangeListener - event listener
+ * @param {array} args - arguments passed to event listener
+ * @return event listener callback
+ */
 function handleListenerBound ( handleChangeListener, ...args ) {
-  return ( ...eventArgs ) => {
-
-    // console.trace();
-    // console.log ( eventArgs, args );
-    handleChangeListener.call(this, ...eventArgs, ...args );
+  return ( event ) => {
+    handleChangeListener.call(this, event, ...args );
   }
 }
-function clearShadowDOM(component) {
-  typeof component.shadowRoot !== 'object' && console.log('undefined shadowroot', component);
-  if ( component.shadowRoot.innerHTML ) {
-    // console.trace();
-    // console.log('Cleared:',component,component.path);
-    while(component.shadowRoot.firstChild) {
-      component.shadowRoot.removeChild(component.shadowRoot.firstChild);
+
+/**
+ * Clears shadowDOM of element
+ * @param {element} element - route element
+*/
+function clearShadowDOM ( element ) {
+  // typeof element.shadowRoot !== 'object' && console.log('undefined shadowroot', element)
+  // NTS: test if statement for non-index routes
+  if ( ! ( element.pathParsed === window.location.pathname && element.shadowRoot.innerHTML === '<slot></slot>' ) ) {
+    while ( element.shadowRoot.firstChild ) {
+      element.shadowRoot.removeChild(element.shadowRoot.firstChild);
     }
   }
 }
 
-
-function preCacheRoute(elementToCache) {
-  // consider link preload for precaching
+/**
+ * Pre-caches route files
+ *  @param {element} element - route element
+ */
+function preCacheRoute ( element ) {
   // algorithm may need change for onload implementation
-  if(elementToCache.src) {
-    fetch(elementToCache.src);
+  if ( element.src ) {
+    fetch(element.src);
   }
 }
-
- </script>
+</script>
 
 
 
@@ -260,7 +277,6 @@ function preCacheRoute(elementToCache) {
       document.head.appendChild(script);
     });
   }
-
   // Lazy load the polyfill if necessary.
   if (!supportsShadowDOMV1) {
     loadScriptShadow('/bower_components/shadydom/shadydom.min.js').then(e => {

@@ -6,7 +6,7 @@
 var SPARouter = ( function ( superClass ) {
   // an array of all our commponents
   var _routeComponents = [];
-  
+
   window.addEventListener('popstate', handleListenerBound(initializeLoading, _routeComponents));
   window.addEventListener('load',handleListenerBound(loadIndexRoutes, _routeComponents));
   return class extends superClass {
@@ -29,12 +29,12 @@ var SPARouter = ( function ( superClass ) {
         anchor.href = window.location.origin+'/'+stripSlash;
       return anchor.pathname;
     }
-    fetchOrRender() {
 
-      // look into alternatives forms of getting rid of relative pathing 
-      return fetch(`${window.location.origin}/${this.src}`).then(function getText(res) {
-        return res.text();
-      });
+    navigateTo() {
+      if(window.location.pathname !== this.pathParsed) {
+        window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
+        initializeFetching ( this.pathParsed, _routeComponents);
+      }
     }
   }
 })(HTMLElement)

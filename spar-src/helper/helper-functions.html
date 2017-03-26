@@ -36,8 +36,8 @@ function initializeFetching ( urlPathname, routeComponents )  {
     })
 
     // clearing set to callback so that it doesn't block fetching
-    setTimeout(()=>{nonRoutes.forEach((route)=>clearShadowDOM( route ));},0);
-    renderDiff( urlPathname, routes );
+    setTimeout(()=>{nonmatchingRoutes.forEach((route)=>clearShadowDOM( route ));},0);
+    renderDiff( urlPathname, matchingRoutes );
 }
 function renderDiff ( urlPathname, routeComponents, invokeLater ) {
   var frameFile = {};
@@ -49,7 +49,7 @@ function renderDiff ( urlPathname, routeComponents, invokeLater ) {
     // may not need 'call', check when tests are setup
     var fetch = true;
     if ( routeComponent.frameId ) {
-      fetch = shouldFetch( frameFile, routeComponent, thkIndex )
+      fetch = pushAndReturnFetchVal( frameFile, routeComponent, thkIndex )
     }
 
     if ( !routeComponent.src ) {
@@ -61,6 +61,7 @@ function renderDiff ( urlPathname, routeComponents, invokeLater ) {
         xml = parseShadowDOM( routeComponent, xmlText );
         if ( frameFile[routeComponent.src] ) {
           frameFile[routeComponent.src].forEach ( function ([ comp, indexThk ]) {
+            console.log(comp, indexThk);
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
@@ -86,7 +87,8 @@ function renderDiff ( urlPathname, routeComponents, invokeLater ) {
     }
   });
 }
-function shouldFetch ( frameFile, routeComponent, thkIndex ) {
+function pushAndReturnFetchVal( frameFile, routeComponent, thkIndex ) {
+    console.log("pushed frame component",routeComponent,thkIndex)
     if ( frameFile[routeComponent.src] ) {
       frameFile[routeComponent.src].push([routeComponent,thkIndex]);
       return false;
@@ -135,7 +137,7 @@ function renderSyncThunk(length, laterCb) {
     contents[index] = content;
     if ( index === counter ) {
       while(components[counter]) {
-        console.log(components[counter], counter, length-1);
+        console.log(components, components[counter], counter, length-1);
         clearShadowDOM(components[counter]); 
         components[counter].shadowRoot.appendChild(contents[counter]);
         counter++;

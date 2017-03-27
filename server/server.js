@@ -1,13 +1,13 @@
 var express = require('express');
 var router1 = express.Router();
 var router2 = express.Router();
-var build = express.Route();
+var build = express.Router();
 var app = express();
 // var appStatAssets = express();
 var path = require('path');
 var morgan = require('morgan');
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, '../')));
 

@@ -8,9 +8,9 @@ function appendMarkup () {
     while ( this.firstChild ) {
       this. removeNode ( firstChild );
     }
-    var routes = document.querySelectorAll ( 'spar-route' );
+    var routes = document.querySelectorAll ( 'spr-route' );
     var shadowRoutes = indexTags.reduce( function ( coll, node ) {
-      return coll.concat ( node.shadowRoot.querySelectorAll ( 'spar-route' ) );
+      return coll.concat ( node.shadowRoot.querySelectorAll ( 'spr-route' ) );
     }, []);
     var routes = routes.concat ( shadowRoutes );
     routes.forEach ( function ( route ) {

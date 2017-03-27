@@ -9,56 +9,56 @@
   <!--<link rel='import' href='spar-src/helper-functions.html'>
   <link rel='import' href='spar-src/behaviors/route-behaviors.html'>-->
 
-  <link rel='import' href='spar-src/spar-route.html'>
+  <link rel='import' href='spar-src/spr-route.html'>
   <link rel='import' href='spar-src/index/spar-index.html'>
 
-  <link rel='import' href='spar-src/spar-link.html'>
+  <link rel='import' href='spar-src/spr-link.html'>
 </head>
 <body>
   This is the test page for spar component.  Routes are rendered below.
   <br></br>
   <br></br>
   <style scoped>
-    spar-link {
+    spr-link {
         text-decoration: underline;
     }  
   </style>
   <spar-index id='index-default-content'> hello there </spar-index>
-  <spar-route id='home-class-div-1' path='home' src="src/home/normalShadowDom.htm"></spar-route>
-  <spar-link path='about us'>Link: click here to navigate to about us page</spar-link>
+  <spr-route id='home-class-div-1' path='home' src="src/home/normalShadowDom.htm"></spr-route>
+  <spr-link path='about us'>Link: click here to navigate to about us page</spr-link>
 
   <spar-index src='src/index.html' id='index-file'> </spar-index>
-  <spar-route id='aboutus-path1' path='about us' src='src/about us/page1.html'> </spar-route>
-  <spar-route id='home-class-div-2' path='home' src="src/home/fellowShadowDOM.html"></spar-route>
-  <spar-route id='aboutus-src-js' path='about us' src='src/about us/source of javascript.html'> </spar-route>
-  <spar-route id='home-script-src' path='home' src="src/home/Srctag.html"></spar-route>
-  <spar-route id='aboutus-invoked-js' path='about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
-  <spar-route id='aboutus-slot' path='about us' src="src/about us/ne$t@d S!ots.html"><div>this div element was in the spar-route tag</div></spar-route>
-  <spar-link path='home'>Link: click here to navigate to home page</spar-link>
-  <spar-route path='home' class="home-default-route-value">The below spar-route is a slot content default</spar-route>
-  <spar-route path='home' src="src/home/SlOt^ContEnt.html" id="home-slot-default"></spar-route>
-  <spar-route path='home' class="home-default-route-value">The below route is the slot content overwritten</spar-route>
-  <spar-route path='home' src="src/home/SlOt^ContEnt.html" id="home-slot"><div slot='slot-name'>Slot override value</div></spar-route>
+  <spr-route id='aboutus-path1' path='about us' src='src/about us/page1.html'> </spr-route>
+  <spr-route id='home-class-div-2' path='home' src="src/home/fellowShadowDOM.html"></spr-route>
+  <spr-route id='aboutus-src-js' path='about us' src='src/about us/source of javascript.html'> </spr-route>
+  <spr-route id='home-script-src' path='home' src="src/home/Srctag.html"></spr-route>
+  <spr-route id='aboutus-invoked-js' path='about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spr-route>
+  <spr-route id='aboutus-slot' path='about us' src="src/about us/ne$t@d S!ots.html"><div>this div element was in the spr-route tag</div></spr-route>
+  <spr-link path='home'>Link: click here to navigate to home page</spr-link>
+  <spr-route path='home' class="home-default-route-value">The below spr-route is a slot content default</spr-route>
+  <spr-route path='home' src="src/home/SlOt^ContEnt.html" id="home-slot-default"></spr-route>
+  <spr-route path='home' class="home-default-route-value">The below route is the slot content overwritten</spr-route>
+  <spr-route path='home' src="src/home/SlOt^ContEnt.html" id="home-slot"><div slot='slot-name'>Slot override value</div></spr-route>
   <br>
   <br>
 
   <spar-index id='index-default-content-dup'> These routes will test the component's ability to handle more complex routes</spar-index>
-  <spar-route id='home-class-div-1-dup' path='home/dup' src="src/about us/duplicate pages/home/normalShadowDom.htm"></spar-route>
-  <spar-link path='about us/dup'>Link: click here to navigate to nested about us page</spar-link>
+  <spr-route id='home-class-div-1-dup' path='home/dup' src="src/about us/duplicate pages/home/normalShadowDom.htm"></spr-route>
+  <spr-link path='about us/dup'>Link: click here to navigate to nested about us page</spr-link>
 
   <spar-index src='src/about us/duplicate pages/index.html' id='index-file-dup'> </spar-index>
-  <spar-route id='aboutus-path1-dup' path='about us/dup' src='src/about us/duplicate pages/about us/page1.html'> </spar-route>
-  <spar-route id='home-class-div-2-dup' path='home/dup' src="src/about us/duplicate pages/home/fellowShadowDOM.html"></spar-route>
-  <spar-route id='aboutus-src-js-dup' path='about us/dup' src='src/about us/duplicate pages/about us/source of javascript.html'> </spar-route>
-  <spar-route id='home-script-src-dup' path='home/dup' src="src/about us/duplicate pages/home/Srctag.html"></spar-route>
-  <spar-route id='aboutus-invoked-js-dup' path='about us/dup' src="src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spar-route>
-  <spar-route id='aboutus-slot-dup' path='about us/dup' src="src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the spar-route tag</div></spar-route>
-  <spar-link path='home/dup'>Link: click here to navigate to nested home page</spar-link>
-  <spar-route path='home/dup' class="home-default-route-value">The below spar-route is a slot content default</spar-route>
-  <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" id="home-slot-default"></spar-route>
-  <spar-route path='home/dup' class="home-default-route-value">The below route is the slot content overwritten</div>
+  <spr-route id='aboutus-path1-dup' path='about us/dup' src='src/about us/duplicate pages/about us/page1.html'> </spr-route>
+  <spr-route id='home-class-div-2-dup' path='home/dup' src="src/about us/duplicate pages/home/fellowShadowDOM.html"></spr-route>
+  <spr-route id='aboutus-src-js-dup' path='about us/dup' src='src/about us/duplicate pages/about us/source of javascript.html'> </spr-route>
+  <spr-route id='home-script-src-dup' path='home/dup' src="src/about us/duplicate pages/home/Srctag.html"></spr-route>
+  <spr-route id='aboutus-invoked-js-dup' path='about us/dup' src="src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spr-route>
+  <spr-route id='aboutus-slot-dup' path='about us/dup' src="src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the spr-route tag</div></spr-route>
+  <spr-link path='home/dup'>Link: click here to navigate to nested home page</spr-link>
+  <spr-route path='home/dup' class="home-default-route-value">The below spr-route is a slot content default</spr-route>
+  <spr-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" id="home-slot-default"></spr-route>
+  <spr-route path='home/dup' class="home-default-route-value">The below route is the slot content overwritten</div>
   <!--Slot not working for some reason-->
-  <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" id="home-slot-dup"><div slot='slot-name'>Slot override value</div></spar-route>
+  <spr-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" id="home-slot-dup"><div slot='slot-name'>Slot override value</div></spr-route>
 
 </body>
 </html>

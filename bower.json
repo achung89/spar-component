@@ -1,7 +1,7 @@
 {
-  "name": "spar-route",
+  "name": "spr-route",
   "description": "Route component",
-  "main": "spar-route.html",
+  "main": "spr-route.html",
   "devDependencies": {
     "web-component-tester": "v6.0.0-prerelease.5"
   },

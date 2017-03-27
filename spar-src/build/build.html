@@ -68,7 +68,7 @@ function appendSyncThunk(length, deferredCb) {
   let contents = [];
   let counter = 0;
   /**
-   * When html files for a spar-route are fetched, this function is called and store the spar element and its fetched contents into a closure. 
+   * When html files for a spr-route are fetched, this function is called and store the spar element and its fetched contents into a closure. 
    * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
    * the deferredCb will be invoked to call appendSync on parent spar-element if one exists
    * @param {number} index - order of element in the dom tree
@@ -122,7 +122,7 @@ function subroutesCheck ( routeElement, xml ) {
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
-    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.pathStripped}"],spar-route[path="/${routeElement.pathStripped}"]`);
+    var subroutes = xml.querySelectorAll(`spr-route[path="${routeElement.pathStripped}"],spr-route[path="/${routeElement.pathStripped}"]`);
   }
   if ( subroutes.length === 0) {
     return false;
@@ -301,7 +301,7 @@ var SPARouter = ( function ( superClass ) {
 
 </script><script>
   class SparLink extends SPARouter {
-    static get is() { return 'spar-link' }
+    static get is() { return 'spr-link' }
 
     constructor() {
       super();
@@ -320,7 +320,7 @@ var SPARouter = ( function ( superClass ) {
   customElements.define(SparLink.is, SparLink);
 </script><script>
     class SparRoute extends SPARouter {
-      static get is() { return 'spar-route'; }
+      static get is() { return 'spr-route'; }
       constructor () {
         super();
         this.attachShadow({mode:'open'});

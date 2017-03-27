@@ -177,7 +177,12 @@ function clearShadowDOM ( element ) {
     }
   }
 }
-function createFragFromChildNodes(xml) {
+/** 
+ * Appends child nodes to a documentFragment
+ * @param {xml} xml - parent node
+ * @return {documentFragment} - extracted children
+*/
+function createFragFromChildNodes ( xml ) {
   var frag = document.createDocumentFragment();
   Array.from(xml.childNodes).forEach(function(node) {
     console.log(node);

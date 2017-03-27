@@ -11,11 +11,11 @@ describe('spar frames', function() {
       setTimeout(function(){
       path1 = document.querySelector('spar-route.aboutus-section.path1');
         done()
-      },500);
+      },1000);
     });
 
     it('should contain routes with content', function() {
-      console.log(77)
+      console.log ( 77 )
       nodesAboutUs = document.querySelectorAll('.aboutus-section')
 
       var allValid = true;
@@ -45,17 +45,17 @@ describe('spar frames', function() {
       
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
-           expect(testDiv[0].innerHTML).to.equal(testDivChildren);
+      expect(testDiv[0].innerHTML).to.equal(testDivChildren);
       expect(path1.shadowRoot.querySelectorAll('spar-route').length).to.equal(2);
     });
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="../src/index.html"></spar-route>
-`;
+      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us/sections" src="test-directory/src/index.html"></spar-route>\n`;                                  
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
       var spar = path1.shadowRoot.querySelectorAll('spar-route');
+      console.log(path1);
       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
@@ -72,44 +72,46 @@ describe('spar frames', function() {
 
   });
   
-//   describe('Back button', function () {
+  describe('Back button', function () {
 
-//     describe('Index Routes', function () {
-//       var indexRoutes = document.getElementsByClassName('index');
-//       var indexContentRoutes = document.getElementsByClassName('index default-content');
-//       var indexFetchRoutes = document.getElementsByClassName('index file');
-//       var links = document.getElementsByTagName('spar-link');
-//       // console.log('this is node',indexFetchRoutes);
+    describe('Index Routes', function () {
+      var indexRoutes = document.getElementsByClassName('index');
+      var indexContentRoutes = document.getElementsByClassName('index default-content');
+      var indexFetchRoutes = document.getElementsByClassName('index file');
+      var links = document.getElementsByTagName('spar-link');
+      // console.log('this is node',indexFetchRoutes);
 
-//       before(function(done) {
-//         setTimeout(function() {
-//           done();
-//           console.log(35);
-//         },100)
-//       });
+      before(function(done) {
+        setTimeout(function() {
+          window.history.back();
+          window.history.back();
+          done();
+          console.log(35);
+        },100)
+      });
 
-//       itParam('should all have content in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
-//         expect(shadowRoot).to.be.ok;
-//         console.log(40);
-//       });
+      itParam('should all have content in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
+        expect(shadowRoot).to.be.ok;
+        console.log(40);
+      });
 
-//       itParam('should display all links', Array.from(links), function(node) {
-//         expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
-//         expect(node.innerHTML).to.be.ok;
-//         console.log(46);
-//       });
+      itParam('should display all links', Array.from(links), function(node) {
+        expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
+        expect(node.innerHTML).to.be.ok;
+        console.log(46);
+      });
 
-//       itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
-//         console.log(node);
-//         expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
-//         expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
-//         expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
-//         console.log(54);
-//       });
-//       itParam('should display default content', Array.from(indexContentRoutes), function(node) {
-//         expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
-//       });
+      itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
+        console.log(node);
+        expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
+        expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
+        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
+        console.log(54);
+      });
+      itParam('should display default content', Array.from(indexContentRoutes), function(node) {
+        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
+      });
 
-//     });
-//   });
+    });
+  });
 });

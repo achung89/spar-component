@@ -1,5 +1,15 @@
 # Single Page Application Router (spar)
-
+<!--
+```
+<custom-element-demo>
+  <template>
+    <link rel="import" href="my-element.html">
+    <link rel="import" href="../other-element/other-element.html">
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
 ```html
 <spar-link path = "aboutus"> Navigate to about us page </spar-link>
 <spar-route path = "aboutus" src = "../src/aboutus.html"></spar-route>

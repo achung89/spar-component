@@ -25,26 +25,30 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     } else if ( shouldFetch ) {
 
       fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
+
         return res.text();
       }).then ( function postFetch ( xmlText ) {
+        console.log(xmlText);
         var xml = parseXML( xmlText );
-        var frameRoutes = frameFile[routeElement.src];
-        if ( frameRoutes ) {
-          frameRoutes.forEach ( function ([ comp, OODT ]) {
+        if ( frameFile[routeElement.src] ) {
+          
+          frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
+
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
-              throw 'Can not find spar-frame id="'+'"';
+              throw 'Can not find spar-frame id="'+comp.frameId+'"';
             } else {
-              var subroutes = subroutesCheck(comp,frameXml[0]);
-              // NTS: should parse only once
-              var parsed = parseXML(frameXml[0].innerHTML);
-              var params = [OODT, comp, parsed];
+              var frameContents = createFragFromChildNodes(frameXml[0]);
+              var subroutes = subroutesCheck(comp,frameContents);
+              console.log(!!subroutes);
+              var params = [OODT, comp, frameContents];
               fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
             }
           })
         } else {
+
           var subroutes = subroutesCheck(routeElement,xml);
           var params = [orderOnDomTree, routeElement, xml];
           fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
@@ -72,7 +76,7 @@ function appendSyncThunk(length, deferredCb) {
    * @param {documentFragment} content - fetched content 
    */
   return function appendSync ( index, component, content ) {
-
+    // console.log ( index, counter, length-1, component, content );
     components[index] = component;
     contents[index] = content;
     if ( index === counter ) {
@@ -109,10 +113,16 @@ function pushAndReturnFetchVal ( frameFile, routeElement, orderOnDomTree ) {
  * @return if spar element children exists, return children. If not, return false.
  */
 function subroutesCheck ( routeElement, xml ) {
+  console.log(routeElement.pathStripped);
+  console.group()
+  Array.from(xml.childNodes).forEach(function(node){
+    console.log(node);
+  })  
+  console.groupEnd()
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
-    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
+    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.pathStripped}"],spar-route[path="/${routeElement.pathStripped}"]`);
   }
   if ( subroutes.length === 0) {
     return false;
@@ -140,7 +150,8 @@ function fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...args ) {
  * @return {documentFragment} - parsed xml
  */
 function parseXML ( xmlString ) {
-  return document.createRange().createContextualFragment(xmlString);
+  var parsedNodes =  document.createRange().createContextualFragment(xmlString);
+  return parsedNodes;
 }
 /**
  * Thunk storing callback invocation and its parameters
@@ -164,5 +175,18 @@ function clearShadowDOM ( element ) {
       element.shadowRoot.removeChild ( element.shadowRoot.firstChild );
     }
   }
+}
+/** 
+ * Appends child nodes to a documentFragment
+ * @param {xml} xml - parent node
+ * @return {documentFragment} - extracted children
+*/
+function createFragFromChildNodes ( xml ) {
+  var frag = document.createDocumentFragment();
+  Array.from(xml.childNodes).forEach(function(node) {
+    console.log(node);
+    frag.appendChild(node);
+  });
+  return frag;
 }
 </script>

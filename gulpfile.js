@@ -3,7 +3,7 @@ var vulcanize = require('gulp-vulcanize');
 var htmlmin = require('gulp-htmlmin');
 
 gulp.task('vulcanize', function() {
-  return gulp.src('spar-src/build.html')
+  return gulp.src('spar-src/entry.html')
   .pipe(vulcanize({
       stripComments: true,
       inlineScripts: true

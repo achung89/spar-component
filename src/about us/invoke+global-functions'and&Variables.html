@@ -1,0 +1,7 @@
+<script>
+  globalFnDeclaration("This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv");
+  var string = globalFnExpression('This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>');
+  var div = document.createElement('div');
+  div.innerHTML = string + globalStr;
+  document.querySelector('.aboutus.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
+</script>

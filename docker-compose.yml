@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  web:
+    build:
+      dockerfile: DockerFileDev
+      context: .
+    volumes:
+      - .:/code
+      - /code/node_modules
+      - /code/bower_components
+      - /code/server_assets/bower_components
+    ports:
+      - "8080:8080"

@@ -1,0 +1,45 @@
+<link rel='import' href='../event-listeners/listeners.html'>
+<script src='../../bower_components/webcomponentsjs/webcomponents-lite.js'></script>
+
+<script>
+
+
+var SPARouter = ( function ( superClass ) {
+  // set of all routes
+  var _routeElements = new Set();
+
+  window.addEventListener('popstate', handleListenerBound ( precheckFetch, _routeElements ));
+  document.addEventListener('DOMContentLoaded', handleListenerBound ( loadIndexRoutes, _routeElements ));
+  window.addEventListener('load', handleListenerBound ( preCacheRoute, _routeElements ))
+  return class extends superClass {
+    
+    connectedCallback() {
+      _routeElements.add(this);
+    }
+    disconnectedCallback() {
+      _routeElements.delete(this);
+    }
+    get src() {
+      return this.getAttribute('src');
+    }
+    get frameId() {
+      return this.getAttribute('frame-id');
+    }
+    get pathParsed() {
+      // strips leading forward slashes
+      var stripSlash = this.path.replace(/^\/*/g,'');
+      // anchor tag will apply url parsing algorithm to path
+      var anchor = document.createElement('a');
+      anchor.href = window.location.origin+'/'+stripSlash;
+      return anchor.pathname;
+    }
+    navigateTo() {
+      if(window.location.pathname !== this.pathParsed) {
+        window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
+        initializeFetching ( this.pathParsed, _routeElements);
+      }
+    }
+  }
+})(HTMLElement)
+
+</script>

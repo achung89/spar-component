@@ -1,0 +1,15 @@
+FROM node:boron
+
+RUN npm install -g bower
+RUN npm install -g nodemon
+RUN mkdir -p /code
+WORKDIR /code
+COPY package.json /code
+COPY bower.json /code
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+RUN bower install
+RUN echo '{ "allow_root": true, "directory" : "server_assets/bower_components" }' > /root/.bowerrc
+RUN bower install
+RUN npm install
+EXPOSE 8080
+CMD nodemon server/server.js

@@ -1,0 +1,12 @@
+<script type='text/javascript'>
+  function globalFnDeclaration(arg) {
+    var div = document.createElement('div');
+    div.id = 'attachedDiv';
+    div.innerHTML = arg;
+    document.querySelector('.aboutus.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
+  }
+  var globalFnExpression = function globalFnExpression(arg) {
+    return arg;
+  }
+  var globalStr = "This global variable was accessed by another script tag in invokeglobal.html and  was appended to the #testDiv in path1.html";
+</script>

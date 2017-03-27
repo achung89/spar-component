@@ -1,0 +1,15 @@
+{
+  "name": "spar-route",
+  "description": "Route component",
+  "main": "spar-route.html",
+  "devDependencies": {
+    "web-component-tester": "v6.0.0-prerelease.5"
+  },
+  "dependencies": {
+    "custom-elements": "webcomponents/custom-elements#^1.0.0-rc.1",
+    "shadydom": "webcomponents/shadydom#^1.0.0-rc.2",
+    "shadycss": "webcomponents/shadycss#^1.0.0-rc.2",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24",
+    "web-component-tester": "^5.0.1"
+  }
+}

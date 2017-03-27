@@ -1,0 +1,23 @@
+
+
+<!--
+`spar-route`
+Route component
+-->
+
+<link rel="import" href="behaviors/route-behaviors.html"></link>
+
+  <script>
+    class SparRoute extends SPARouter {
+      static get is() { return 'spar-route'; }
+      constructor () {
+        super();
+        this.attachShadow({mode:'open'});
+      }
+      get path() {
+        var stripSlash = this.getAttribute('path').replace(/^\//g,'');
+        return stripSlash;
+      }
+    };
+    customElements.define(SparRoute.is, SparRoute);
+  </script>

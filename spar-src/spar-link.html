@@ -1,0 +1,20 @@
+<link rel="import" href="behaviors/route-behaviors.html"></link>
+<script>
+  class SparLink extends SPARouter {
+    static get is() { return 'spar-link' }
+
+    constructor() {
+      super();
+      this.navigateTo = this.navigateTo.bind(this);
+      var shadowRoot = this.attachShadow({mode:'open'});
+      shadowRoot.appendChild(document.createElement('slot'));
+    }
+    get path() {
+      return this.getAttribute('path');
+    }
+    connectedCallback () {
+      this.addEventListener('click', this.navigateTo)
+    }
+  }
+  customElements.define(SparLink.is, SparLink);
+</script>

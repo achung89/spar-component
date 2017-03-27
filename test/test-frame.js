@@ -1,15 +1,4 @@
-function click(el){
-    var ev = document.createEvent("MouseEvent");
-    ev.initMouseEvent(
-        "click",
-        true /* bubble */, true /* cancelable */,
-        window, null,
-        0, 0, 0, 0, /* coordinates */
-        false, false, false, false, /* modifier keys */
-        0 /*left*/, null
-    );
-    el.dispatchEvent(ev);
-}
+
 describe('spar frames', function() {
   describe('About us frame page', function () {
 
@@ -18,7 +7,7 @@ describe('spar frames', function() {
     var path1;
     before( function(done) {
       var aboutUsLink = document.querySelector("spar-link[path='about us/sections']");
-      click(aboutUsLink);
+      aboutUsLink.click();
       setTimeout(function(){
       path1 = document.querySelector('spar-route.aboutus-section.path1');
         done()

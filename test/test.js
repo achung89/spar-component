@@ -1,15 +1,3 @@
-function click(el){
-    var ev = document.createEvent("MouseEvent");
-    ev.initMouseEvent(
-        "click",
-        true /* bubble */, true /* cancelable */,
-        window, null,
-        0, 0, 0, 0, /* coordinates */
-        false, false, false, false, /* modifier keys */
-        0 /*left*/, null
-    );
-    el.dispatchEvent(ev);
-}
 describe('SPAR-componets', function() {
   describe('Component functionality', function() {
     var sparRoute;
@@ -28,7 +16,6 @@ describe('SPAR-componets', function() {
     // it('should be able to get and set properties', function() {
 
     // });
-
   });
 
   describe('Index Routes', function () {
@@ -76,7 +63,7 @@ describe('SPAR-componets', function() {
     var path1;
     before( function(done) {
       var aboutUsLink = document.querySelector("spar-link[path='about us']");
-      click(aboutUsLink);
+      aboutUsLink.click()
       setTimeout(function(){
       path1 = document.querySelector('spar-route.aboutus.path1');
         done()
@@ -144,7 +131,7 @@ describe('SPAR-componets', function() {
   describe('Home page', function () {
     before(function (done) {
       var homeLink = document.querySelector("spar-link[path='home']");
-      click(homeLink);
+      homeLink.click();
       setTimeout(function(){
         done();
       },500);

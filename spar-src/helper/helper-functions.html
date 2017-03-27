@@ -1,71 +1,17 @@
 <script>
-
-/** 
- * Takes a string and outputs a parsed XML
- * @param {string} xmlString - string to be parsed
- * @return {documentFragment} - parsed xml
- */
-function parseXML ( xmlString ) {
-  return document.createRange().createContextualFragment(xmlString);
-}
-
 /**
- * Called on 'load': pushstate the index path and starts the fetch-async/append-sync algorithm for routes
- * @param {event} event - event object from 'load' listener 
- * @param {array} routeElements - array of route elements
- */
-function loadIndexRoutes ( event, routeElements ) {
-  window.history.pushState({'_spa_PATH':'/'},'','/');
-  initializeFetching( '/', routeElements );
-}
-
-/**
- * Called on 'popstate'. Starts fetch-async/append-sync algorithm
- * @param {event} event - event object from 'pop' listener
- * @param {array} routeElements - array of route elements
- */
-function precheckFetch ( event, routeElements ) {
-
-  // fetch only if popstate was triggered by navigation button
-  if ( event.state && event.state._spa_PATH ) {
-    let pathname = event.state._spa_PATH;
-    initializeFetching(pathname, routeElements);
-  }
-}
-
-/**
- * Clears all shadowDOMs and fetches files
- * @param {string} urlPathname - url string to compare routes to
- * @param {array} routeElements - array of route elements
- */
-function initializeFetching ( urlPathname, routeElements )  {
-    var matchingRoutes = [];
-
-    routeElements.forEach( function ( comp ) {
-      // console.log(comp);
-      if ( comp.pathParsed === urlPathname ) {
-        matchingRoutes.push(comp);
-      } 
-    });
-
-    // clearing deferred so as to not block fetching
-    setTimeout(()=>{routeElements.forEach((route)=>clearShadowDOM( route ));},0);
-    fetchRoutes( urlPathname, matchingRoutes );
-}
-
-/**
- * Recursive tree function to fetch files async and call appendSync.
+ * Recursive tree function to fetch files asynchronously and call appendSync.
  * @param {string} urlPathname - pushstate path
  * @param {array} routeElements array - of elements to be fetched and later rendered
  * @callback deferredFn - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
-function fetchRoutes ( urlPathname, routeElements, deferredCb ) {
+function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
   // frameFile stores information regarding framed routes
   var frameFile = {};
   if ( ( routeElements.size || routeElements.length ) === 0 ) {
     return;
   }
-  let  appendSyncFn = appendSyncThunk ( routeElements.size || routeElements.length, deferredCb );
+  var  appendSyncFn = appendSyncThunk ( routeElements.size || routeElements.length, deferredCb );
   routeElements.forEach( ( routeElement, orderOnDomTree ) => {
     // may not need 'call', check when tests are setup
     var shouldFetch = true;
@@ -104,71 +50,8 @@ function fetchRoutes ( urlPathname, routeElements, deferredCb ) {
     }
   });
 }
-
 /**
- * Stores element if it is fetching a framed route. Returns false if the file has already been fetched
- * @param {object} frameFile - holds information regarding element
- * @param {spar element} routeElement  
- * @param {number} orderOnDomTree - order of element to be appended in appendSync
- * @return {boolean}
- */
-function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
-    if ( frameFile[routeElement.src] ) {
-      frameFile[routeElement.src].push([routeElement,orderOnDomTree]);
-      return false;
-    } else {      
-      frameFile[routeElement.src]=[[routeElement,orderOnDomTree]];
-      return true;
-    }
-}
-
-/**
- * Checks if fetched file contains any spar element children
- * @param {element} routeElement - parent
- * @param {nodes} xml - fetched children
- * @return if spar element children exists, return children. If not, return false.
- */
-function subroutesCheck (routeElement, xml) {
-  if ( routeElement.path === '/' ) {
-    var subroutes = xml.querySelectorAll(`spar-index`);
-  } else {
-    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
-  }
-  if ( subroutes.length === 0) {
-    return false;
-  } else {
-    return subroutes;
-  }
-}
-
-/**
- * If subroutes exist, recursively call fetch on children. If not, call appendSync function on element
- * @param {array} subroutes - nested spar components 
- * @callback appendSyncFn - appendSync function
- * @param {array} args - parameters of appendSyncFn 
- */
-function fetchSubroutesOrAppend (subroutes, appendSyncFn, ...args) {
-    if ( subroutes ) {
-      // look into other metrics other than window.location.pathname
-      fetchRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
-    } else {
-      appendSyncFn ( args[0], args[1], args[2] );
-    }
-}
-
-/**
- * Thunk storing callback invocation and its parameters
- * @callback appendSyncFn
- * @param {array} arg - parameters for callback
- */
-function deferCall(cb, ...arg) {
-  return function () {
-    cb ( ...arg );
-  }
-}
-
-/**
- * Thunk returning the append-sync algorithm function
+ * Thunk returning the appendSync algorithm function
  * @param {number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
  * @callback deferredCb - result of 'deferCall' which, on invocation, calls syncRender on parent spar element
  * @return appendSync function
@@ -181,7 +64,7 @@ function appendSyncThunk(length, deferredCb) {
   /**
    * When html files are fetched, this function is called and stores the spar element and its contents into a closure. 
    * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
-   * the appendSync function will be called on the parent spar-element if one exists
+   * the appendSync function will be called on the parent spar-element if it exists
    * @param {number} index - order of element in the dom tree
    * @param {element} component - element who's content has been fetched
    * @param {documentFragment} content - fetched content 
@@ -201,19 +84,72 @@ function appendSyncThunk(length, deferredCb) {
     }
   }
 }
-
 /**
- * Passes event object and any parameters into event listener
- * @param {fn} handleChangeListener - event listener
- * @param {array} args - arguments passed to event listener
- * @return event listener callback
+ * Stores element if it is fetching a framed route. Returns false if the file has already been fetched
+ * @param {object} frameFile - holds information regarding element
+ * @param {spar element} routeElement  
+ * @param {number} orderOnDomTree - order of element to be appended in appendSync
+ * @return {boolean}
  */
-function handleListenerBound ( handleChangeListener, ...args ) {
-  return ( event ) => {
-    handleChangeListener.call(this, event, ...args );
+function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
+    if ( frameFile[routeElement.src] ) {
+      frameFile[routeElement.src].push([routeElement,orderOnDomTree]);
+      return false;
+    } else {      
+      frameFile[routeElement.src]=[[routeElement,orderOnDomTree]];
+      return true;
+    }
+}
+/**
+ * Checks if fetched file contains any spar element children
+ * @param {element} routeElement - parent
+ * @param {nodes} xml - fetched children
+ * @return if spar element children exists, return children. If not, return false.
+ */
+function subroutesCheck (routeElement, xml) {
+  if ( routeElement.path === '/' ) {
+    var subroutes = xml.querySelectorAll(`spar-index`);
+  } else {
+    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
+  }
+  if ( subroutes.length === 0) {
+    return false;
+  } else {
+    return subroutes;
   }
 }
-
+/**
+ * If subroutes exist, recursively call fetch on children. If not, call appendSync function on element
+ * @param {array} subroutes - nested spar components 
+ * @callback appendSyncFn - appendSync function
+ * @param {array} args - parameters of appendSyncFn 
+ */
+function fetchSubroutesOrAppend (subroutes, appendSyncFn, ...args) {
+    if ( subroutes ) {
+      // look into other metrics other than window.location.pathname
+      fetchAndAppendRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
+    } else {
+      appendSyncFn ( args[0], args[1], args[2] );
+    }
+}
+/** 
+ * Takes a string and outputs a parsed XML
+ * @param {string} xmlString - string to be parsed
+ * @return {documentFragment} - parsed xml
+ */
+function parseXML ( xmlString ) {
+  return document.createRange().createContextualFragment(xmlString);
+}
+/**
+ * Thunk storing callback invocation and its parameters
+ * @callback appendSyncFn
+ * @param {array} arg - parameters for callback
+ */
+function deferCall(cb, ...arg) {
+  return function () {
+    cb ( ...arg );
+  }
+}
 /**
  * Clears shadowDOM of element
  * @param {element} element - route element
@@ -226,20 +162,6 @@ function clearShadowDOM ( element ) {
       element.shadowRoot.removeChild(element.shadowRoot.firstChild);
     }
   }
-}
-
-/**
- * Pre-caches route files
- *  @param {element} element - route element
- */
-function preCacheRoute ( event, elements ) {
-  // algorithm may need change for onload implementation
-  
-  elements.forEach ( function ( element ) {
-    if ( element.src && element.pathParsed !== '/' ) {
-      fetch(element.src);
-    }
-  });
 }
 </script>
 

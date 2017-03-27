@@ -1,0 +1,304 @@
+<html><head><meta charset="UTF-8"></head><body><div hidden="" by-vulcanize=""><script>
+/**
+ * Recursive tree function to fetch files asynchronously and call appendSync.
+ * @param {string} urlPathname - pushstate path
+ * @param {array} routeElements array - of elements to be fetched and later rendered
+ * @callback deferredFn - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
+ */
+function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
+  // frameFile stores information regarding framed routes
+  var frameFile = {};
+  if ( ( routeElements.size || routeElements.length ) === 0 ) {
+    return;
+  }
+  var  appendSyncFn = appendSyncThunk ( routeElements.size || routeElements.length, deferredCb );
+  routeElements.forEach( ( routeElement, orderOnDomTree ) => {
+    // may not need 'call', check when tests are setup
+    var shouldFetch = true;
+    if ( routeElement.frameId ) {
+      shouldFetch = pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree )
+    }
+
+    if ( !routeElement.src ) {
+      appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
+    } else if ( shouldFetch ) {
+
+      fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
+        return res.text();
+      }).then ( function postFetch ( xmlText ) {
+        var xml = parseXML( xmlText );
+        if ( frameFile[routeElement.src] ) {
+          frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
+            var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
+            if ( frameXml.length > 1 ) {
+              throw 'Can not have multiple tags with same frame id per document';
+            } else if ( frameXml.length === 0 ) {
+              throw 'Can not find spar-frame id="'+'"';
+            } else {
+              var subroutes = subroutesCheck(comp,frameXml[0]);
+              var parsed = parseXML(frameXml[0].innerHTML);
+              var params = [OODT, comp, parsed];
+              fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
+            }
+          })
+        } else {
+          var subroutes = subroutesCheck(routeElement,xml);
+          var params = [orderOnDomTree, routeElement, xml];
+          fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
+        }
+      });
+    }
+  });
+}
+/**
+ * Thunk returning the appendSync algorithm function
+ * @param {number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
+ * @callback deferredCb - result of 'deferCall' which, on invocation, calls syncRender on parent spar element
+ * @return appendSync function
+ */
+function appendSyncThunk(length, deferredCb) {
+  let components = [];
+  let contents = [];
+  let counter = 0;
+
+  /**
+   * When html files are fetched, this function is called and stores the spar element and its contents into a closure. 
+   * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
+   * the appendSync function will be called on the parent spar-element if it exists
+   * @param {number} index - order of element in the dom tree
+   * @param {element} component - element who's content has been fetched
+   * @param {documentFragment} content - fetched content 
+   */
+  return function appendSync ( index, component, content ) {
+
+    components[index] = component;
+    contents[index] = content;
+    if ( index === counter ) {
+      while ( components[counter] ) {
+        components[counter].shadowRoot.appendChild(contents[counter]);
+        counter++;
+      }
+    }
+    if ( length === counter && deferredCb) {
+      deferredCb();
+    }
+  }
+}
+/**
+ * Stores element if it is fetching a framed route. Returns false if the file has already been fetched
+ * @param {object} frameFile - holds information regarding element
+ * @param {spar element} routeElement  
+ * @param {number} orderOnDomTree - order of element to be appended in appendSync
+ * @return {boolean}
+ */
+function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
+    if ( frameFile[routeElement.src] ) {
+      frameFile[routeElement.src].push([routeElement,orderOnDomTree]);
+      return false;
+    } else {      
+      frameFile[routeElement.src]=[[routeElement,orderOnDomTree]];
+      return true;
+    }
+}
+/**
+ * Checks if fetched file contains any spar element children
+ * @param {element} routeElement - parent
+ * @param {nodes} xml - fetched children
+ * @return if spar element children exists, return children. If not, return false.
+ */
+function subroutesCheck (routeElement, xml) {
+  if ( routeElement.path === '/' ) {
+    var subroutes = xml.querySelectorAll(`spar-index`);
+  } else {
+    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.path}"],spar-route[path="/${routeElement.path}"]`);
+  }
+  if ( subroutes.length === 0) {
+    return false;
+  } else {
+    return subroutes;
+  }
+}
+/**
+ * If subroutes exist, recursively call fetch on children. If not, call appendSync function on element
+ * @param {array} subroutes - nested spar components 
+ * @callback appendSyncFn - appendSync function
+ * @param {array} args - parameters of appendSyncFn 
+ */
+function fetchSubroutesOrAppend (subroutes, appendSyncFn, ...args) {
+    if ( subroutes ) {
+      // look into other metrics other than window.location.pathname
+      fetchAndAppendRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
+    } else {
+      appendSyncFn ( args[0], args[1], args[2] );
+    }
+}
+/** 
+ * Takes a string and outputs a parsed XML
+ * @param {string} xmlString - string to be parsed
+ * @return {documentFragment} - parsed xml
+ */
+function parseXML ( xmlString ) {
+  return document.createRange().createContextualFragment(xmlString);
+}
+/**
+ * Thunk storing callback invocation and its parameters
+ * @callback appendSyncFn
+ * @param {array} arg - parameters for callback
+ */
+function deferCall(cb, ...arg) {
+  return function () {
+    cb ( ...arg );
+  }
+}
+/**
+ * Clears shadowDOM of element
+ * @param {element} element - route element
+*/
+function clearShadowDOM ( element ) {
+  // typeof element.shadowRoot !== 'object' && console.log('undefined shadowroot', element)
+  // NTS: test if statement for non-index routes
+  if ( ! ( element.pathParsed === window.location.pathname && element.shadowRoot.innerHTML === '<slot></slot>' ) ) {
+    while ( element.shadowRoot.firstChild ) {
+      element.shadowRoot.removeChild(element.shadowRoot.firstChild);
+    }
+  }
+}
+</script><script>
+  /**
+ * Called on 'popstate'. Starts fetch-async/append-sync algorithm
+ * @param {event} event - event object from 'pop' listener
+ * @param {array} routeElements - array of route elements
+ */
+function precheckFetch ( event, routeElements ) {
+  // fetch only if popstate was triggered by navigation button
+  if ( event.state && event.state._spa_PATH ) {
+    let pathname = event.state._spa_PATH;
+    initializeFetching(pathname, routeElements);
+  }
+}
+/**
+ * Called on 'load': pushstate the index path and starts the fetch-async/append-sync algorithm for routes
+ * @param {event} event - event object from 'load' listener 
+ * @param {array} routeElements - array of route elements
+ */
+function loadIndexRoutes ( event, routeElements ) {
+  window.history.pushState({'_spa_PATH':'/'},'','/');
+  initializeFetching( '/', routeElements );
+}
+/**
+ * Clears all shadowDOMs and fetches files
+ * @param {string} urlPathname - url string to compare routes to
+ * @param {array} routeElements - array of route elements
+ */
+function initializeFetching ( urlPathname, routeElements )  {
+    var matchingRoutes = [];
+    routeElements.forEach( function ( comp ) {
+      // console.log(comp);
+      if ( comp.pathParsed === urlPathname ) {
+        matchingRoutes.push(comp);
+      }
+    });
+
+    // clearing deferred so as to not block fetching
+    setTimeout(()=>{routeElements.forEach((route)=>clearShadowDOM( route ));},0);
+    fetchAndAppendRoutes( urlPathname, matchingRoutes );
+}
+/**
+ * Pre-caches route files
+ *  @param {element} element - route element
+ */
+function preCacheRoute ( event, elements ) {
+  // algorithm may need change for onload implementation
+  
+  elements.forEach ( function ( element ) {
+    if ( element.src && element.pathParsed !== '/' ) {
+      fetch(element.src);
+    }
+  });
+}
+/**
+ * Passes event object and any parameters into event listener
+ * @param {fn} handleChangeListener - event listener
+ * @param {array} args - arguments passed to event listener
+ * @return event listener callback
+ */
+function handleListenerBound ( handleChangeListener, ...args ) {
+  return ( event ) => {
+    handleChangeListener.call(this, event, ...args );
+  }
+}
+</script><script>
+
+
+var SPARouter = ( function ( superClass ) {
+  // set of all routes
+  var _routeElements = new Set();
+
+  window.addEventListener('popstate', handleListenerBound ( precheckFetch, _routeElements ));
+  document.addEventListener('DOMContentLoaded', handleListenerBound ( loadIndexRoutes, _routeElements ));
+  window.addEventListener('load', handleListenerBound ( preCacheRoute, _routeElements ))
+  return class extends superClass {
+    
+    connectedCallback() {
+      _routeElements.add(this);
+    }
+    disconnectedCallback() {
+      _routeElements.delete(this);
+    }
+    get src() {
+      return this.getAttribute('src');
+    }
+    get frameId() {
+      return this.getAttribute('frame-id');
+    }
+    get pathParsed() {
+      // strips leading forward slashes
+      var stripSlash = this.path.replace(/^\/*/g,'');
+      // anchor tag will apply url parsing algorithm to path
+      var anchor = document.createElement('a');
+      anchor.href = window.location.origin+'/'+stripSlash;
+      return anchor.pathname;
+    }
+    navigateTo() {
+      console.log(window.location.pathname, this.pathParsed)
+      if(window.location.pathname !== this.pathParsed) {
+        window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
+        initializeFetching ( this.pathParsed, _routeElements);
+      }
+    }
+  }
+})(HTMLElement)
+
+</script><script>
+  class SparLink extends SPARouter {
+    static get is() { return 'spar-link' }
+
+    constructor() {
+      super();
+      this.navigateTo = this.navigateTo.bind(this);
+      var shadowRoot = this.attachShadow({mode:'open'});
+      shadowRoot.appendChild(document.createElement('slot'));
+    }
+    get path() {
+      return this.getAttribute('path');
+    }
+    connectedCallback () {
+      console.log(this.path);
+      this.addEventListener('click', this.navigateTo)
+    }
+  }
+  customElements.define(SparLink.is, SparLink);
+</script><script>
+    class SparRoute extends SPARouter {
+      static get is() { return 'spar-route'; }
+      constructor () {
+        super();
+        this.attachShadow({mode:'open'});
+      }
+      get path() {
+        var stripSlash = this.getAttribute('path').replace(/^\//g,'');
+        return stripSlash;
+      }
+    };
+    customElements.define(SparRoute.is, SparRoute);
+  </script></div></body></html>

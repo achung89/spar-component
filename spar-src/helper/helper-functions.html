@@ -2,21 +2,22 @@
 /**
  * Recursive tree function to fetch files asynchronously and call appendSync.
  * @param {string} urlPathname - pushstate path
- * @param {array} routeElements array - of elements to be fetched and later rendered
- * @callback deferredFn - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
+ * @param {array} routeElements - array of elements to be fetched and later rendered
+ * @callback deferredCb - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
 function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
-  // frameFile stores information regarding framed routes
+  // frameFile stores routes fetching spar-frames
   var frameFile = {};
   if ( ( routeElements.size || routeElements.length ) === 0 ) {
     return;
   }
   var  appendSyncFn = appendSyncThunk ( routeElements.size || routeElements.length, deferredCb );
   routeElements.forEach( ( routeElement, orderOnDomTree ) => {
-    // may not need 'call', check when tests are setup
     var shouldFetch = true;
-    if ( routeElement.frameId ) {
-      shouldFetch = pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree )
+    var hasFrameId = routeElement.frameId;
+
+    if ( hasFrameId ) {
+      shouldFetch = pushAndReturnFetchVal ( frameFile, routeElement, orderOnDomTree )
     }
 
     if ( !routeElement.src ) {
@@ -27,8 +28,9 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
         return res.text();
       }).then ( function postFetch ( xmlText ) {
         var xml = parseXML( xmlText );
-        if ( frameFile[routeElement.src] ) {
-          frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
+        var frameRoutes = frameFile[routeElement.src];
+        if ( frameRoutes ) {
+          frameRoutes.forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
@@ -36,6 +38,7 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
               throw 'Can not find spar-frame id="'+'"';
             } else {
               var subroutes = subroutesCheck(comp,frameXml[0]);
+              // NTS: should parse only once
               var parsed = parseXML(frameXml[0].innerHTML);
               var params = [OODT, comp, parsed];
               fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
@@ -51,7 +54,7 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
   });
 }
 /**
- * Thunk returning the appendSync algorithm function
+ * Thunk returning the appendSyn function
  * @param {number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
  * @callback deferredCb - result of 'deferCall' which, on invocation, calls syncRender on parent spar element
  * @return appendSync function
@@ -60,11 +63,10 @@ function appendSyncThunk(length, deferredCb) {
   let components = [];
   let contents = [];
   let counter = 0;
-
   /**
-   * When html files are fetched, this function is called and stores the spar element and its contents into a closure. 
+   * When html files for a spar-route are fetched, this function is called and store the spar element and its fetched contents into a closure. 
    * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
-   * the appendSync function will be called on the parent spar-element if it exists
+   * the deferredCb will be invoked to call appendSync on parent spar-element if one exists
    * @param {number} index - order of element in the dom tree
    * @param {element} component - element who's content has been fetched
    * @param {documentFragment} content - fetched content 
@@ -75,7 +77,7 @@ function appendSyncThunk(length, deferredCb) {
     contents[index] = content;
     if ( index === counter ) {
       while ( components[counter] ) {
-        components[counter].shadowRoot.appendChild(contents[counter]);
+        components[counter].shadowRoot.appendChild ( contents[counter] );
         counter++;
       }
     }
@@ -91,7 +93,7 @@ function appendSyncThunk(length, deferredCb) {
  * @param {number} orderOnDomTree - order of element to be appended in appendSync
  * @return {boolean}
  */
-function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
+function pushAndReturnFetchVal ( frameFile, routeElement, orderOnDomTree ) {
     if ( frameFile[routeElement.src] ) {
       frameFile[routeElement.src].push([routeElement,orderOnDomTree]);
       return false;
@@ -106,7 +108,7 @@ function pushAndReturnFetchVal( frameFile, routeElement, orderOnDomTree ) {
  * @param {nodes} xml - fetched children
  * @return if spar element children exists, return children. If not, return false.
  */
-function subroutesCheck (routeElement, xml) {
+function subroutesCheck ( routeElement, xml ) {
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
@@ -124,7 +126,7 @@ function subroutesCheck (routeElement, xml) {
  * @callback appendSyncFn - appendSync function
  * @param {array} args - parameters of appendSyncFn 
  */
-function fetchSubroutesOrAppend (subroutes, appendSyncFn, ...args) {
+function fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...args ) {
     if ( subroutes ) {
       // look into other metrics other than window.location.pathname
       fetchAndAppendRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
@@ -145,7 +147,7 @@ function parseXML ( xmlString ) {
  * @callback appendSyncFn
  * @param {array} arg - parameters for callback
  */
-function deferCall(cb, ...arg) {
+function deferCall ( cb, ...arg ) {
   return function () {
     cb ( ...arg );
   }
@@ -159,7 +161,7 @@ function clearShadowDOM ( element ) {
   // NTS: test if statement for non-index routes
   if ( ! ( element.pathParsed === window.location.pathname && element.shadowRoot.innerHTML === '<slot></slot>' ) ) {
     while ( element.shadowRoot.firstChild ) {
-      element.shadowRoot.removeChild(element.shadowRoot.firstChild);
+      element.shadowRoot.removeChild ( element.shadowRoot.firstChild );
     }
   }
 }

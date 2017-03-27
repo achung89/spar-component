@@ -13,6 +13,7 @@
       return this.getAttribute('path');
     }
     connectedCallback () {
+      console.log(this.path);
       this.addEventListener('click', this.navigateTo)
     }
   }

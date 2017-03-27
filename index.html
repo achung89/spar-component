@@ -13,13 +13,14 @@
 </head>
 <body>
   This is the test page for spar component.  Routes are rendered below.
-  <br></br>
-  <br></br>
+  <br>
+  <br>
   <style scoped>
     spar-link {
         text-decoration: underline;
     }
   </style>
+
   <spar-route path='/' class='index default-content'> hello there </spar-route>
   <spar-route class='home class-div-1' path='home' src="src/home/normalShadowDom.htm"></spar-route>
   <spar-link path='about us'> click here to navigate to about us page</spar-link>
@@ -31,6 +32,7 @@
   <spar-route class='home script-src' path='home' src="src/home/Srctag.html"></spar-route>
   <spar-route class='aboutus invoked-js' path='/about us' src="src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
   <spar-route class='aboutus slot' path='about us' src="src/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  
   <spar-link path='home'> click here to navigate to home page</spar-link>
   <spar-route path='home' class="home default-route-value">The below spar-route is a slot content default</spar-route>
   <spar-route path='/home' src="src/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
@@ -77,15 +79,15 @@
   <spar-route class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="src/about us segments/aboutusmix.html"></spar-route>
   <spar-route class='aboutus-section-mix slot' path="about us/sections/comp" src="src/about us segments/about us.html" frame-id="four">Slot override value</spar-route>
   <script>
-    WCT.loadSuites([
-      'test/index.test.js',
-      'test/test.js',
-      // 'test/test-dup.js'
-    ]);
-    WCT.loadSuites([
-      'test/test-frame.js',
-      // 'test/test-mix.js'
-    ]);
+    // WCT.loadSuites([
+    //   'test/index.test.js',
+    //   'test/test.js',
+    //   // 'test/test-dup.js'
+    // ]);
+    // WCT.loadSuites([
+    //   'test/test-frame.js',
+    //   // 'test/test-mix.js'
+    // ]);
   </script>
 </body>
 </html>

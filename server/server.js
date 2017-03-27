@@ -1,11 +1,14 @@
 var express = require('express');
 var router1 = express.Router();
 var router2 = express.Router();
+var build = express.Route();
 var app = express();
-var appStatAssets = express();
+// var appStatAssets = express();
 var path = require('path');
+var morgan = require('morgan');
 
-app.use(express.static(path.join(__dirname, '../test-directory/')));
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '../')));
 
 router1.get('/', function ( req, res ) {
   res.sendFile(path.join(__dirname, '../test-directory/index.html'));
@@ -23,6 +26,7 @@ app.listen(8080, function(err){
     throw err;
   }
 });
+
 /**the following routes test the service from a build folder */
 // appStatAssets.use(express.static(path.join(__dirname, 'server_assets')));
 

@@ -25,12 +25,15 @@ var SPARouter = ( function ( superClass ) {
     get frameId() {
       return this.getAttribute('frame-id');
     }
+    get pathStripped() {
+      var stripSlash = this.path.replace(/^\/*/g,'');
+      return stripSlash;
+    }
     get pathParsed() {
       // strips leading forward slashes
-      var stripSlash = this.path.replace(/^\/*/g,'');
       // anchor tag will apply url parsing algorithm to path
       var anchor = document.createElement('a');
-      anchor.href = window.location.origin+'/'+stripSlash;
+      anchor.href = window.location.origin+'/'+this.pathStripped;
       return anchor.pathname;
     }
     navigateTo() {

@@ -12,4 +12,4 @@ RUN echo '{ "allow_root": true, "directory" : "server_assets/bower_components" }
 RUN bower install
 RUN npm install
 EXPOSE 8080
-CMD nodemon server/server.js
+CMD nodemon -L server/server.js

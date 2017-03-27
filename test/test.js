@@ -108,7 +108,7 @@ describe('SPAR-componets', function() {
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="../src/index.html"></spar-route>\n`;
+      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="test-directory/src/index.html"></spar-route>\n`;
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
       var spar = path1.shadowRoot.querySelectorAll('spar-route');
@@ -198,7 +198,7 @@ describe('SPAR-componets', function() {
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="../src/index.html"></spar-route>\n`;
+      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="test-directory/src/index.html"></spar-route>\n`;
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
       var spar = path1.shadowRoot.querySelectorAll('spar-route');

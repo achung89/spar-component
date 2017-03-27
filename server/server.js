@@ -8,18 +8,24 @@ var path = require('path');
 var morgan = require('morgan');
 
 app.use(morgan('dev'));
+
 app.use(express.static(path.join(__dirname, '../')));
 
-router1.get('/', function ( req, res ) {
-  res.sendFile(path.join(__dirname, '../test-directory/index.html'));
+build.get ('/',function ( req,res ) {
+  res.sendFile (path.join(__dirname, '../docs/demo.html') );
 });
-router2.get('/', function ( req,res ) {
-  res.sendFile(path.join(__dirname, '../test-directory/index2/index.html'));
-})
+router1.get ( '/', function ( req, res ) {
+  res.sendFile ( path.join(__dirname, '../test-directory/index.html'));
+});
+router2.get ( '/', function ( req,res ) {
+  res.sendFile ( path.join(__dirname, '../test-directory/index2/index.html'));
+});
 
 app.use(router1);
 app.use('/two', router2)
+
 app.use('/three', express.static(path.join(__dirname, '../test-directory/server_assets')));
+app.use('/build', build)
 
 app.listen(8080, function(err){
   if(err) {

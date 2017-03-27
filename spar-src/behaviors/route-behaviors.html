@@ -1,6 +1,4 @@
 <link rel='import' href='../event-listeners/listeners.html'>
-<script src='bower_components/webcomponentsjs/webcomponents-lite.js'></script>
-
 <script>
 
 
@@ -37,6 +35,7 @@ var SPARouter = ( function ( superClass ) {
       return anchor.pathname;
     }
     navigateTo() {
+      console.log(window.location.pathname, this.pathParsed)
       if(window.location.pathname !== this.pathParsed) {
         window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
         initializeFetching ( this.pathParsed, _routeElements);

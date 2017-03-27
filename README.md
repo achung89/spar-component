@@ -1,4 +1,4 @@
-# Single Page Application Router (spar)
+# Single Page Application Router (SPAR)
 <!--
 ```
 <custom-element-demo>
@@ -15,20 +15,20 @@
 <spar-route path = "aboutus" src = "../src/aboutus.html"></spar-route>
 
 ```
-Spar-component is an unopinionated declarative single page router made with webcomponents (link). It allows for single page navigation without the use of javascript. To begin using spar, simply:
+Spar-component is an unopinionated declarative single page router made with webcomponents (link). It allows for single page navigation without the use of javascript. To use spar, simply:
 
 1) Declare a spar-route element with a "path" attribute for the pathname and a "src" attribute pointing to a html file containing the child elements
 2) Declare a spar-link element with a "path" attribute matching the spar-route
 
 The contents of the fetched file will be appended to the route-element. Multiple spar-route elements can be declared for a single path and contents can be placed directly in the spar-route tag.
 
-```
+```html
 <spar-route path = '/'><div>Welcome to the home page<div></spar-route>
 ```
 
 Spar-component also allows for nested spar-routes. It allows for placing spar-elements wi
 
-#Spar-frame
+# Spar-frame
 
 The spar-frame element allows you to put contents of multiple route elements in a single file. The contents are separated by a <spar-frame> tag.
 
@@ -55,11 +55,11 @@ The spar-frame element allows you to put contents of multiple route elements in 
 ```
 # PRPL
 
-Spar-component models the PRPL pattern for efficient resource loading. It does this throgh:
+Spar-component models the PRPL pattern for efficient resource loading. It:
 
-1) Giving the index homepage the means to act as an entry point for other files
-2) Rendering the index route after the document is parsed
-3) Caching all routes after document loads
+1) Gives the index homepage the ability to act as an entry point for other files
+2) Renders the index route after the document is parsed
+3) Caches all routes after document has loaded
 
 # Design decisions
 

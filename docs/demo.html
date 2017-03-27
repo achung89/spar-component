@@ -12,7 +12,11 @@
   <div>
     <div>
       <div id = "display">
-        
+        <spar-route path="/home"><h5>Welcome! This is the home page. This text was added inline and serves as the default content for this route element.</h5></spar-route>  
+        <spar-route path="/home" src="/docs/src/home.html"></spar-route>
+        <spar-route path="aboutus">This is the about us page, these pages have nested routes</spar-route>
+        <spar-route path="aboutus" src="/docs/src/aboutus.html"></spar-route>
+
       </div>
       <div id="markup">
         <script src="/docs/js/markup.js"></script>

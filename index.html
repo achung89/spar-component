@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>spar component test page</title>
-  <script src='/spar-src/polyfill.js'></script>
- 
   <script src="bower_components/web-component-tester/browser.js"></script>
   <script src="mocha-param/lib/index.js"></script>
   <link rel='import' href='spar-src/spar-route.html'>
@@ -20,7 +18,7 @@
   <style scoped>
     spar-link {
         text-decoration: underline;
-    }  
+    }
   </style>
   <spar-route path='/' class='index default-content'> hello there </spar-route>
   <spar-route class='home class-div-1' path='home' src="src/home/normalShadowDom.htm"></spar-route>
@@ -59,12 +57,13 @@
 
   <!--Slot not working for some reason-->
   <spar-route path='home/dup' src="src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
+  
   <spar-route path='/'>The routes below will test the ability to fetch framed routes</spar-route>
   <spar-route class='aboutus-section default' path="about us/sections">The routes below are segmented frames from a single file</spar-route>
   <spar-route class='aboutus-section path1' path="about us/sections" src="src/about us segments/about us.html" frame-id="one"></spar-route>
   <spar-route class='aboutus-section js-src' path="about us/sections" src="src/about us segments/about us.html" frame-id="two"></spar-route>
   <spar-route class='aboutus-section invoke-js' path="about us/sections" src="src/about us segments/about us.html" frame-id="3"></spar-route>
-  <spar-route class='aboutus-section slot'path="about us/sections" src="src/about us segments/about us.html" frame-id="four"></spar-route>
+  <spar-route class='aboutus-section slot' path="about us/sections" src="src/about us segments/about us.html" frame-id="four"></spar-route>
   <spar-link path="about us/sections"> click here to display segmented components</spar-link>
 
   <spar-link path="about us/sections/comp"> click here to display framed components from two files mixed with regular route components</spar-link>
@@ -77,7 +76,6 @@
   <spar-route class='aboutus-section-mix invoke-js' path="about us/sections/comp" src="src/about us segments/about us2.html" frame-id="3"></spar-route>
   <spar-route class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="src/about us segments/aboutusmix.html"></spar-route>
   <spar-route class='aboutus-section-mix slot' path="about us/sections/comp" src="src/about us segments/about us.html" frame-id="four">Slot override value</spar-route>
-  <spar-link path="about us/sections"> click here to display segmented components</spar-link>
   <script>
     WCT.loadSuites([
       'test/index.test.js',

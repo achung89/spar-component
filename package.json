@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/achung89/spar-component#readme",
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-vulcanize": "^6.1.0",
     "mocha-param": "^1.0.2"
   }
 }

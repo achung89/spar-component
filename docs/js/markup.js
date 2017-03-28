@@ -14,9 +14,13 @@ function appendMarkup () {
     }, []);
     var routes = routes.concat ( shadowRoutes );
     routes.forEach ( function ( route ) {
-    document.write('src="'+element.src.substr ( element.src.lastIndexOf ('/') )+'"<br>' + 
-                    'path="' + element.pathStripped + '"<br>"' + 
-                    element.shadowRoot.innerHTML + "<br>");
+    var interpretTicks = route.shadowRoot.innerHTML.replace(new RegExp('<','g'),'&lt;')
+                                                       .replace(new RegExp('>','g'),'&gt;');
+  
+
+    document.write('<div>src="' + element.src.substr ( element.src.lastIndexOf ('/') ) + '"</div><br>' + 
+                    '<div>path="' + element.pathStripped + '"</div><br>"' + 
+                    '<pre class="prettyprint lang-html">' + interpretTicks+ '</pre><br>');
     });
   }, 100 );
 }

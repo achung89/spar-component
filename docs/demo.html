@@ -4,19 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/default.min.css">
-  <link rel='import' href="../spar-src/build.html">
-  <title>spr-route demo page</title>
+  <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+  <link rel="import" href="spar-src/build/build.html">
+    <title>spr-route demo page</title>
 </head>
 <body>
   <div>
-    <div>
+    <div id="links">
+      <spr-link path="/"></spr-link>
+    </div>
       <div id = "display">
-        <spr-route path="/home"><h5>Welcome! This is the home page. This text was added inline and serves as the default content for this route element.</h5></spr-route>  
-        <spr-route path="/home" src="/docs/src/home.html"></spr-route>
-        <spr-route path="aboutus">This is the about us page, these pages have nested routes</spr-route>
-        <spr-route path="aboutus" src="/docs/src/aboutus.html"></spr-route>
-
+        <div>
+        <spr-route path="/"> </spr-route>
+        <spr-route path="slots"><h5>Since these routers use webcomponents, you can use the webcomponents <pre class="prettyprint lang-html">&lt;slot&gt;</pre> api to inject elements into  </h5></spr-route>  
+        <spr-route path="slots" src="/docs/src/slots.html">
+          <div slot="header">Just place your slot elements in the fetched xml</div>
+          <div slot="body">Label your elements on your page using the slot api</div>
+          <div slot="footer">And they will be injected into the slot tags when the route changes</div>
+        </spr-route>
+        <spr-route path="nested-routes">You can also place route elements in the fetched xml</spr-route>
+        <spr-route path="nested-routes" src="/docs/src/nested.html"></spr-route>
       </div>
       <div id="markup">
         <script src="/docs/js/markup.js"></script>

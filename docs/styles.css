@@ -4,3 +4,6 @@
 #markup {
   float:right;
 }
+#links {
+  display:flex;
+}

@@ -63,18 +63,18 @@ Spar-component models the PRPL pattern for efficient resource loading. It:
 
 # Design decisions
 
-This app uses a non-blocking synchronous appending algorithm for rendering. On route change, the route will:
+This app uses a non-blocking algorithm which appends routes in order. On a path change, the route will:
 
 1) Fetch all routes asynchronously
-2) Invoke a callback on receiving each file which will...
+2) Invoke a callback upon receiving a file which will...
     - parse the file
-    - check to see if previous route element contents have been appended
-    - if not, the contents the fetched element will be stored and appended until after the previous elements have been fetched and appended.
-3) If the fetched contents have nested spr-route elements, than the algorithm will delay appending the contents until after the contents of child spr-route elements are fetched and appended
+    - append the contents if previous route elements in the DOM tree have been appended
+    - otherwise store the contents until previous elements have been fetched and appended
+3) If the fetched contents have nested spr-route elements, than the algorithm will delay appending the contents until after the child spr-route elements fetch and append their children. All of these methods are performed asynchronously.  
 
-Appending routes in order and appending the contents of nested spar elements before attaching them to the DOM tree minimizes the effects of DOM reflow.
+Appending routes in order and appending the contents of nested spar elements before attaching them to the DOM tree minimizes the effects of DOM reflow. It also ensures that all script tags that are fetched are executed in the order that they appear on the page.  
 
 # Support 
-At the moment, spar-component is only supported by google chrome. As webcomponents become more widespread, spar-component will be accessible on more browsers.
+At the moment, webcomponents and HTMLImport tags are only supported by google chrome, and the current polyfill seems to break the spar-element. As webcomponents become more widely accepted, spar-component will work to be more accessibly be more browsers.
 
 # Known issues

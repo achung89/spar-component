@@ -1,57 +1,46 @@
 # Single Page Application Router (SPAR)
-<!--
-```
-<custom-element-demo>
-  <template>
-    <link rel="import" href="my-element.html">
-    <link rel="import" href="../other-element/other-element.html">
-    <next-code-block></next-code-block>
-  </template>
-</custom-element-demo>
-```
--->
-```html
-<spr-link path = "aboutus"> Navigate to about us page </spr-link>
-<spr-route path = "aboutus" src = "../src/aboutus.html"></spr-route>
-
-```
-Spar-component is an unopinionated declarative single page router made with webcomponents (link). It allows for single page navigation without the use of javascript. To use spar, simply:
-
-1) Declare a spr-route element with a "path" attribute for the pathname and a "src" attribute pointing to a html file containing the child elements
-2) Declare a spr-link element with a "path" attribute matching the spr-route
-
-The contents of the fetched file will be appended to the route-element. Multiple spr-route elements can be declared for a single path and contents can be placed directly in the spr-route tag.
 
 ```html
-<spr-route path = '/'><div>Welcome to the home page<div></spr-route>
+<spar-link path = "aboutus"> Navigate to about us page </spar-link>
+<spar-path path = "aboutus" src = "../src/aboutus.html"></spar-path>
 ```
+Spar-component is an unopinionated declarative single page router made with webcomponents (link). It allows developers to incorporate SPA navigation without the use of javascript. To use spar, simply:
 
-Spar-component also allows for nested spr-routes. It allows for placing spar-elements wi
+1) Declare a spar-path element with a "path" attribute for the pathname and a "src" attribute pointing to a html file
+2) Declare a spar-link element with a "path" attribute matching the <spar-path>
 
-# Spar-frame
-
-The spar-frame element allows you to put contents of multiple route elements in a single file. The contents are separated by a <spar-frame> tag.
+The contents of the fetched file will be appended to the route-element. Multiple <spar-path> can be declared for a single path.
 
 ```html
-<spar-frame id = "code">
+<spar-path path = '/'><div>Welcome to the home page<div></spar-path>
+```
+
+Spar-component also allows nesting for spar-paths. It allows for placing spar-paths wi
+
+# spr-frame
+
+The spr-frame element allows you to put contents of multiple route elements in a single file. The contents are separated by a <spr-frame>.
+
+```html
+<spr-frame id = "code">
 <script>
   function codeFn() {
     ...
   }
 </script>
-</spar-frame>
+</spr-frame>
 
-<spar-frame id = "header">
+<spr-frame id = "header">
 <div>hello world!</div>
-</spar-frame>
+</spr-frame>
 
-<spar-frame id = "body">
+<spr-frame id = "body">
 ...
-</spar-frame>
+</spr-frame>
 ```
-<spr-route  path="/helloworld" frame-id="code" src="helloworld.html"></spr-route>
-<spr-route path="/helloworld" frame-id="header" src="helloworld.html"></spr-route>
-<spr-route path="/helloworld" frame-id="body" src="helloworld.html"></spr-route>
+<spar-path  path="/helloworld" frame-id="code" src="helloworld.html"></spar-path>
+<spar-path path="/helloworld" frame-id="header" src="helloworld.html"></spar-path>
+<spar-path path="/helloworld" frame-id="body" src="helloworld.html"></spar-path>
 ```
 # PRPL
 
@@ -70,11 +59,10 @@ This app uses a non-blocking algorithm which appends routes in order. On a path 
     - parse the file
     - append the contents if previous route elements in the DOM tree have been appended
     - otherwise store the contents until previous elements have been fetched and appended
-3) If the fetched contents have nested spr-route elements, than the algorithm will delay appending the contents until after the child spr-route elements fetch and append their children. All of these methods are performed asynchronously.  
+3) If the fetched contents have nested spar-path than the algorithm will delay appending the it until after the child spar-path fetches and appends its children. These chain of events are called asynchronously.  
 
-Appending routes in order and appending the contents of nested spar elements before attaching them to the DOM tree minimizes the effects of DOM reflow. It also ensures that all script tags that are fetched are executed in the order that they appear on the page.  
+Appending routes in order and appending the contents of nested spar elements before attaching them to the DOM tree minimizes the effects of DOM reflow. It also ensures that fetched script tags are executed in the order that they appear on the page.  
 
 # Support 
-At the moment, webcomponents and HTMLImport tags are only supported by google chrome, and the current polyfill seems to break the spar-element. As webcomponents become more widely accepted, spar-component will work to be more accessibly be more browsers.
-
+At the moment, spar-path is only supported by google chrome, as the current webcomponent polyfill seems incompatible with the current version of spar-path.  
 # Known issues

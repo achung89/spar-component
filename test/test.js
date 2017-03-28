@@ -8,7 +8,7 @@ describe('SPAR-componets', function() {
       sparRoute = new SparRoute();
       sparLink = new SparLink();
     })
-    it('should have class of spr-route, spr-link', function() {
+    it('should have class of spar-path, spar-link', function() {
       console.log(9);
       expect(sparRoute).to.be.an.instanceOf(SparRoute);
       expect(sparLink).to.be.an.instanceOf(SparLink);
@@ -22,7 +22,7 @@ describe('SPAR-componets', function() {
     var indexRoutes = document.getElementsByClassName('index');
     var indexContentRoutes = document.getElementsByClassName('index default-content');
     var indexFetchRoutes = document.getElementsByClassName('index file');
-    var links = document.getElementsByTagName('spr-link');
+    var links = document.getElementsByTagName('spar-link');
     // console.log('this is node',indexFetchRoutes);
 
     before(function(done) {
@@ -62,10 +62,10 @@ describe('SPAR-componets', function() {
     var nodes = {}
     var path1;
     before( function(done) {
-      var aboutUsLink = document.querySelector("spr-link[path='about us']");
+      var aboutUsLink = document.querySelector("spar-link[path='about us']");
       aboutUsLink.click()
       setTimeout(function(){
-      path1 = document.querySelector('spr-route.aboutus.path1');
+      path1 = document.querySelector('spar-path.aboutus.path1');
         done()
       },500);
     });
@@ -103,21 +103,21 @@ describe('SPAR-componets', function() {
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
            expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-      expect(path1.shadowRoot.querySelectorAll('spr-route').length).to.equal(2);
+      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
     });
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spr-route can perform a double nest</div>\n<spr-route path="about us" src="test-directory/src/index.html"></spr-route>\n`;
+      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-path can perform a double nest</div>\n<spar-path path="about us" src="test-directory/src/index.html"></spar-path>\n`;
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
-      var spar = path1.shadowRoot.querySelectorAll('spr-route');
+      var spar = path1.shadowRoot.querySelectorAll('spar-path');
       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
-      expect(spar[1].shadowRoot.querySelector('spr-route').shadowRoot.innerHTML).to.be.ok;
-      expect(spar[1].shadowRoot.querySelector('spr-route').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
     });
 
     it('should assign the default content to the slot', function() {
@@ -130,7 +130,7 @@ describe('SPAR-componets', function() {
   
   describe('Home page', function () {
     before(function (done) {
-      var homeLink = document.querySelector("spr-link[path='home']");
+      var homeLink = document.querySelector("spar-link[path='home']");
       homeLink.click();
       setTimeout(function(){
         done();
@@ -143,7 +143,7 @@ describe('SPAR-componets', function() {
     });
     it('should display default content and slot content', function() {
       var defaultRoute = document.querySelector('.home.default-route-value');
-      expect(defaultRoute.innerHTML).to.equal('The below spr-route is a slot content default');
+      expect(defaultRoute.innerHTML).to.equal('The below spar-path is a slot content default');
       var defaultSlot = document.querySelector('.home.slot div[slot="slot-name"]');
       expect(defaultSlot.assignedSlot).to.be.instanceOf(HTMLSlotElement);
     });
@@ -156,7 +156,7 @@ describe('SPAR-componets', function() {
     before( function ( done ) {
       window.history.back();
       setTimeout(function(){
-        path1 = document.querySelector('spr-route.aboutus.path1');
+        path1 = document.querySelector('spar-path.aboutus.path1');
         done()
       },500);
     });
@@ -193,21 +193,21 @@ describe('SPAR-componets', function() {
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
            expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-      expect(path1.shadowRoot.querySelectorAll('spr-route').length).to.equal(2);
+      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
     });
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spr-route can perform a double nest</div>\n<spr-route path="about us" src="test-directory/src/index.html"></spr-route>\n`;
+      var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-path can perform a double nest</div>\n<spar-path path="about us" src="test-directory/src/index.html"></spar-path>\n`;
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
-      var spar = path1.shadowRoot.querySelectorAll('spr-route');
+      var spar = path1.shadowRoot.querySelectorAll('spar-path');
       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
-      expect(spar[1].shadowRoot.querySelector('spr-route').shadowRoot.innerHTML).to.be.ok;
-      expect(spar[1].shadowRoot.querySelector('spr-route').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
     });
 
     it('should assign the default content to the slot', function() {

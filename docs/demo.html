@@ -6,24 +6,24 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
   <link rel="import" href="spar-src/build/build.html">
-    <title>spr-route demo page</title>
+    <title>spar-path demo page</title>
 </head>
 <body>
   <div>
     <div id="links">
-      <spr-link path="/"></spr-link>
+      <spar-link path="/"></spar-link>
     </div>
       <div id = "display">
         <div>
-        <spr-route path="/"> </spr-route>
-        <spr-route path="slots"><h5>Since these routers use webcomponents, you can use the webcomponents <pre class="prettyprint lang-html">&lt;slot&gt;</pre> api to inject elements into  </h5></spr-route>  
-        <spr-route path="slots" src="/docs/src/slots.html">
+        <spar-path path="/"> </spar-path>
+        <spar-path path="slots"><h5>Since these routers use webcomponents, you can use the webcomponents <pre class="prettyprint lang-html">&lt;slot&gt;</pre> api to inject elements into  </h5></spar-path>  
+        <spar-path path="slots" src="/docs/src/slots.html">
           <div slot="header">Just place your slot elements in the fetched xml</div>
           <div slot="body">Label your elements on your page using the slot api</div>
           <div slot="footer">And they will be injected into the slot tags when the route changes</div>
-        </spr-route>
-        <spr-route path="nested-routes">You can also place route elements in the fetched xml</spr-route>
-        <spr-route path="nested-routes" src="/docs/src/nested.html"></spr-route>
+        </spar-path>
+        <spar-path path="nested-routes">You can also place route elements in the fetched xml</spar-path>
+        <spar-path path="nested-routes" src="/docs/src/nested.html"></spar-path>
       </div>
       <div id="markup">
         <script src="/docs/js/markup.js"></script>

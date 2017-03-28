@@ -1,14 +1,14 @@
-<spar-frame id="one">
+<spr-frame id="one">
 <div id="testDiv">
   <div>path1.html has rendered</div>
 </div>
-<spr-route path="about us/sections" src="test-directory/nested components/aboutus.html"></spr-route>
+<spar-path path="about us/sections" src="test-directory/nested components/aboutus.html"></spar-path>
 
 <div>we are still in page1.html the content below is the result of a double nesting</div>
-<spr-route path="about us/sections" src="test-directory/nested components sections/about-us-double-nested.html"></spr-route>
-</spar-frame>
+<spar-path path="about us/sections" src="test-directory/nested components sections/about-us-double-nested.html"></spar-path>
+</spr-frame>
 
-<spar-frame id="two">
+<spr-frame id="two">
   <script type='text/javascript'>
   function globalFnDeclaration(arg) {
     var div = document.createElement('div');
@@ -21,10 +21,10 @@
   }
   var globalStr = "This global variable was accessed by another script tag in invokeglobal.html and  was appended to the #testDiv in path1.html";
 </script>
-</spar-frame>
-<spar-frame id="1">
-</spar-frame>
-<spar-frame id="3">
+</spr-frame>
+<spr-frame id="1">
+</spr-frame>
+<spr-frame id="3">
 <script>
   globalFnDeclaration("This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv");
   var string = globalFnExpression('This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>');
@@ -32,17 +32,17 @@
   div.innerHTML = string + globalStr;
   document.querySelector('.aboutus-section.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
 </script>
-</spar-frame>
+</spr-frame>
 
-<spar-frame id="four">
+<spr-frame id="four">
 <div>
-  Below is a slot tag.  Whatever is placed in the spr-route tag will be rendered below.
+  Below is a slot tag.  Whatever is placed in the spar-path tag will be rendered below.
   <slot></slot>
 </div>
 The slot below will not render because of a bug in slot distribution rendering
 <slot><slot>
-</spar-frame>
+</spr-frame>
 
-<spar-frame id="5">
+<spr-frame id="5">
 
-</spar-frame>
+</spr-frame>

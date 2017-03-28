@@ -6,7 +6,7 @@
  * @callback deferredCb - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
 function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
-  // frameFile stores routes fetching spar-frames
+  // frameFile stores routes fetching spr-frames
   var frameFile = {};
   if ( ( routeElements.size || routeElements.length ) === 0 ) {
     return;
@@ -33,12 +33,12 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
         if ( frameFile[routeElement.src] ) {
           
           frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
-            var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
+            var frameXml = xml.querySelectorAll(`spr-frame[id="${comp.frameId}"]`);
 
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
-              throw 'Can not find spar-frame id="'+comp.frameId+'"';
+              throw 'Can not find spr-frame id="'+comp.frameId+'"';
             } else {
               var frameContents = createFragFromChildNodes(frameXml[0]);
               var subroutes = subroutesCheck(comp,frameContents);
@@ -68,9 +68,9 @@ function appendSyncThunk(length, deferredCb) {
   let contents = [];
   let counter = 0;
   /**
-   * When html files for a spr-route are fetched, this function is called and store the spar element and its fetched contents into a closure. 
+   * When html files for a spar-path are fetched, this function is called and store the spar element and its fetched contents into a closure. 
    * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
-   * the deferredCb will be invoked to call appendSync on parent spar-element if one exists
+   * the deferredCb will be invoked to call appendSync on parent spar-path if one exists
    * @param {number} index - order of element in the dom tree
    * @param {element} component - element who's content has been fetched
    * @param {documentFragment} content - fetched content 
@@ -122,7 +122,7 @@ function subroutesCheck ( routeElement, xml ) {
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
-    var subroutes = xml.querySelectorAll(`spr-route[path="${routeElement.pathStripped}"],spr-route[path="/${routeElement.pathStripped}"]`);
+    var subroutes = xml.querySelectorAll(`spar-path[path="${routeElement.pathStripped}"],spar-path[path="/${routeElement.pathStripped}"]`);
   }
   if ( subroutes.length === 0) {
     return false;

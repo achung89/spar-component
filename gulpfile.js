@@ -9,8 +9,9 @@ gulp.task('vulcanize', function() {
       stripComments: true,
       inlineScripts: true
   }))
-  .pipe(rename('prod.html'))
+  .pipe(rename('spar-component.html'))
   .pipe(gulp.dest('spar-src/build'))
+  .pipe(rename('prod.html'))
   .pipe(gulp.dest('docs/src/build'));
 });
 

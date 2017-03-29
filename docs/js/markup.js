@@ -10,7 +10,7 @@ var demo = {
       demo.markupRoutes();
       demo.prettify();
     }
-    setTimeout( fn , 250 );
+    setTimeout( fn , 100 );
   },
   markupIndex: function () {
     var title = document.createElement('div');
@@ -85,6 +85,7 @@ var markUp = document.querySelector('#markup');
 var links = document.querySelector('#links');
 var indexDiv = document.querySelector('.index-route');
 var subroutesDiv = document.querySelector('.subroutes');
-links.addEventListener('click', demo.appendMarkup.bind(display));
+links.addEventListener('click', demo.appendMarkup);
+window.addEventListener('popstate', demo.appendMarkup)
 demo.markupIndex();
 demo.appendMarkup();

@@ -3,7 +3,6 @@
 var indexTags = document.querySelectorAll('body *');
 var demo = {
   appendMarkup: function () {
-    console.log(subroutesDiv)
     while ( subroutesDiv.firstChild ) {
       subroutesDiv.removeChild ( subroutesDiv.firstChild );
     }
@@ -15,7 +14,7 @@ var demo = {
   },
   markupIndex: function () {
     var title = document.createElement('div');
-    title.appendChild(document.createTextNode('src="demo.html"'));
+    title.appendChild(document.createTextNode('src="index.html"'));
     var pre = document.createElement('pre');
     pre.className="prettyprint lang-html";
     var bodyMarkup = demo.interpretMarkup ( document.body.innerHTML );  

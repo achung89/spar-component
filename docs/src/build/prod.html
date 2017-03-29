@@ -23,14 +23,14 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     if ( !routeElement.src ) {
       appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
     } else if ( shouldFetch ) {
-      fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
+      fetch(`${routeElement.baseUrl}${routeElement.src}`).then(function getText(res) {
         return res.text();
       }).then ( function postFetch ( xmlText ) {
         var xml = parseXML( xmlText );
         if ( frameFile[routeElement.src] ) {
           frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
-            // We throw errors since the browser parser won't pick up errors regarding spar-frame since it is statically analyzed
+            // We throw errors since the browser parser won't pick up errors regarding spar-frames since they are statically analyzed
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
@@ -252,7 +252,10 @@ var SPARouter = ( function ( superClass ) {
   document.addEventListener('DOMContentLoaded', handleListenerBound ( loadIndexRoutes, _routeElements ));
   window.addEventListener('load', handleListenerBound ( preCacheRoute, _routeElements ))
   return class extends superClass {
-    
+    constructor () {
+      super();
+      this._relativePath = '';
+    }
     connectedCallback() {
       _routeElements.add(this);
     }
@@ -276,8 +279,20 @@ var SPARouter = ( function ( superClass ) {
       anchor.href = window.location.origin+'/'+this.pathStripped;
       return anchor.pathname;
     }
+    get baseUrl () {
+      var anchor = document.createElement('a');
+      anchor.href = this.pathStripped;
+      var url;
+      url = anchor.protocol + '//' + anchor.host + '/';
+      return url;
+    }
+    // static set relativePath (val) {
+    //   this._relativePath = val;
+    // }
+    // get relativePath () {
+    //   return this._relativePath;
+    // }
     navigateTo() {
-      console.log(window.location.pathname, this.pathParsed)
       if(window.location.pathname !== this.pathParsed) {
         window.history.pushState({'_spa_PATH':this.pathParsed},'',this.pathParsed);
         initializeFetching ( this.pathParsed, _routeElements);

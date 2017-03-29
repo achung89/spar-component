@@ -23,14 +23,14 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     if ( !routeElement.src ) {
       appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
     } else if ( shouldFetch ) {
-      fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
+      fetch(`${routeElement.baseUrl}${routeElement.src}`).then(function getText(res) {
         return res.text();
       }).then ( function postFetch ( xmlText ) {
         var xml = parseXML( xmlText );
         if ( frameFile[routeElement.src] ) {
           frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
-            // We throw errors since the browser parser won't pick up errors regarding spar-frame since it is statically analyzed
+            // We throw errors since the browser parser won't pick up errors regarding spar-frames since they are statically analyzed
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {

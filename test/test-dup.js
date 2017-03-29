@@ -8,7 +8,7 @@
   //       var aboutUsLink = document.querySelector("spar-link[path='about us/dup']");
   //       click(aboutUsLink);
   //       setTimeout(function(){
-  //       path1 = document.querySelector('spar-route.aboutus-dup.path1');
+  //       path1 = document.querySelector('spar-path.aboutus-dup.path1');
   //         done();
   //       },500);
   //     });
@@ -44,25 +44,25 @@
   //       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
   //       expect(testDiv.length).to.equal(1);
   //         expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-  //       expect(path1.shadowRoot.querySelectorAll('spar-route').length).to.equal(2);
+  //       expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
   //     });
 
   //     it('should have nested components', function() {
   //       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-  //       var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>\n<spar-route path="about us" src="../src/index.html"></spar-route>\n`;
+  //       var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-path can perform a double nest</div>\n<spar-path path="about us" src="../src/index.html"></spar-path>\n`;
   //       var tripleNestedComponentHTML = `<div>
   //   <div>
   //     index.html file in src rendered
   //   </div>
   // </div>`;
 
-  //       var spar = path1.shadowRoot.querySelectorAll('spar-route');
+  //       var spar = path1.shadowRoot.querySelectorAll('spar-path');
   //       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
   //       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
   //       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
   //       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
-  //       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.be.ok;
-  //       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
+  //       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
+  //       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
   //     });
 
   //     it('should assign the default content to the slot', function() {
@@ -88,7 +88,7 @@
   //     });
   //     it('should display default content and slot content', function() {
   //       var defaultRoute = document.querySelector('.home-dup .default-route-value');
-  //       expect(defaultRoute.innerHTML).to.equal('The below spar-route is a slot content default');
+  //       expect(defaultRoute.innerHTML).to.equal('The below spar-path is a slot content default');
   //       var defaultSlot = document.querySelector('.home-dup .slot div[slot="slot-name"]');
   //       expect(defaultSlot.assignedSlot).to.be.instanceOf(HTMLSlotElement);
   //     });
@@ -101,7 +101,7 @@
   //     before( function ( done ) {
   //       window.history.back();
   //       setTimeout(function(){
-  //         path1 = document.querySelector('spar-route.aboutus-dup.path1');
+  //         path1 = document.querySelector('spar-path.aboutus-dup.path1');
   //         done()
   //       },500);
   //     });
@@ -139,13 +139,13 @@
   //       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
   //       expect(testDiv.length).to.equal(1);
   //           expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-  //       expect(path1.shadowRoot.querySelectorAll('spar-route').length).to.equal(2);
+  //       expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
   //     });
 
   //     it('should have nested components', function() {
   //       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
-  //       var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-route can perform a double nest</div>
-  // <spar-route path="about us" src="../src/index.html"></spar-route>
+  //       var doubleNestedComponentHTML = `<div>this is a nested component. src index will render below if spar-path can perform a double nest</div>
+  // <spar-path path="about us" src="../src/index.html"></spar-path>
   // `;
   //       var tripleNestedComponentHTML = `<div>
   //   <div>
@@ -153,13 +153,13 @@
   //   </div>
   // </div>`;
 
-  //       var spar = path1.shadowRoot.querySelectorAll('spar-route');
+  //       var spar = path1.shadowRoot.querySelectorAll('spar-path');
   //       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
   //       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
   //       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
   //       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
-  //       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.be.ok;
-  //       expect(spar[1].shadowRoot.querySelector('spar-route').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
+  //       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
+  //       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
   //     });
 
   //     it('should assign the default content to the slot', function() {

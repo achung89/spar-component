@@ -1,13 +1,13 @@
 var express = require('express');
 var router1 = express.Router();
 var router2 = express.Router();
-var build = express.Route();
+var build = express.Router();
 var app = express();
 // var appStatAssets = express();
 var path = require('path');
 var morgan = require('morgan');
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.use(express.static(path.join(__dirname, '../')));
 
@@ -22,10 +22,11 @@ router2.get ( '/', function ( req,res ) {
 });
 
 app.use(router1);
+app.use('/build', build)
 app.use('/two', router2)
 
 app.use('/three', express.static(path.join(__dirname, '../test-directory/server_assets')));
-app.use('/build', build)
+
 
 app.listen(8080, function(err){
   if(err) {

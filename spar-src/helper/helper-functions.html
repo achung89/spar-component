@@ -23,32 +23,26 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     if ( !routeElement.src ) {
       appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
     } else if ( shouldFetch ) {
-
       fetch(`${window.location.origin}/${routeElement.src}`).then(function getText(res) {
-
         return res.text();
       }).then ( function postFetch ( xmlText ) {
-        console.log(xmlText);
         var xml = parseXML( xmlText );
         if ( frameFile[routeElement.src] ) {
-          
           frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
-
+            // We throw errors since the browser parser won't pick up errors regarding spar-frame since it is statically analyzed
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
               throw 'Can not find spar-frame id="'+comp.frameId+'"';
             } else {
-              var frameContents = createFragFromChildNodes(frameXml[0]);
-              var subroutes = subroutesCheck(comp,frameContents);
-              console.log(!!subroutes);
+              var frameContents = createFragFromChildNodes ( frameXml[0] );
+              var subroutes = subroutesCheck ( comp,frameContents );
               var params = [OODT, comp, frameContents];
               fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
             }
           })
         } else {
-
           var subroutes = subroutesCheck(routeElement,xml);
           var params = [orderOnDomTree, routeElement, xml];
           fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...params );
@@ -68,9 +62,9 @@ function appendSyncThunk(length, deferredCb) {
   let contents = [];
   let counter = 0;
   /**
-   * When html files for a spar-route are fetched, this function is called and store the spar element and its fetched contents into a closure. 
+   * When html files for a spar-path are fetched, this cb stores the the spar element and its fetched contents into a closure. 
    * Only if the element is next in line in the DOM tree will it's children be appended. After all elements children are appended, 
-   * the deferredCb will be invoked to call appendSync on parent spar-element if one exists
+   * the deferredCb will be invoked to call appendSync on the parent spar-path element if one exists
    * @param {number} index - order of element in the dom tree
    * @param {element} component - element who's content has been fetched
    * @param {documentFragment} content - fetched content 
@@ -113,16 +107,10 @@ function pushAndReturnFetchVal ( frameFile, routeElement, orderOnDomTree ) {
  * @return if spar element children exists, return children. If not, return false.
  */
 function subroutesCheck ( routeElement, xml ) {
-  console.log(routeElement.pathStripped);
-  console.group()
-  Array.from(xml.childNodes).forEach(function(node){
-    console.log(node);
-  })  
-  console.groupEnd()
   if ( routeElement.path === '/' ) {
     var subroutes = xml.querySelectorAll(`spar-index`);
   } else {
-    var subroutes = xml.querySelectorAll(`spar-route[path="${routeElement.pathStripped}"],spar-route[path="/${routeElement.pathStripped}"]`);
+    var subroutes = xml.querySelectorAll(`spar-path[path="${routeElement.pathStripped}"],spar-path[path="/${routeElement.pathStripped}"]`);
   }
   if ( subroutes.length === 0) {
     return false;
@@ -170,7 +158,7 @@ function deferCall ( cb, ...arg ) {
 function clearShadowDOM ( element ) {
   // typeof element.shadowRoot !== 'object' && console.log('undefined shadowroot', element)
   // NTS: test if statement for non-index routes
-  if ( ! ( element.pathParsed === window.location.pathname && element.shadowRoot.innerHTML === '<slot></slot>' ) ) {
+  if ( !( element.pathParsed === window.location.pathname && element.shadowRoot.innerHTML === '<slot></slot>' ) ) {
     while ( element.shadowRoot.firstChild ) {
       element.shadowRoot.removeChild ( element.shadowRoot.firstChild );
     }
@@ -183,8 +171,7 @@ function clearShadowDOM ( element ) {
 */
 function createFragFromChildNodes ( xml ) {
   var frag = document.createDocumentFragment();
-  Array.from(xml.childNodes).forEach(function(node) {
-    console.log(node);
+  Array.from ( xml.childNodes ).forEach ( function ( node ) {
     frag.appendChild(node);
   });
   return frag;

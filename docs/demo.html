@@ -4,20 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.10.0/styles/default.min.css">
-  <link rel='import' href="../spar-src/build.html">
-  <title>Spar-route demo page</title>
+  <link rel="import" href="spar-src/build/build.html">
+  <link rel="stylesheet" href="docs/normalize.css">
+  <link rel="stylesheet" href="docs/styles.css">
+    <title>spar-path demo page</title>
 </head>
 <body>
-  <div>
+<nav id="links">
+  <spar-link path="/">Index route</spar-link>
+  <spar-link path="/slots">Using the 'slot'' API</spar-link>
+  <spar-link path="/nested-routes">Nested spar-path elements</spar-link>
+  <spar-link path="frames">Bundling a route with frames</spar-link>
+</nav>
+<div id = "display">
+
+  <!--header-->
+  <spar-path path="/">
     <div>
-      <div id = "display">
-        
-      </div>
-      <div id="markup">
-        <script src="/docs/js/markup.js"></script>
-      </div>
-    <div> 
-  </div>
+      Below are some paths for the index route. Each path fetches a separate file and appends them to the DOM in the order in which they appear on the page
+    </div>
+  </spar-path>
+  <spar-path path="slots">
+      Since these routers use webcomponents, you can use the webcomponents 'slot' api to inject elements into
+  </spar-path>  
+  <spar-path path="nested-routes">
+    <div>
+      You can also place route elements in the fetched xml
+    </div>
+  </spar-path>
+  <hr>
+  <!--body-->
+  <spar-path path="/" src="docs/src/index/subindex.html"></spar-path>
+  <spar-path path="/" src="docs/src/index/subindex2.html"></spar-path>
+
+  <spar-path path="slots" src="/docs/src/slots/slots.html">
+    <div slot="header">Just place the slot tags in the fetched xml</div>
+    <div slot="footer">And they will be injected into the slot tags when the route changes</div>
+  </spar-path>
+
+  <spar-path path="nested-routes" src="/docs/src/nested/nest.html"></spar-path>
+
+  <spar-path path="frames" frame-id="frame-one" src="/docs/src/frame/frame.html"></spar-path>
+  <spar-path path="frames">This allows for elements from the same routes to be created in a single file </spar-path>
+  <spar-path path="frames" frame-id="frame-two" src="/docs/src/frame/frame.html"></spar-path>
+</div>
+<div id="markup">
+  <div class="html index-route"></div>
+  <div class="html subroutes"></div>
+  <script src="/docs/js/markup.js"></script>
+</div>
 </body>
 </html>

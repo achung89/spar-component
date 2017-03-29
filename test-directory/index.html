@@ -8,7 +8,7 @@
   <script src="bower_components/web-component-tester/browser.js"></script>
   <script src="test-directory/mocha-param/lib/index.js"></script>
   <script src="spar-src/stringifyNode.js"></script>
-  <link rel='import' href='spar-src/spar-route.html'>
+  <link rel='import' href='spar-src/spar-path.html'>
   <link rel='import' href='spar-src/spar-link.html'>
 </head>
 <body>
@@ -21,62 +21,62 @@
     }
   </style>
 
-  <spar-route path='/' class='index default-content'> hello there </spar-route>
-  <spar-route class='home class-div-1' path='home' src="test-directory/src/home/normalShadowDom.htm"></spar-route>
+  <spar-path path='/' class='index default-content'> hello there </spar-path>
+  <spar-path class='home class-div-1' path='home' src="test-directory/src/home/normalShadowDom.htm"></spar-path>
   <spar-link path='about us'> click here to navigate to about us page</spar-link>
 
-  <spar-route path='/' src='test-directory/src/index.html' class='index file'> </spar-route>
-  <spar-route class='aboutus path1' path='about us' src='test-directory/src/about us/page1.html'> </spar-route>
-  <spar-route class='home class-div-2' path='home' src="test-directory/src/home/fellowShadowDOM.html"></spar-route>
-  <spar-route class='aboutus src-js' path='/about us' src='test-directory/src/about us/source of javascript.html'> </spar-route>
-  <spar-route class='home script-src' path='home' src="test-directory/src/home/Srctag.html"></spar-route>
-  <spar-route class='aboutus invoked-js' path='/about us' src="test-directory/src/about us/invoke+global-functions'and&Variables.html"> </spar-route>
-  <spar-route class='aboutus slot' path='about us' src="test-directory/src/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  <spar-path path='/' src='test-directory/src/index.html' class='index file'> </spar-path>
+  <spar-path class='aboutus path1' path='about us' src='test-directory/src/about us/page1.html'> </spar-path>
+  <spar-path class='home class-div-2' path='home' src="test-directory/src/home/fellowShadowDOM.html"></spar-path>
+  <spar-path class='aboutus src-js' path='/about us' src='test-directory/src/about us/source of javascript.html'> </spar-path>
+  <spar-path class='home script-src' path='home' src="test-directory/src/home/Srctag.html"></spar-path>
+  <spar-path class='aboutus invoked-js' path='/about us' src="test-directory/src/about us/invoke+global-functions'and&Variables.html"> </spar-path>
+  <spar-path class='aboutus slot' path='about us' src="test-directory/src/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   <spar-link path='home'> click here to navigate to home page</spar-link>
-  <spar-route path='home' class="home default-route-value">The below spar-route is a slot content default</spar-route>
-  <spar-route path='/home' src="test-directory/src/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
-  <spar-route path='home' class="home default-route-value">The below route is the slot content overwritten</spar-route>
-  <spar-route path='/home' src="test-directory/src/home/SlOt^ContEnt.html" class="home slot"><div slot='slot-name'>Slot override value</div></spar-route>
+  <spar-path path='home' class="home default-route-value">The below spar-path is a slot content default</spar-path>
+  <spar-path path='/home' src="test-directory/src/home/SlOt^ContEnt.html" class="home slot-default"></spar-path>
+  <spar-path path='home' class="home default-route-value">The below route is the slot content overwritten</spar-path>
+  <spar-path path='/home' src="test-directory/src/home/SlOt^ContEnt.html" class="home slot"><div slot='slot-name'>Slot override value</div></spar-path>
   <br>
   <br>
 
-  <spar-route path='/' class='index default-content'> These routes will test the component's ability to handle more complex routes</spar-route>
-  <spar-route class='home-dup class-div-1' path='home/dup' src="test-directory/src/about us/duplicate pages/home/normalShadowDom.htm"></spar-route>
+  <spar-path path='/' class='index default-content'> These routes will test the component's ability to handle more complex routes</spar-path>
+  <spar-path class='home-dup class-div-1' path='home/dup' src="test-directory/src/about us/duplicate pages/home/normalShadowDom.htm"></spar-path>
   <spar-link path='about us/dup'> click here to navigate to nested about us page</spar-link>
 
-  <spar-route path='/' src='test-directory/src/about us/duplicate pages/index.html' class='index file'> </spar-route>
-  <spar-route class='aboutus-dup path1' path='/about us/dup' src='test-directory/src/about us/duplicate pages/about us/page1.html'> </spar-route>
-  <spar-route class='home-dup class-div-2' path='home/dup' src="test-directory/src/about us/duplicate pages/home/fellowShadowDOM.html"></spar-route>
-  <spar-route class='aboutus-dup src-js' path='about us/dup' src='test-directory/src/about us/duplicate pages/about us/source of javascript.html'> </spar-route>
-  <spar-route class='home-dup script-src' path='/home/dup' src="test-directory/src/about us/duplicate pages/home/Srctag.html"></spar-route>
-  <spar-route class='aboutus-dup invoked-js' path='about us/dup' src="test-directory/src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spar-route>
-  <spar-route class='aboutus-dup slot' path='/about us/dup' src="test-directory/src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  <spar-path path='/' src='test-directory/src/about us/duplicate pages/index.html' class='index file'> </spar-path>
+  <spar-path class='aboutus-dup path1' path='/about us/dup' src='test-directory/src/about us/duplicate pages/about us/page1.html'> </spar-path>
+  <spar-path class='home-dup class-div-2' path='home/dup' src="test-directory/src/about us/duplicate pages/home/fellowShadowDOM.html"></spar-path>
+  <spar-path class='aboutus-dup src-js' path='about us/dup' src='test-directory/src/about us/duplicate pages/about us/source of javascript.html'> </spar-path>
+  <spar-path class='home-dup script-src' path='/home/dup' src="test-directory/src/about us/duplicate pages/home/Srctag.html"></spar-path>
+  <spar-path class='aboutus-dup invoked-js' path='about us/dup' src="test-directory/src/about us/duplicate pages/about us/invoke+global-functions'and&Variables.html"> </spar-path>
+  <spar-path class='aboutus-dup slot' path='/about us/dup' src="test-directory/src/about us/duplicate pages/about us/ne$t@d S!ots.html"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   <spar-link path='home/dup'> click here to navigate to nested home page</spar-link>
-  <spar-route path='home/dup' class="home-dup default-route-value">The below spar-route is a slot content default</spar-route>
-  <spar-route path='home/dup' src="test-directory/src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home slot-default"></spar-route>
-  <spar-route path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</spar-route>
+  <spar-path path='home/dup' class="home-dup default-route-value">The below spar-path is a slot content default</spar-path>
+  <spar-path path='home/dup' src="test-directory/src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home slot-default"></spar-path>
+  <spar-path path='home/dup' class="/home-dup default-route-value">The below route is the slot content overwritten</spar-path>
 
 
-  <spar-route path='home/dup' src="test-directory/src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-route>
+  <spar-path path='home/dup' src="test-directory/src/about us/duplicate pages/home/SlOt^ContEnt.html" class="home-dup slot"><div slot='slot-name'>Slot override value</div></spar-path>
   
-  <spar-route path='/'>The routes below will test the ability to fetch framed routes</spar-route>
-  <spar-route class='aboutus-section default' path="about us/sections">The routes below are segmented frames from a single file</spar-route>
-  <spar-route class='aboutus-section path1' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="one"></spar-route>
-  <spar-route class='aboutus-section js-src' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="two"></spar-route>
-  <spar-route class='aboutus-section invoke-js' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="3"></spar-route>
-  <spar-route class='aboutus-section slot' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="four"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  <spar-path path='/'>The routes below will test the ability to fetch framed routes</spar-path>
+  <spar-path class='aboutus-section default' path="about us/sections">The routes below are segmented frames from a single file</spar-path>
+  <spar-path class='aboutus-section path1' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="one"></spar-path>
+  <spar-path class='aboutus-section js-src' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="two"></spar-path>
+  <spar-path class='aboutus-section invoke-js' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="3"></spar-path>
+  <spar-path class='aboutus-section slot' path="about us/sections" src="test-directory/src/about us segments/about us.html" frame-id="four"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   <spar-link path="about us/sections"> click here to display framed routes</spar-link>
 
   <spar-link path="about us/sections/comp"> click here to display framed components from two files mixed with regular route components</spar-link>
-  <spar-route path='/'>The routes below will test the ability to fetch framed routes</spar-route>
-  <spar-route class='aboutus-section-mix default' path="about us/sections/comp">The routes below are segmented frames from two file mixed in with regular routes</spar-route>
-  <spar-route class='aboutus-section-mix path1' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="one"></spar-route>
-  <spar-route class='aboutus-section-mix default' path="about us/section/comp"> mixed </spar-route>
-  <spar-route class='aboutus-section-mix js-src' path="about us/sections/comp" src="test-directory/src/about us segments/about us2.html" frame-id="two"></spar-route>
-  <spar-route class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="test-directory/src/about us segments/aboutusmix.html"></spar-route>
-  <spar-route class='aboutus-section-mix invoke-js' path="about us/sections/comp" src="test-directory/src/about us segments/about us2.html" frame-id="3"></spar-route>
-  <spar-route class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="test-directory/src/about us segments/aboutusmix.html"></spar-route>
-  <spar-route class='aboutus-section-mix slot' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="four"><div>this div element was in the light dom of the spar-route tag</div></spar-route>
+  <spar-path path='/'>The routes below will test the ability to fetch framed routes</spar-path>
+  <spar-path class='aboutus-section-mix default' path="about us/sections/comp">The routes below are segmented frames from two file mixed in with regular routes</spar-path>
+  <spar-path class='aboutus-section-mix path1' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="one"></spar-path>
+  <spar-path class='aboutus-section-mix default' path="about us/section/comp"> mixed </spar-path>
+  <spar-path class='aboutus-section-mix js-src' path="about us/sections/comp" src="test-directory/src/about us segments/about us2.html" frame-id="two"></spar-path>
+  <spar-path class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="test-directory/src/about us segments/aboutusmix.html"></spar-path>
+  <spar-path class='aboutus-section-mix invoke-js' path="about us/sections/comp" src="test-directory/src/about us segments/about us2.html" frame-id="3"></spar-path>
+  <spar-path class="aboutus-section-mix mixed-content" path="about us/sections/comp" src="test-directory/src/about us segments/aboutusmix.html"></spar-path>
+  <spar-path class='aboutus-section-mix slot' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="four"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   
   <script>
     WCT.loadSuites([
@@ -86,7 +86,6 @@
     ]);
     WCT.loadSuites([
       'test/test-frame.js',
-
     ]);
   </script>
 </body>

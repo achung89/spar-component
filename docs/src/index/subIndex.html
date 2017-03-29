@@ -1,0 +1,17 @@
+<div>
+You can place html markup, link-tags, and script tags in the fetched files
+</div>
+
+<div id="lowerDiv"></div>
+
+<script>
+  function remoteFn(string) {
+    var div = document.createElement('div')
+    div.innerHTML = string;
+    div.id = "appendedDiv";
+    console.log(div);
+    document.querySelector('spar-path[src="docs/src/index/subindex.html"]')
+      .shadowRoot.querySelector('#lowerDiv')
+      .appendChild(div);
+  }
+</script>

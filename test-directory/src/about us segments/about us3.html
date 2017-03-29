@@ -1,4 +1,4 @@
-<spr-frame id="one">
+<spar-frame id="one">
 <div id="testDiv">
   <div>path1.html has rendered</div>
 </div>
@@ -6,9 +6,9 @@
 
 <div>we are still in page1.html the content below is the result of a double nesting</div>
 <spar-path path="about us/sections/comp" src="test-directory/about us sections-mixed/about-us-double-nested.html"></spar-path>
-</spr-frame>
+</spar-frame>
 
-<spr-frame id="two">
+<spar-frame id="two">
   <script type='text/javascript'>
   function globalFnDeclaration(arg) {
     var div = document.createElement('div');
@@ -21,10 +21,10 @@
   }
   var globalStr = "This global variable was accessed by another script tag in invokeglobal.html and  was appended to the #testDiv in path1.html";
 </script>
-</spr-frame>
-<spr-frame id="1">
-</spr-frame>
-<spr-frame id="3">
+</spar-frame>
+<spar-frame id="1">
+</spar-frame>
+<spar-frame id="3">
 <script>
   globalFnDeclaration("This string passed to remote function in another route-component and was appended to a third route - path1.html's - shadoDOM #testDiv");
   var string = globalFnExpression('This string was passed to and returned from a function in a remote script tag and was appended to same route as above<br>');
@@ -32,17 +32,17 @@
   div.innerHTML = string + globalStr;
   document.querySelector('.aboutus-section-mix.path1').shadowRoot.querySelector('#testDiv').appendChild(div);
 </script>
-</spr-frame>
+</spar-frame>
 
-<spr-frame id="four">
+<spar-frame id="four">
 <div>
   Below is a slot tag.  Whatever is placed in the spar-path tag will be rendered below.
   <slot></slot>
 </div>
 The slot below will not render because of a bug in slot distribution rendering
 <slot><slot>
-</spr-frame>
+</spar-frame>
 
-<spr-frame id="5">
+<spar-frame id="5">
 
-</spr-frame>
+</spar-frame>

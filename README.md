@@ -15,54 +15,58 @@ The contents of the fetched file will be appended to the route-element. Multiple
 <spar-path path = '/'><div>Welcome to the home page<div></spar-path>
 ```
 
-Spar-component also allows nesting for spar-paths. It allows for placing spar-paths wi
+Spar-component also allows nesting spar-paths. You can place spar-path elements in the fetched html files.  
 
-# spr-frame
+# spar-frame
 
-The spr-frame element allows you to put contents of multiple route elements in a single file. The contents are separated by a <spr-frame>.
+The spar-frame element allows you to put contents of multiple route elements in a single file. The contents are separated by  <spar-frame>
 
 ```html
-<spr-frame id = "code">
+<spar-frame id = "header">
+<div>This text appears in the header frame</div>
+</spar-frame>
+
+<spar-frame id = "body">
+<div>This text appears in the body frame</div>
+</spar-frame>
+<spar-frame id = "code">
 <script>
-  function codeFn() {
+  function fn() {
     ...
   }
 </script>
-</spr-frame>
-
-<spr-frame id = "header">
-<div>hello world!</div>
-</spr-frame>
-
-<spr-frame id = "body">
-...
-</spr-frame>
+</spar-frame>
 ```
+
+```html
 <spar-path  path="/helloworld" frame-id="code" src="helloworld.html"></spar-path>
 <spar-path path="/helloworld" frame-id="header" src="helloworld.html"></spar-path>
 <spar-path path="/helloworld" frame-id="body" src="helloworld.html"></spar-path>
 ```
+
+Using spar-frames will increase performance since only a single file is fetched.
+
 # PRPL
 
-Spar-component models the PRPL pattern for efficient resource loading. It:
+Spar-component models the [PRPL pattern created by google](https://developers.google.com/web/fundamentals/performance/prpl-pattern/) for resource loading. It:
 
-1) Gives the index homepage the ability to act as an entry point for other files
-2) Renders the index route after the document is parsed
-3) Caches all routes after document has loaded
+1) Marks the index as an entry point for other files
+2) Renders the index routes after the html is parsed
+3) Caches all routes after the document has loaded
 
-# Design decisions
+# Design:
 
-This app uses a non-blocking algorithm which appends routes in order. On a path change, the route will:
+This app uses thunks to fetch routes asynchronously and append them in top-down page order. On a path change, the route will:
 
 1) Fetch all routes asynchronously
 2) Invoke a callback upon receiving a file which will...
     - parse the file
-    - append the contents if previous route elements in the DOM tree have been appended
-    - otherwise store the contents until previous elements have been fetched and appended
-3) If the fetched contents have nested spar-path than the algorithm will delay appending the it until after the child spar-path fetches and appends its children. These chain of events are called asynchronously.  
+    - append the contents if route elements higher up in the DOM tree have already been appended
+    - otherwise store the contents until previous elements are appended
+3) If the fetched contents have nested spar-path/s than the appending will be delayed until after the child spar-path element fetches and appends its children. This is to reduce DOM reflow that may occur if the the children spar-path contents are appended after the parent's content has already been attached to the DOM. These chain of events are triggered by an asynchronous callback, meaning they will not interfere with eachother.
 
-Appending routes in order and appending the contents of nested spar elements before attaching them to the DOM tree minimizes the effects of DOM reflow. It also ensures that fetched script tags are executed in the order that they appear on the page.  
+The app appends routes in order in which they appear on the page to minimize DOM reflow. It also ensures that script tags are executed in the order that they appear on the page.
 
 # Support 
-At the moment, spar-path is only supported by google chrome, as the current webcomponent polyfill seems incompatible with the current version of spar-path.  
-# Known issues
+At the moment, spar-path is only supported by google chrome.
+

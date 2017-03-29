@@ -22,10 +22,11 @@ router2.get ( '/', function ( req,res ) {
 });
 
 app.use(router1);
+app.use('/build', build)
 app.use('/two', router2)
 
 app.use('/three', express.static(path.join(__dirname, '../test-directory/server_assets')));
-app.use('/build', build)
+
 
 app.listen(8080, function(err){
   if(err) {

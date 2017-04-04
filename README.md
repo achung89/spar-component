@@ -17,8 +17,6 @@ The contents of the fetched file will be appended to the route-element. Multiple
 
 Spar-component also allows nesting spar-paths. You can place spar-path elements in the fetched html files.
 
-All
-
 # spar-frame
 
 The spar-frame allows you to put contents of multiple route elements in a single file. The contents are separated by a <spar-frame> tag

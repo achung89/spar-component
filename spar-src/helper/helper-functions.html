@@ -75,6 +75,10 @@ function appendSyncThunk(length, deferredCb) {
     contents[index] = content;
     if ( index === counter ) {
       while ( components[counter] ) {
+        //documentFragments in firefox don't instantiate customElements
+        if ( components[counter].shadowRoot === null ) {
+          components[counter].attachShadow({mode:'open'});
+        }
         components[counter].shadowRoot.appendChild ( contents[counter] );
         counter++;
       }

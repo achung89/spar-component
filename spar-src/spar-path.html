@@ -13,6 +13,7 @@ Route component
       constructor () {
         super();
         this.attachShadow({mode:'open'});
+        console.log(this.shadowRoot);
       }
       get path() {
         var stripSlash = this.getAttribute('path').replace(/^\//g,'');

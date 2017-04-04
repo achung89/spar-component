@@ -9,7 +9,7 @@
     "custom-elements": "webcomponents/custom-elements#^1.0.0-rc.1",
     "shadydom": "webcomponents/shadydom#^1.0.0-rc.2",
     "shadycss": "webcomponents/shadycss#^1.0.0-rc.2",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24",
-    "web-component-tester": "^5.0.1"
+    "web-component-tester": "^5.0.1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24"
   }
 }

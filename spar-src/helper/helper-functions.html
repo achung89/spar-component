@@ -1,13 +1,14 @@
 <script>
 /**
  * Recursive tree function to fetch files asynchronously and call appendSync.
- * @param {string} urlPathname - pushstate path
- * @param {array} routeElements - array of elements to be fetched and later rendered
+ * @param {String} urlPathname - pushstate path
+ * @param {Array} routeElements - array of elements to be fetched and later rendered
  * @callback deferredCb - a function which delays the 'syncRender' invocation on an element until all its subroutes have been fetched and appended
  */
 function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
   // frameFile stores routes fetching spar-frames
   var frameFile = {};
+  // base case
   if ( ( routeElements.size || routeElements.length ) === 0 ) {
     return;
   }
@@ -21,6 +22,7 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     }
 
     if ( !routeElement.src ) {
+      console.log(routeElement)
       appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
     } else if ( shouldFetch ) {
       fetch(`${routeElement.baseUrl}${routeElement.src}`).then(function getText(res) {
@@ -30,7 +32,7 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
         if ( frameFile[routeElement.src] ) {
           frameFile[routeElement.src].forEach ( function ([ comp, OODT ]) {
             var frameXml = xml.querySelectorAll(`spar-frame[id="${comp.frameId}"]`);
-            // We throw errors since the browser parser won't pick up errors regarding spar-frames since they are statically analyzed
+            // throw errors since the browser parser won't pick up errors regarding spar-frames since they are statically analyzed
             if ( frameXml.length > 1 ) {
               throw 'Can not have multiple tags with same frame id per document';
             } else if ( frameXml.length === 0 ) {
@@ -53,7 +55,7 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
 }
 /**
  * Thunk returning the appendSyn function
- * @param {number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
+ * @param {Number} length - length of array of components, when counter equals length, syncRender is called on its parent spar element
  * @callback deferredCb - result of 'deferCall' which, on invocation, calls syncRender on parent spar element
  * @return appendSync function
  */
@@ -75,7 +77,7 @@ function appendSyncThunk(length, deferredCb) {
     contents[index] = content;
     if ( index === counter ) {
       while ( components[counter] ) {
-        //documentFragments in firefox don't instantiate customElements
+        // firefox documentFragments don't instantiate customElements and their shadowRoots
         if ( components[counter].shadowRoot === null ) {
           components[counter].attachShadow({mode:'open'});
         }
@@ -130,6 +132,12 @@ function subroutesCheck ( routeElement, xml ) {
  */
 function fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...args ) {
     if ( subroutes ) {
+      var subroutes = Array.from(subroutes);
+      // documentFragrments in firefox do not instantiate customElements
+      subroutes.forEach(function instantiateSubroute(route, index) {
+        console.log(route.getAttribute('src'), route.getAttribute('path'))
+        subroutes[index].prototype = Object.create(SparRoute.prototype);
+      })
       // look into other metrics other than window.location.pathname
       fetchAndAppendRoutes ( window.location.pathname, subroutes, deferCall ( appendSyncFn, ...args ) );
     } else {
@@ -138,7 +146,7 @@ function fetchSubroutesOrAppend ( subroutes, appendSyncFn, ...args ) {
 }
 /** 
  * Takes a string and outputs a parsed XML
- * @param {string} xmlString - string to be parsed
+ * @param {String} xmlString - string to be parsed
  * @return {documentFragment} - parsed xml
  */
 function parseXML ( xmlString ) {
@@ -148,7 +156,7 @@ function parseXML ( xmlString ) {
 /**
  * Thunk storing callback invocation and its parameters
  * @callback appendSyncFn
- * @param {array} arg - parameters for callback
+ * @param {Array} arg - parameters for callback
  */
 function deferCall ( cb, ...arg ) {
   return function () {
@@ -157,7 +165,7 @@ function deferCall ( cb, ...arg ) {
 }
 /**
  * Clears shadowDOM of element
- * @param {element} element - route element
+ * @param {Element} element - route element
 */
 function clearShadowDOM ( element ) {
   // typeof element.shadowRoot !== 'object' && console.log('undefined shadowroot', element)
@@ -170,7 +178,7 @@ function clearShadowDOM ( element ) {
 }
 /** 
  * Appends child nodes to a documentFragment
- * @param {xml} xml - parent node
+ * @param {Xml} xml - parent node
  * @return {documentFragment} - extracted children
 */
 function createFragFromChildNodes ( xml ) {

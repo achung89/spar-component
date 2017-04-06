@@ -1,10 +1,13 @@
+
 describe('SPAR-componets', function() {
   describe('Component functionality', function() {
     var sparRoute;
     var sparLink;
-    let setTimeout$Andrew = window.setTimeout; 
-    before(function(){
+    before(function(done){
       console.log(8);
+      setTimeout(()=>{
+        done();
+      },1000)
       sparRoute = new SparRoute();
       sparLink = new SparLink();
     })
@@ -19,41 +22,45 @@ describe('SPAR-componets', function() {
   });
 
   describe('Index Routes', function () {
-    var indexRoutes = document.getElementsByClassName('index');
-    var indexContentRoutes = document.getElementsByClassName('index default-content');
-    var indexFetchRoutes = document.getElementsByClassName('index file');
-    var links = document.getElementsByTagName('spar-link');
+    var indexRoutes;
+    var indexFetchRoutes;
+    var links;
+    var indexContentRoutes;
     // console.log('this is node',indexFetchRoutes);
-
+        indexRoutes = document.getElementsByClassName('index');
+        indexFetchRoutes = document.getElementsByClassName('index file');
+        links = document.getElementsByTagName('spar-link');
+        indexContentRoutes = document.getElementsByClassName('index default-content');
     before(function(done) {
       setTimeout(function() {
-        done();
+
         console.log(35);
-      },100)
+        done();
+      },500)
     });
+    // it('should display all index routes ', function () {
+      itParam('should all have fragment in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
+        expect(shadowRoot).to.be.ok;
+        console.log(40);
+      });
 
-    itParam('should all have content in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
-      expect(shadowRoot).to.be.ok;
-      console.log(40);
-    });
+      itParam('should display all links', Array.from(links), function(node) {
+        expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
+        expect(node.innerHTML).to.be.ok;
+        console.log(46);
+      });
 
-    itParam('should display all links', Array.from(links), function(node) {
-      expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
-      expect(node.innerHTML).to.be.ok;
-      console.log(46);
-    });
-
-    itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
-      console.log(node);
-      expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
-      expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
-      expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
-      console.log(54);
-    });
-    itParam('should display default content', Array.from(indexContentRoutes), function(node) {
-      expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
-    });
-
+      itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
+        console.log(node);
+        expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
+        expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
+        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
+        console.log(54);
+      });
+      itParam('should display default content', Array.from(indexContentRoutes), function(node) {
+        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
+      });
+    // });
   });
 
   describe('About us page', function () {

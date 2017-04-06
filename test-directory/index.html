@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>spar component test page</title>
-  <!--<script src="bower_components/web-component-tester/browser.js"></script>-->
+
   <!--<script src="../custom-elements/custom-elements.min.js"></script>-->
   <!--<script src="../webcomponentsjs/webcomponents-hi-sd-ce.js"></script>-->
   <script src="../webcomponentsjs/webcomponents-lite.js"></script>
@@ -14,6 +14,7 @@
   <script src="/test-directory/mocha-param/lib/index.js"></script>
   <link rel='import' href='spar-src/spar-path.html'>
   <link rel='import' href='spar-src/spar-link.html'>
+  <script src="bower_components/web-component-tester/browser.js"></script>
 </head>
 <body>
   This is the test page for spar component.  Routes are rendered below.
@@ -83,15 +84,15 @@
   <spar-path class='aboutus-section-mix slot' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="four"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   
   <script>
-    // WCT.loadSuites([
-    //   'test/index.test.js',
-    //   'test/test.js',
-    //   'test/test-dup.js'
-    // ]);
-    // WCT.loadSuites([
-    //   'test/test-frame.js',
-    // 'test/test-mix.js'
-    // ]);
+      WCT.loadSuites([
+      'test/index.test.js',
+      'test/test.js',
+      'test/test-dup.js'
+      ]);
+      // WCT.loadSuites([
+      //   'test/test-frame.js',
+      // 'test/test-mix.js'
+      // ]);
   </script>
 </body>
 </html>      

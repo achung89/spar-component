@@ -1,6 +1,6 @@
 # Single Page Application Router (SPAR)
 
-* Since WebComponents is still a developing technology, SPAR component is not fully supported on browsers other than chrome. The webcomponent polyfill will allow SPAR component to have basic function on other browsers but will not be as performant and stable *
+*Since WebComponents is still a developing technology, SPAR component is not fully supported on browsers other than chrome. The webcomponent polyfill will allow SPAR component to have basic function on other browsers but will not be as performant and stable*
 
 [Click here for demo](https://achung89.github.io/spar-component/demo.html)
 

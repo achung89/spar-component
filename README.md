@@ -70,6 +70,8 @@ Spar-component fetches routes asynchronously and appends them in top-down page o
 
 Appending routes in order in which they appear on the page also ensures that script tags are executed in order.
 
+For more information about SPAR component, you can check out the [developer notes](https://github.com/achung89/spar-component/blob/master/Developer-notes.md)
+
 # Future features
 Adding a Route-config file
 Base path matching (ex. /^aboutus === /aboutus/(path) )

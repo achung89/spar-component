@@ -8,7 +8,6 @@ function initializeLoadListeners (_routeElements) {
   } else {
     //on non-chrome browsers, delay loading index until all routes instances are initialized
     var htmlRoutes = document.querySelectorAll('spar-path');
-
     (function loadWhenRoutesInstantiate() {
       setTimeout(function (){
         if(htmlRoutes.length === _routeElements.size) {
@@ -21,7 +20,7 @@ function initializeLoadListeners (_routeElements) {
     })()
   }
 }
-  /**
+/**
  * Called on 'popstate'. Starts fetch-async/append-sync algorithm
  * @param {event} event - event object from 'pop' listener
  * @param {array} routeElements - array of route elements
@@ -54,7 +53,6 @@ function initializeFetching ( urlPathname, routeElements )  {
         matchingRoutes.push(comp);
       }
     });
-
     // clearing deferred so as to not block fetching
     setTimeout(()=>{routeElements.forEach((route)=>clearShadowDOM( route ));},0);
     fetchAndAppendRoutes( urlPathname, matchingRoutes );
@@ -65,7 +63,6 @@ function initializeFetching ( urlPathname, routeElements )  {
  */
 function preCacheRoutes ( event, elements ) {
   // algorithm may need change for onload implementation
-  
   elements.forEach ( function ( element ) {
     if ( element.src && element.pathParsed !== '/' ) {
       fetch(element.src);

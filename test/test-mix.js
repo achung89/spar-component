@@ -11,8 +11,7 @@ function click(el){
     el.dispatchEvent(ev);
 }
 describe('spar frames-mix', function() {
-  describe('About us frame page', function () {
-
+  describe('About us frame/comp page', function () {
     var nodesAboutUs=[];
     var nodes = {}
     var path1;
@@ -22,8 +21,7 @@ describe('spar frames-mix', function() {
       setTimeout(function(){
       path1 = document.querySelector('spar-path.aboutus-section-mix.path1');
         done()
-      },500);
-    });
+      },500); });
 
     it('should contain routes with shadowRoot', function() {
       console.log(77)
@@ -46,8 +44,7 @@ describe('spar frames-mix', function() {
         return !!node.shadowRoot && bool;
       }, allValid)
       expect(nodesAboutUs.length).to.equal(8);
-      expect(allValid).to.be.true;
-    });
+      expect(allValid).to.be.true;  });
 
     it('should have expected contents', function() {
       var testDivChildren = `
@@ -58,8 +55,7 @@ describe('spar frames-mix', function() {
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
            expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
-    });
+      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);  });
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
@@ -72,16 +68,12 @@ describe('spar frames-mix', function() {
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
-      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
-    });
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML); });
 
     it('should assign the default content to the slot', function() {
       var slotRoute = document.querySelector('.aboutus-section-mix.slot');
       expect(slotRoute.firstChild).to.be.instanceOf(HTMLDivElement);
-      expect(slotRoute.firstChild.assignedSlot).to.be.instanceOf(HTMLSlotElement);
-    });
-
-  });
+      expect(slotRoute.firstChild.assignedSlot).to.be.instanceOf(HTMLSlotElement);  }); });
   
   describe('Back button', function () {
 
@@ -94,35 +86,22 @@ describe('spar frames-mix', function() {
 
       before(function(done) {
         window.history.back();
-        window.history.back();
+        // why does this line mess up the tests?
+        // window.history.back();
         setTimeout(function() {
           done();
-          console.log(35);
-        },100)
-      });
+        },500)  });
 
       itParam('should all have content in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
-        expect(shadowRoot).to.be.ok;
-        console.log(40);
-      });
+        expect(shadowRoot).to.be.ok;  });
 
       itParam('should display all links', Array.from(links), function(node) {
-        expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
-        expect(node.innerHTML).to.be.ok;
-        console.log(46);
-      });
+        expect(window.getComputedStyle(node).textDecorationLine).to.equal('underline');
+        expect(node.innerHTML).to.be.ok;  });
 
-      itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
-        console.log(node);
+      itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {  
         expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
         expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
-        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
-        console.log(54);
-      });
+        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;  });
       itParam('should display default content', Array.from(indexContentRoutes), function(node) {
-        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
-      });
-
-    });
-  });
-});
+        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement); }); }); }); });

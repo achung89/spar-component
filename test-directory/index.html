@@ -12,9 +12,9 @@
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.23/webcomponents-lite.js"></script>-->
   <!--<script src="../webcomponentsjs/webcomponents-loader.js"></script>-->
   <script src="/test-directory/mocha-param/lib/index.js"></script>
+  <script src="bower_components/web-component-tester/browser.js"></script>
   <link rel='import' href='spar-src/spar-path.html'>
   <link rel='import' href='spar-src/spar-link.html'>
-  <script src="bower_components/web-component-tester/browser.js"></script>
 </head>
 <body>
   This is the test page for spar component.  Routes are rendered below.
@@ -89,10 +89,10 @@
       'test/test.js',
       'test/test-dup.js'
       ]);
-      // WCT.loadSuites([
-      //   'test/test-frame.js',
-      // 'test/test-mix.js'
-      // ]);
+      WCT.loadSuites([
+        'test/test-frame.js',
+      'test/test-mix.js'
+      ]);
   </script>
 </body>
 </html>      

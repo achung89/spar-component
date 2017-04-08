@@ -22,7 +22,6 @@ function fetchAndAppendRoutes ( urlPathname, routeElements, deferredCb ) {
     }
 
     if ( !routeElement.src ) {
-      console.log(routeElement)
       appendSyncFn(orderOnDomTree, routeElement, document.createElement('slot') )
     } else if ( shouldFetch ) {
       fetch(`${routeElement.baseUrl}${routeElement.src}`).then(function getText(res) {
@@ -114,7 +113,7 @@ function pushAndReturnFetchVal ( frameFile, routeElement, orderOnDomTree ) {
  */
 function subroutesCheck ( routeElement, xml ) {
   if ( routeElement.path === '/' ) {
-    var subroutes = xml.querySelectorAll(`spar-index`);
+    var subroutes = xml.querySelectorAll(`spar-path[path="/"]`);
   } else {
     var subroutes = xml.querySelectorAll(`spar-path[path="${routeElement.pathStripped}"],spar-path[path="/${routeElement.pathStripped}"]`);
   }

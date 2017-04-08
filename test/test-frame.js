@@ -1,7 +1,6 @@
 
 describe('spar frames', function() {
   describe('About us frame page', function () {
-
     var nodesAboutUs=[];
     var nodes = {}
     var path1;
@@ -11,13 +10,10 @@ describe('spar frames', function() {
       setTimeout(function(){
       path1 = document.querySelector('spar-path.aboutus-section.path1');
         done()
-      },1000);
-    });
+      },1000);  });
 
     it('should contain routes with content', function() {
-      console.log ( 77 )
       nodesAboutUs = document.querySelectorAll('.aboutus-section')
-
       var allValid = true;
       allValid = Array.from(nodesAboutUs).reduce(function reducer( bool, node ) {
         if( node.className === 'aboutus-section path1' ) {
@@ -35,8 +31,7 @@ describe('spar frames', function() {
         return !!node.shadowRoot && bool;
       }, allValid)
       expect(nodesAboutUs.length).to.equal(5);
-      expect(allValid).to.be.true;
-    });
+      expect(allValid).to.be.true;  });
 
     it('should have expected contents', function() {
       var testDivChildren = `
@@ -46,8 +41,7 @@ describe('spar frames', function() {
       var testDiv = path1.shadowRoot.querySelectorAll('#testDiv');
       expect(testDiv.length).to.equal(1);
       expect(testDiv[0].innerHTML).to.equal(testDivChildren);
-      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);
-    });
+      expect(path1.shadowRoot.querySelectorAll('spar-path').length).to.equal(2);  });
 
     it('should have nested components', function() {
       var nestedComponentHTML = `<div> this lies in a nested component hurray! </div>`;
@@ -55,22 +49,17 @@ describe('spar frames', function() {
       var tripleNestedComponentHTML = `<div>\n  <div>\n    index.html file in src rendered\n  </div>\n</div>`;
 
       var spar = path1.shadowRoot.querySelectorAll('spar-path');
-      console.log(path1);
       expect(spar[0].shadowRoot.innerHTML).to.be.ok;
       expect(spar[1].shadowRoot.innerHTML).to.be.ok;
       expect(spar[0].shadowRoot.innerHTML).to.equal(nestedComponentHTML);
       expect(spar[1].shadowRoot.innerHTML).to.equal(doubleNestedComponentHTML);
       expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.be.ok;
-      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML);
-    });
+      expect(spar[1].shadowRoot.querySelector('spar-path').shadowRoot.innerHTML).to.equal(tripleNestedComponentHTML); });
 
     it('should assign the default content to the slot', function() {
       var slotRoute = document.querySelector('.aboutus-section.slot');
       expect(slotRoute.firstChild).to.be.instanceOf(HTMLDivElement);
-      expect(slotRoute.firstChild.assignedSlot).to.be.instanceOf(HTMLSlotElement);
-    });
-
-  });
+      expect(slotRoute.firstChild.assignedSlot).to.be.instanceOf(HTMLSlotElement);  }); });
   
   describe('Back button', function () {
 
@@ -82,36 +71,23 @@ describe('spar frames', function() {
       // console.log('this is node',indexFetchRoutes);
 
       before(function(done) {
+        window.history.back();
+        window.history.back();
         setTimeout(function() {
-          window.history.back();
-          window.history.back();
           done();
-          console.log(35);
-        },100)
-      });
+        },500)  });
 
-      itParam('should all have content in shadowRoot',Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
-        expect(shadowRoot).to.be.ok;
-        console.log(40);
-      });
+      itParam('should all have content in shadowRoot', Array.from(indexRoutes).map(index=>index.shadowRoot), function(shadowRoot) {
+        expect(shadowRoot).to.be.ok;  });
 
       itParam('should display all links', Array.from(links), function(node) {
-        expect(window.getComputedStyle(node).textDecoration).to.equal('underline');
-        expect(node.innerHTML).to.be.ok;
-        console.log(46);
-      });
+        expect(window.getComputedStyle(node).textDecorationLine).to.equal('underline');
+        expect(node.innerHTML).to.be.ok;  });
 
       itParam('should display fetched index-route', Array.from(indexFetchRoutes),  function ( node ) {
-        console.log(node);
         expect(node.shadowRoot.innerHTML.trim()).to.not.equal('');
         expect(node.shadowRoot.firstChild).to.be.an.instanceOf(HTMLDivElement);
-        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;
-        console.log(54);
-      });
-      itParam('should display default content', Array.from(indexContentRoutes), function(node) {
-        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement);
-      });
+        expect(node.shadowRoot.innerHTML.includes('index.html')).to.be.true;  });
 
-    });
-  });
-});
+      itParam('should display default content', Array.from(indexContentRoutes), function(node) {
+        expect(node.shadowRoot.firstChild).to.be.instanceOf(HTMLSlotElement); }); }); }); });

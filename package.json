@@ -25,6 +25,7 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-vulcanize": "^6.1.0",
-    "mocha-param": "^1.0.2"
+    "mocha-param": "^1.0.2",
+    "morgan": "^1.8.1"
   }
 }

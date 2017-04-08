@@ -1,18 +1,16 @@
 <link rel='import' href='../event-listeners/listeners.html'>
 <script>
-
+var _routeElements = new Set();
 
 var SPARouter = ( function ( superClass ) {
   // set of all routes
-  var _routeElements = new Set();
 
-  window.addEventListener('popstate', handleListenerBound ( precheckFetch, _routeElements ));
-  document.addEventListener('DOMContentLoaded', handleListenerBound ( loadIndexRoutes, _routeElements ));
-  window.addEventListener('load', handleListenerBound ( preCacheRoute, _routeElements ))
+  initializeLoadListeners(_routeElements);
   return class extends superClass {
     constructor () {
       super();
       this._relativePath = '';
+      this._path;
     }
     connectedCallback() {
       _routeElements.add(this);
@@ -21,13 +19,22 @@ var SPARouter = ( function ( superClass ) {
       _routeElements.delete(this);
     }
     get src() {
-      return this.getAttribute('src');
+      return this._src || this.getAttribute('src');
+    }
+    set src(value) {
+      this._src = value;
+    }
+    get path() {
+      return this._path || this.getAttribute('path');
+    }
+    set path(value) {
+      this._path = value;
     }
     get frameId() {
       return this.getAttribute('frame-id');
     }
     get pathStripped() {
-      var stripSlash = this.path.replace(/^\/*/g,'');
+      var stripSlash = this.getAttribute('path').replace(/^\/*/g,'');
       return stripSlash;
     }
     get pathParsed() {

@@ -10,12 +10,16 @@ Route component
   <script>
     class SparRoute extends SPARouter {
       static get is() { return 'spar-path'; }
-      constructor () {
+      constructor (src, path) {
         super();
         this.attachShadow({mode:'open'});
+        this._src = src;
+        this._path = path;
+        console.log(this._path,this._src);
       }
       get path() {
-        var stripSlash = this.getAttribute('path').replace(/^\//g,'');
+        var path = this._path || this.getAttribute('path');
+        var stripSlash = path.replace(/^\//g,'');
         return stripSlash;
       }
     };

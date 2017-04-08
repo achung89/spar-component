@@ -1,11 +1,31 @@
 <link rel='import' href='../helper/helper-functions.html'>
 <script>
-  /**
+function initializeLoadListeners (_routeElements) {
+  window.addEventListener('popstate', handleListenerBound ( sparPopListener, _routeElements ));
+  if( document.readyState ==='loading' || document.readyState === 'uninitialized' ) {
+    document.addEventListener('DOMContentLoaded', handleListenerBound ( loadIndexRoutes, _routeElements ));
+    window.addEventListener('load', handleListenerBound ( preCacheRoutes, _routeElements ))
+  } else {
+    //on non-chrome browsers, delay loading index until all routes instances are initialized
+    var htmlRoutes = document.querySelectorAll('spar-path');
+    (function loadWhenRoutesInstantiate() {
+      setTimeout(function (){
+        if(htmlRoutes.length === _routeElements.size) {
+          loadIndexRoutes(null, _routeElements);
+          preCacheRoutes(null, _routeElements);
+        } else {
+          loadWhenRoutesInstantiate();
+        }
+      },0);
+    })()
+  }
+}
+/**
  * Called on 'popstate'. Starts fetch-async/append-sync algorithm
  * @param {event} event - event object from 'pop' listener
  * @param {array} routeElements - array of route elements
  */
-function precheckFetch ( event, routeElements ) {
+function sparPopListener ( event, routeElements ) {
   // fetch only if popstate was triggered by navigation button
   if ( event.state && event.state._spa_PATH ) {
     let pathname = event.state._spa_PATH;
@@ -27,15 +47,12 @@ function loadIndexRoutes ( event, routeElements ) {
  * @param {array} routeElements - array of route elements
  */
 function initializeFetching ( urlPathname, routeElements )  {
-    console.log(urlPathname);
     var matchingRoutes = [];
     routeElements.forEach( function ( comp ) {
-      // console.log(comp);
       if ( comp.pathParsed === urlPathname ) {
         matchingRoutes.push(comp);
       }
     });
-
     // clearing deferred so as to not block fetching
     setTimeout(()=>{routeElements.forEach((route)=>clearShadowDOM( route ));},0);
     fetchAndAppendRoutes( urlPathname, matchingRoutes );
@@ -44,9 +61,8 @@ function initializeFetching ( urlPathname, routeElements )  {
  * Pre-caches route files
  *  @param {element} element - route element
  */
-function preCacheRoute ( event, elements ) {
+function preCacheRoutes ( event, elements ) {
   // algorithm may need change for onload implementation
-  
   elements.forEach ( function ( element ) {
     if ( element.src && element.pathParsed !== '/' ) {
       fetch(element.src);

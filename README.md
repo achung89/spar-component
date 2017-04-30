@@ -1,6 +1,6 @@
 # Single Page Application Router (SPAR)
 
-*Since WebComponents is still a developing technology, SPAR component is not fully supported on browsers other than chrome. The webcomponent polyfill will allow SPAR component to have basic function on other browsers but will not be as performant and stable*
+*As WebComponent is still a developing technology, SPAR component is not fully supported on all browsers. SPAR component works best on chrome and polyfills to firefox, but work still need to be done before it is production ready*
 
 [Click here for demo](https://achung89.github.io/spar-component/demo.html)
 
@@ -8,18 +8,18 @@
 <spar-link path = "aboutus"> Navigate to about us page </spar-link>
 <spar-path path = "aboutus" src = "../src/aboutus.html"></spar-path>
 ```
-Spar-component is an unopinionated declarative single page router made with [webcomponents](https://developer.mozilla.org/en-US/docs/Web/Web_Components) technology. It allows developers to incorporate SPA navigation without the use of javascript. To use spar, simply:
+Spar-component is an unopinionated declarative single page router made with [webcomponents](https://developer.mozilla.org/en-US/docs/Web/Web_Components) technology. It allows developers to incorporate SPA navigation. To use spar, simply:
 
 1) Declare a spar-path element with a "path" attribute for the pathname and a "src" attribute pointing to a html file
-2) Declare a spar-link element with a "path" attribute matching the <spar-path>
+2) Declare a spar-link element with a "path" attribute matching the path (replaces anchor tags)
 
-The contents of the fetched file will be appended to the route-element. Multiple <spar-path> can be declared for a single pathname.
+The contents of the fetched file will be appended to the route-element. Multiple spar-path elements can be declared for a single pathname.
 
-Spar-component also allows nesting spar-paths. You can place spar-path elements in the fetched html files.
+Spar-component also allows nesting spar-paths meaning you can place spar-path elements in the fetched html files.
 
 # Spar-frame
 
-The spar-frame allows you to put contents of multiple route elements in a single file. The contents are separated by a <spar-frame> tag
+The spar-frame allows you to put contents of multiple route elements in a single file. The contents are separated by a 'spar-frame' tag
 
 helloworld.html
 ```html
@@ -42,12 +42,12 @@ helloworld.html
 
 index.html
 ```html
-<spar-path  path = "/helloworld" frame-id = "code" src = "helloworld.html"></spar-path>
+<spar-path path = "/helloworld" frame-id = "code" src = "helloworld.html"></spar-path>
 <spar-path path = "/helloworld" frame-id = "header" src = "helloworld.html"></spar-path>
 <spar-path path = "/helloworld" frame-id = "body" src = "helloworld.html"></spar-path>
 ```
 
-Using spar-frames allows for a quicker load time since only a single file is fetched and parsed.
+Using spar-frames allows for quicker load time since only a single file is fetched and parsed.
 
 # PRPL
 

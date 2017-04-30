@@ -12,7 +12,7 @@
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.23/webcomponents-lite.js"></script>-->
   <!--<script src="../webcomponentsjs/webcomponents-loader.js"></script>-->
   <script src="/test-directory/mocha-param/lib/index.js"></script>
-  <script src="bower_components/web-component-tester/browser.js"></script>
+  <!--<script src="bower_components/web-component-tester/browser.js"></script>-->
   <link rel='import' href='spar-src/spar-path.html'>
   <link rel='import' href='spar-src/spar-link.html'>
 </head>
@@ -25,7 +25,7 @@
         text-decoration: underline;
     }
   </style>
-
+  
   <spar-path path='/' class='index default-content'> hello there </spar-path>
   <spar-path class='home class-div-1' path='home' src="test-directory/src/home/normalShadowDom.htm"></spar-path>
   <spar-link path='about us'> click here to navigate to about us page</spar-link>
@@ -84,15 +84,15 @@
   <spar-path class='aboutus-section-mix slot' path="about us/sections/comp" src="test-directory/src/about us segments/about us3.html" frame-id="four"><div>this div element was in the light dom of the spar-path tag</div></spar-path>
   
   <script>
-      WCT.loadSuites([
-      'test/index.test.js',
-      'test/test.js',
-      'test/test-dup.js'
-      ]);
-      WCT.loadSuites([
-        'test/test-frame.js',
-      'test/test-mix.js'
-      ]);
+      // WCT.loadSuites([
+      // 'test/index.test.js',
+      // 'test/test.js',
+      // 'test/test-dup.js'
+      // ]);
+      // WCT.loadSuites([
+      //   'test/test-frame.js',
+      // 'test/test-mix.js'
+      // ]);
   </script>
 </body>
 </html>      

@@ -1,11 +1,11 @@
 # Single Page Application Router (SPAR)
 
+[Click here for demo](https://achung89.github.io/spar-component/demo.html)
+
 *As WebComponent is still a developing technology, SPAR component is not fully supported on all browsers. SPAR component works best on chrome and polyfills to firefox, but work still need to be done before it is production ready.*
 
-![alt text](https://digitalscientists.com/system/images/1448/original/logo-browserstack.png "Browser Stack")
-*Future polyfill testin will use BrowserStack: a high-powered Selenium based testing service that enables both automated and live cross-browser/cross-platform testing services, go check them out!*
-
-[Click here for demo](https://achung89.github.io/spar-component/demo.html)
+*Future polyfill testin will use BrowserStack: a high-powered Selenium based testing service that delivers both automated and live cross-browser/cross-platform testing services, go check them out!*  
+[<img src="https://digitalscientists.com/system/images/1448/original/logo-browserstack.png" alt="Browserstack"/>](www.browserstack.com))  
 
 ```html
 <spar-link path = "aboutus"> Navigate to about us page </spar-link>
